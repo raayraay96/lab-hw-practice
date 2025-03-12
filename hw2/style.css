@@ -385,3 +385,110 @@ button:hover {
     .bit.connection::after { height: 40px; }
     .flow-bit { margin: 0 10px; }
 }
+
+/* IVT Table styling (Problem 1) */
+.ivt-table {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    background-color: #555;
+    padding: 10px;
+    border-radius: 8px;
+    width: 300px;
+    margin: 10px auto;
+}
+.ivt-cell {
+    background-color: #444;
+    color: #eee;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    position: relative;
+    transition: all 0.3s;
+    overflow: hidden;
+}
+.ivt-cell.active {
+    background-color: #00ff88;
+    color: #000;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.7);
+}
+.pointer-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 12px solid #facc15;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+.pointer-icon.visible {
+    opacity: 1;
+}
+.ivt-label {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7em;
+    color: #facc15;
+}
+
+/* PC Register styling (Problem 6) */
+.pc-register {
+    background-color: #666;
+    color: #eee;
+    padding: 15px 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 300px;
+    margin: 20px auto;
+    font-size: 1.1em;
+}
+.pc-label {
+    font-weight: bold;
+    margin-right: 15px;
+    color: #facc15;
+}
+.pc-value {
+    font-family: monospace;
+    background-color: #444;
+    padding: 8px 12px;
+    border-radius: 5px;
+    min-width: 150px;
+    text-align: center;
+    transition: all 0.5s;
+}
+.pc-value.isr-active {
+    background-color: #00ff88;
+    color: #000;
+}
+
+/* Interrupt Priority styling (Problems 7 & 8) */
+.priority-level {
+    font-size: 0.8em;
+    color: #b8b8b8;
+    margin-left: 5px;
+    display: inline-block;
+}
+.priority-level.highlight-priority {
+    color: #facc15;
+    font-weight: bold;
+}
+.preemption-note {
+    background-color: rgba(0, 255, 136, 0.1);
+    color: #00ff88;
+    padding: 8px;
+    border-radius: 5px;
+    margin: 10px auto;
+    text-align: center;
+    font-size: 0.9em;
+    transition: opacity 1s;
+    font-style: italic;
+    width: 300px;
+}

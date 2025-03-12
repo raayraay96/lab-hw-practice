@@ -30,6 +30,23 @@
                     <div class="signal-bits" id="vector-table-options"></div>
                 </div>
             </div>
+            <!-- New: IVT Visualization -->
+            <div class="ivt-table">
+                <div class="ivt-cell active">
+                    <span class="ivt-label">ISR 1</span>
+                    <span class="pointer-icon visible"></span>
+                </div>
+                <div class="ivt-cell">
+                    <span class="ivt-label">ISR 2</span>
+                </div>
+                <div class="ivt-cell">
+                    <span class="ivt-label">ISR 3</span>
+                </div>
+                <div class="ivt-cell">
+                    <span class="ivt-label">ISR 4</span>
+                </div>
+                <!-- ...additional cells if needed... -->
+            </div>
             <div class="calculation-steps" id="vector-table-steps">
                 <p>a: Saved CPU state - Incorrect (stack)</p>
                 <p>b,d: Priority levels - Incorrect (registers)</p>
@@ -151,6 +168,11 @@
                     <div class="signal-bits" id="pc-options"></div>
                 </div>
             </div>
+            <!-- New: PC Register Visualization -->
+            <div class="pc-register">
+                <span class="pc-label">PC:</span>
+                <span class="pc-value">0x0000</span>
+            </div>
             <div class="calculation-steps" id="pc-steps">
                 <p>a: Counts instructions - Incorrect</p>
                 <p>b: Next instruction pointer - Correct</p>
@@ -176,7 +198,11 @@
                     <span class="signal-label">Interrupts</span>
                     <div class="signal-bits" id="priority1-interrupts"></div>
                 </div>
+                <!-- New: Priority level badge -->
+                <span class="priority-level highlight-priority">PRI=0</span>
             </div>
+            <!-- New: Preemption Note -->
+            <div class="preemption-note">Higher-priority ISR preempts lower-priority ISR</div>
             <div class="calculation-steps" id="priority1-steps">
                 <p>ISR_2: EN=1, PEND=1, PRI=0</p>
                 <p>ISR_3: EN=1, PEND=1, PRI=0</p>
@@ -200,7 +226,11 @@
                     <span class="signal-label">Interrupts</span>
                     <div class="signal-bits" id="priority2-interrupts"></div>
                 </div>
+                <!-- New: Priority level badge -->
+                <span class="priority-level highlight-priority">PRI=0</span>
             </div>
+            <!-- New: Preemption Note -->
+            <div class="preemption-note">Higher-priority ISR wins (PC = 0x2200)</div>
             <div class="calculation-steps" id="priority2-steps">
                 <p>ISR_0: EN=1, PEND=1, PRI=1</p>
                 <p>ISR_2: EN=1, PEND=1, PRI=0</p>
