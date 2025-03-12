@@ -26,7 +26,6 @@ function resetBits(bitContainer, initialText) {
         } else {
             child.classList.remove('high', 'connection', 'visible');
             child.classList.add('low');
-            if (initialText !== '') child.innerHTML = initialText;
         }
     });
 }
@@ -34,14 +33,40 @@ function resetBits(bitContainer, initialText) {
 window.onscroll = function() {
     const btn = document.getElementById('back-to-top');
     if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-        btn.style.display = 'block';
+        btn.style.display = "block";
     } else {
-        btn.style.display = 'none';
+        btn.style.display = "none";
     }
 };
 
 function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Helper: Show an explanatory overlay message during animations
+function showExplanation(text) {
+    let explanationOverlay = document.getElementById('animation-explanation');
+    if (!explanationOverlay) {
+        explanationOverlay = document.createElement('div');
+        explanationOverlay.id = 'animation-explanation';
+        explanationOverlay.style.position = 'fixed';
+        explanationOverlay.style.bottom = '20px';
+        explanationOverlay.style.left = '50%';
+        explanationOverlay.style.transform = 'translateX(-50%)';
+        explanationOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        explanationOverlay.style.color = '#fff';
+        explanationOverlay.style.padding = '10px 20px';
+        explanationOverlay.style.borderRadius = '5px';
+        explanationOverlay.style.fontSize = '16px';
+        explanationOverlay.style.zIndex = '1000';
+        explanationOverlay.style.opacity = '1';
+        document.body.appendChild(explanationOverlay);
+    }
+    explanationOverlay.textContent = text;
+    explanationOverlay.style.opacity = '1';
+    setTimeout(() => {
+        explanationOverlay.style.opacity = '0';
+    }, 2500);
 }
 
 // Problem 1: SysTick Limitations Animation
@@ -55,13 +80,18 @@ function initSysTickLimitationsAnimation() {
 
     function animate() {
         reset();
+        showExplanation("Starting SysTick: All options at baseline.");
         setTimeout(() => {
             const bit = optionBitsGroup.children[2];
             bit.classList.remove('low');
             bit.classList.add('high', 'connection');
+            showExplanation("Activating SysTick: Signal is raised.");
             setTimeout(() => bit.classList.add('visible'), 100);
-        }, 500);
-        setTimeout(() => highlightSteps(steps), 1000);
+        }, 800);
+        setTimeout(() => {
+            showExplanation("Reviewing SysTick limitations step-by-step.");
+            highlightSteps(steps);
+        }, 1500);
     }
 
     function reset() {
@@ -90,19 +120,25 @@ function initTimerConfigAnimation() {
 
     function animate() {
         reset();
+        showExplanation("Starting Timer Configuration: Initiating timer settings.");
         setTimeout(() => {
             const bit0 = optionBitsGroup.children[0];
             bit0.classList.remove('low');
             bit0.classList.add('high', 'connection');
+            showExplanation("Setting PRE value: Timer starts counting.");
             setTimeout(() => bit0.classList.add('visible'), 100);
             setTimeout(() => {
                 const bit2 = optionBitsGroup.children[2];
                 bit2.classList.remove('low');
                 bit2.classList.add('high', 'connection');
+                showExplanation("Setting RELOAD value: Defines timer reset.");
                 setTimeout(() => bit2.classList.add('visible'), 100);
-            }, 500);
-        }, 500);
-        setTimeout(() => highlightSteps(steps), 1500);
+            }, 800);
+        }, 800);
+        setTimeout(() => {
+            showExplanation("Timer configuration complete. Review the steps.");
+            highlightSteps(steps);
+        }, 1800);
     }
 
     function reset() {
@@ -134,13 +170,18 @@ function initInterruptIntervalAnimation() {
 
     function animate() {
         reset();
+        showExplanation("Starting Interrupt Interval: Monitoring signal timing.");
         setTimeout(() => {
             const bit = optionBitsGroup.children[1];
             bit.classList.remove('low');
             bit.classList.add('high', 'connection');
+            showExplanation("Interrupt detected: Interval recognized.");
             setTimeout(() => bit.classList.add('visible'), 100);
-        }, 500);
-        setTimeout(() => highlightSteps(steps), 1000);
+        }, 800);
+        setTimeout(() => {
+            showExplanation("Reviewing interrupt timing details.");
+            highlightSteps(steps);
+        }, 1500);
     }
 
     function reset() {
@@ -159,46 +200,33 @@ function initInterruptIntervalAnimation() {
 
 // Problem 4: Keypad Scanning Animation
 function initKeypadScanningAnimation() {
-    const keypadBits = document.getElementById('keypad-scanning-keypad');
+    const keypadBits = document.getElementById('keypad-scanning-options');
     const steps = document.getElementById('keypad-scanning-steps');
     const animateBtn = document.getElementById('keypad-scanning-animate-btn');
     const stepsBtn = document.getElementById('keypad-scanning-steps-btn');
     const resetBtn = document.getElementById('keypad-scanning-reset-btn');
-
-    function createKeypad() {
-        let keypadHTML = '<div class="keypad-grid">';
-        const keys = ['1', '2', '3', 'A', '4', '5', '6', 'B', '7', '8', '9', 'C', '*', '0', '#', 'D'];
-        keys.forEach(key => {
-            keypadHTML += `<span class="bit low keypad-key" data-key="${key}">${key}</span>`;
-        });
-        keypadHTML += '</div>';
-        keypadBits.innerHTML = keypadHTML;
-    }
+    const keypadBitsGroup = keypadBits.children[0];
 
     function animate() {
         reset();
-        createKeypad();
-        const keypadKeys = [...keypadBits.querySelectorAll('.keypad-key')];
-
+        showExplanation("Starting Keypad Scanning: Monitoring signal timing.");
         setTimeout(() => {
-            keypadKeys[0].classList.remove('low');
-            keypadKeys[0].classList.add('high', 'connection', 'visible'); // Key '1'
-            keypadKeys[1].classList.remove('low');
-            keypadKeys[1].classList.add('high', 'connection', 'visible'); // Key '2'
-            setTimeout(() => {
-                keypadKeys[0].classList.remove('high', 'connection', 'visible');
-                keypadKeys[0].classList.add('low');
-                keypadKeys[1].classList.remove('high', 'connection', 'visible');
-                keypadKeys[1].classList.add('low');
-                keypadKeys[4].classList.remove('low');
-                keypadKeys[4].classList.add('high', 'connection', 'visible'); // Key '4'
-            }, 1000);
-        }, 500);
-        setTimeout(() => highlightSteps(steps), 2500);
+            const bit = keypadBitsGroup.children[1];
+            bit.classList.remove('low');
+            bit.classList.add('high', 'connection');
+            showExplanation("Keypad detected: Scanning recognized.");
+            setTimeout(() => bit.classList.add('visible'), 100);
+        }, 800);
+        setTimeout(() => {
+            showExplanation("Reviewing Keypad Scanning details.");
+            highlightSteps(steps);
+        }, 1500);
     }
 
     function reset() {
-        keypadBits.innerHTML = '';
+        resetBits(keypadBits, '');
+        const options = ['a) 2.5 ms', 'b) 5 ms', 'c) 10 ms', 'd) 7 ms'];
+        options.forEach((opt, i) => keypadBitsGroup.children[i].innerHTML = opt);
         steps.classList.remove('visible');
         stepsBtn.textContent = 'Show Steps';
     }
@@ -211,42 +239,33 @@ function initKeypadScanningAnimation() {
 
 // Problem 5: History Byte Animation
 function initHistoryByteAnimation() {
-    const historyBits = document.getElementById('history-byte-bits');
+    const historyBits = document.getElementById('history-byte-options');
     const steps = document.getElementById('history-byte-steps');
     const animateBtn = document.getElementById('history-byte-animate-btn');
     const stepsBtn = document.getElementById('history-byte-steps-btn');
     const resetBtn = document.getElementById('history-byte-reset-btn');
-    const historyBitGroup = historyBits.children[0];
+    const historyBitsGroup = historyBits.children[0];
 
     function animate() {
         reset();
-        const sequence = [
-            { values: ['0', '0', '0', '0', '0', '0', '0', '0'], delay: 0 },
-            { values: ['0', '0', '0', '0', '0', '0', '0', '1'], delay: 500 },
-            { values: ['0', '0', '0', '0', '0', '0', '1', '1'], delay: 1000 },
-            { values: ['0', '0', '0', '0', '0', '1', '1', '1'], delay: 1500 },
-            { values: ['0', '0', '0', '0', '1', '1', '1', '1'], delay: 2000 },
-            { values: ['0', '1', 'X', 'X', 'X', '1', '1', '1'], delay: 2500 }
-        ];
-
-        sequence.forEach(stage => {
-            setTimeout(() => {
-                stage.values.forEach((val, i) => {
-                    const bit = historyBitGroup.children[i];
-                    bit.textContent = val;
-                    bit.classList.remove('low');
-                    bit.classList.add('high');
-                    if (val === 'X') {
-                        bit.classList.add('connection', 'visible');
-                    }
-                });
-            }, stage.delay);
-        });
-        setTimeout(() => highlightSteps(steps), 3000);
+        showExplanation("Starting History Byte: Monitoring signal timing.");
+        setTimeout(() => {
+            const bit = historyBitsGroup.children[1];
+            bit.classList.remove('low');
+            bit.classList.add('high', 'connection');
+            showExplanation("History Byte detected: Scanning recognized.");
+            setTimeout(() => bit.classList.add('visible'), 100);
+        }, 800);
+        setTimeout(() => {
+            showExplanation("Reviewing History Byte details.");
+            highlightSteps(steps);
+        }, 1500);
     }
 
     function reset() {
-        resetBits(historyBits, '0');
+        resetBits(historyBits, '');
+        const options = ['a) 2.5 ms', 'b) 5 ms', 'c) 10 ms', 'd) 7 ms'];
+        options.forEach((opt, i) => historyBitsGroup.children[i].innerHTML = opt);
         steps.classList.remove('visible');
         stepsBtn.textContent = 'Show Steps';
     }
@@ -259,29 +278,33 @@ function initHistoryByteAnimation() {
 
 // Problem 6: Display Frequency Animation
 function initDisplayFrequencyAnimation() {
-    const frequencyBits = document.getElementById('display-frequency-hz').querySelector('div');
+    const frequencyBits = document.getElementById('display-frequency-options');
     const steps = document.getElementById('display-frequency-steps');
     const animateBtn = document.getElementById('display-frequency-animate-btn');
     const stepsBtn = document.getElementById('display-frequency-steps-btn');
     const resetBtn = document.getElementById('display-frequency-reset-btn');
+    const frequencyBitsGroup = frequencyBits.children[0];
 
     function animate() {
         reset();
-        const result = '625';
+        showExplanation("Starting Display Frequency: Monitoring signal timing.");
         setTimeout(() => {
-            result.split('').forEach((digit, i) => {
-                const bit = frequencyBits.children[i];
-                bit.textContent = digit;
-                bit.classList.remove('low');
-                bit.classList.add('high', 'connection');
-                setTimeout(() => bit.classList.add('visible'), 100);
-            });
-        }, 500);
-        setTimeout(() => highlightSteps(steps), 1000);
+            const bit = frequencyBitsGroup.children[1];
+            bit.classList.remove('low');
+            bit.classList.add('high', 'connection');
+            showExplanation("Display Frequency detected: Scanning recognized.");
+            setTimeout(() => bit.classList.add('visible'), 100);
+        }, 800);
+        setTimeout(() => {
+            showExplanation("Reviewing Display Frequency details.");
+            highlightSteps(steps);
+        }, 1500);
     }
 
     function reset() {
-        resetBits({ children: [frequencyBits] }, '0');
+        resetBits(frequencyBits, '');
+        const options = ['a) 2.5 ms', 'b) 5 ms', 'c) 10 ms', 'd) 7 ms'];
+        options.forEach((opt, i) => frequencyBitsGroup.children[i].innerHTML = opt);
         steps.classList.remove('visible');
         stepsBtn.textContent = 'Show Steps';
     }
@@ -294,29 +317,33 @@ function initDisplayFrequencyAnimation() {
 
 // Problem 7: Multiplexing Pins Animation
 function initMultiplexingPinsAnimation() {
-    const pinsBits = document.getElementById('multiplexing-pins-count').querySelector('div');
+    const pinsBits = document.getElementById('multiplexing-pins-options');
     const steps = document.getElementById('multiplexing-pins-steps');
     const animateBtn = document.getElementById('multiplexing-pins-animate-btn');
     const stepsBtn = document.getElementById('multiplexing-pins-steps-btn');
     const resetBtn = document.getElementById('multiplexing-pins-reset-btn');
+    const pinsBitsGroup = pinsBits.children[0];
 
     function animate() {
         reset();
-        const result = '14';
+        showExplanation("Starting Multiplexing Pins: Monitoring signal timing.");
         setTimeout(() => {
-            result.split('').forEach((digit, i) => {
-                const bit = pinsBits.children[i];
-                bit.textContent = digit;
-                bit.classList.remove('low');
-                bit.classList.add('high', 'connection');
-                setTimeout(() => bit.classList.add('visible'), 100);
-            });
-        }, 500);
-        setTimeout(() => highlightSteps(steps), 1000);
+            const bit = pinsBitsGroup.children[1];
+            bit.classList.remove('low');
+            bit.classList.add('high', 'connection');
+            showExplanation("Multiplexing Pins detected: Scanning recognized.");
+            setTimeout(() => bit.classList.add('visible'), 100);
+        }, 800);
+        setTimeout(() => {
+            showExplanation("Reviewing Multiplexing Pins details.");
+            highlightSteps(steps);
+        }, 1500);
     }
 
     function reset() {
-        resetBits({ children: [pinsBits] }, '0');
+        resetBits(pinsBits, '');
+        const options = ['a) 2.5 ms', 'b) 5 ms', 'c) 10 ms', 'd) 7 ms'];
+        options.forEach((opt, i) => pinsBitsGroup.children[i].innerHTML = opt);
         steps.classList.remove('visible');
         stepsBtn.textContent = 'Show Steps';
     }
@@ -329,29 +356,33 @@ function initMultiplexingPinsAnimation() {
 
 // Problem 8: Two Arrays Animation
 function initTwoArraysAnimation() {
-    const pinsBits = document.getElementById('two-arrays-pins-count').querySelector('div');
+    const pinsBits = document.getElementById('two-arrays-options');
     const steps = document.getElementById('two-arrays-steps');
     const animateBtn = document.getElementById('two-arrays-animate-btn');
     const stepsBtn = document.getElementById('two-arrays-steps-btn');
     const resetBtn = document.getElementById('two-arrays-reset-btn');
+    const pinsBitsGroup = pinsBits.children[0];
 
     function animate() {
         reset();
-        const result = '14';
+        showExplanation("Starting Two Arrays: Monitoring signal timing.");
         setTimeout(() => {
-            result.split('').forEach((digit, i) => {
-                const bit = pinsBits.children[i];
-                bit.textContent = digit;
-                bit.classList.remove('low');
-                bit.classList.add('high', 'connection');
-                setTimeout(() => bit.classList.add('visible'), 100);
-            });
-        }, 500);
-        setTimeout(() => highlightSteps(steps), 1000);
+            const bit = pinsBitsGroup.children[1];
+            bit.classList.remove('low');
+            bit.classList.add('high', 'connection');
+            showExplanation("Two Arrays detected: Scanning recognized.");
+            setTimeout(() => bit.classList.add('visible'), 100);
+        }, 800);
+        setTimeout(() => {
+            showExplanation("Reviewing Two Arrays details.");
+            highlightSteps(steps);
+        }, 1500);
     }
 
     function reset() {
-        resetBits({ children: [pinsBits] }, '0');
+        resetBits(pinsBits, '');
+        const options = ['a) 2.5 ms', 'b) 5 ms', 'c) 10 ms', 'd) 7 ms'];
+        options.forEach((opt, i) => pinsBitsGroup.children[i].innerHTML = opt);
         steps.classList.remove('visible');
         stepsBtn.textContent = 'Show Steps';
     }
@@ -362,31 +393,35 @@ function initTwoArraysAnimation() {
     reset();
 }
 
-// Problem 9: Counter Timer Interval Animation
+// Problem 9: Counter Timer Animation
 function initCounterTimerAnimation() {
-    const intervalBits = document.getElementById('counter-timer-interval-ms').querySelector('div');
+    const intervalBits = document.getElementById('counter-timer-options');
     const steps = document.getElementById('counter-timer-steps');
     const animateBtn = document.getElementById('counter-timer-animate-btn');
     const stepsBtn = document.getElementById('counter-timer-steps-btn');
     const resetBtn = document.getElementById('counter-timer-reset-btn');
+    const intervalBitsGroup = intervalBits.children[0];
 
     function animate() {
         reset();
-        const result = '5.12';
+        showExplanation("Starting Counter Timer: Monitoring signal timing.");
         setTimeout(() => {
-            result.split('').forEach((char, i) => {
-                const bit = intervalBits.children[i];
-                bit.textContent = char;
-                bit.classList.remove('low');
-                bit.classList.add('high', 'connection');
-                setTimeout(() => bit.classList.add('visible'), 100);
-            });
-        }, 500);
-        setTimeout(() => highlightSteps(steps), 1000);
+            const bit = intervalBitsGroup.children[1];
+            bit.classList.remove('low');
+            bit.classList.add('high', 'connection');
+            showExplanation("Counter Timer detected: Scanning recognized.");
+            setTimeout(() => bit.classList.add('visible'), 100);
+        }, 800);
+        setTimeout(() => {
+            showExplanation("Reviewing Counter Timer details.");
+            highlightSteps(steps);
+        }, 1500);
     }
 
     function reset() {
-        resetBits({ children: [intervalBits] }, '0');
+        resetBits(intervalBits, '');
+        const options = ['a) 2.5 ms', 'b) 5 ms', 'c) 10 ms', 'd) 7 ms'];
+        options.forEach((opt, i) => intervalBitsGroup.children[i].innerHTML = opt);
         steps.classList.remove('visible');
         stepsBtn.textContent = 'Show Steps';
     }
