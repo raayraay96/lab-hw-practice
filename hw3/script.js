@@ -435,6 +435,146 @@ function initCounterTimerAnimation() {
     reset();
 }
 
+// NEW ANIMATION FUNCTIONS FOR DMA, FIXED-POINT, DAC, ADC, QUANTIZATION, AND INTEGRATION
+
+function initDmaAnimation() {
+    const container = document.getElementById('dma-controller');
+    const steps = document.getElementById('dma-steps');
+    const animateBtn = document.getElementById('dma-animate-btn');
+    const stepsBtn = document.getElementById('dma-steps-btn');
+    const resetBtn = document.getElementById('dma-reset-btn');
+    function animate() {
+        // Explain DMA: show processor configuring DMA channels and DMA transferring data independently.
+        showExplanation("Configuring DMA: Processor sets up DMA channels.");
+        // ...simulate DMA transfer animation...
+        setTimeout(() => highlightSteps(steps), 1500);
+    }
+    function reset() {
+        container.innerHTML = ''; // Reset DMA display
+        steps.classList.remove('visible');
+        stepsBtn.textContent = 'Show Steps';
+    }
+    animateBtn.addEventListener('click', animate);
+    stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+    resetBtn.addEventListener('click', reset);
+    reset();
+}
+
+function initFixedPointAnimation() {
+    const container = document.getElementById('fixed-point-display');
+    const steps = document.getElementById('fixed-point-steps');
+    const animateBtn = document.getElementById('fixed-point-animate-btn');
+    const stepsBtn = document.getElementById('fixed-point-steps-btn');
+    const resetBtn = document.getElementById('fixed-point-reset-btn');
+    function animate() {
+        // Demonstrate conversion to Q4.4: break down integer and fractional parts.
+        showExplanation("Converting decimal to Q4.4 fixed-point format.");
+        // ...simulate conversion process...
+        setTimeout(() => highlightSteps(steps), 1500);
+    }
+    function reset() {
+        container.innerHTML = '0.0000'; // initial fixed-point display
+        steps.classList.remove('visible');
+        stepsBtn.textContent = 'Show Steps';
+    }
+    animateBtn.addEventListener('click', animate);
+    stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+    resetBtn.addEventListener('click', reset);
+    reset();
+}
+
+function initDacAnimation() {
+    const container = document.getElementById('dac-display');
+    const steps = document.getElementById('dac-steps');
+    const animateBtn = document.getElementById('dac-animate-btn');
+    const stepsBtn = document.getElementById('dac-steps-btn');
+    const resetBtn = document.getElementById('dac-reset-btn');
+    function animate() {
+        // Show conversion of a digital value into an analog voltage.
+        showExplanation("DAC conversion: Digital value → Analog voltage.");
+        // ...simulate DAC output update...
+        setTimeout(() => highlightSteps(steps), 1500);
+    }
+    function reset() {
+        container.innerHTML = '0 V';
+        steps.classList.remove('visible');
+        stepsBtn.textContent = 'Show Steps';
+    }
+    animateBtn.addEventListener('click', animate);
+    stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+    resetBtn.addEventListener('click', reset);
+    reset();
+}
+
+function initAdcAnimation() {
+    const container = document.getElementById('adc-display');
+    const steps = document.getElementById('adc-steps');
+    const animateBtn = document.getElementById('adc-animate-btn');
+    const stepsBtn = document.getElementById('adc-steps-btn');
+    const resetBtn = document.getElementById('adc-reset-btn');
+    function animate() {
+        // Illustrate ADC sampling and quantization.
+        showExplanation("ADC sampling: Converting analog input to digital value.");
+        // ...simulate analog-to-digital conversion...
+        setTimeout(() => highlightSteps(steps), 1500);
+    }
+    function reset() {
+        container.innerHTML = '0';
+        steps.classList.remove('visible');
+        stepsBtn.textContent = 'Show Steps';
+    }
+    animateBtn.addEventListener('click', animate);
+    stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+    resetBtn.addEventListener('click', reset);
+    reset();
+}
+
+function initQuantizationAnimation() {
+    const container = document.getElementById('quantization-display');
+    const steps = document.getElementById('quantization-steps');
+    const animateBtn = document.getElementById('quantization-animate-btn');
+    const stepsBtn = document.getElementById('quantization-steps-btn');
+    const resetBtn = document.getElementById('quantization-reset-btn');
+    function animate() {
+        // Explain ADC quantization error using LSB calculations.
+        showExplanation("Quantization Error: Highlighting the LSB impact.");
+        // ...simulate error estimation...
+        setTimeout(() => highlightSteps(steps), 1500);
+    }
+    function reset() {
+        container.innerHTML = '0';
+        steps.classList.remove('visible');
+        stepsBtn.textContent = 'Show Steps';
+    }
+    animateBtn.addEventListener('click', animate);
+    stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+    resetBtn.addEventListener('click', reset);
+    reset();
+}
+
+function initAdcDacIntegrationAnimation() {
+    const container = document.getElementById('adcdac-display');
+    const steps = document.getElementById('adcdac-steps');
+    const animateBtn = document.getElementById('adcdac-animate-btn');
+    const stepsBtn = document.getElementById('adcdac-steps-btn');
+    const resetBtn = document.getElementById('adcdac-reset-btn');
+    function animate() {
+        // Demonstrate a chain: ADC samples, digital processing, then DAC outputs the analog result.
+        showExplanation("ADC→DAC Chain: Capture analog input and regenerate output.");
+        // ...simulate the full conversion chain...
+        setTimeout(() => highlightSteps(steps), 1500);
+    }
+    function reset() {
+        container.innerHTML = '0 V';
+        steps.classList.remove('visible');
+        stepsBtn.textContent = 'Show Steps';
+    }
+    animateBtn.addEventListener('click', animate);
+    stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+    resetBtn.addEventListener('click', reset);
+    reset();
+}
+
 // Initialize animations
 document.addEventListener('DOMContentLoaded', () => {
     initSysTickLimitationsAnimation();
@@ -446,4 +586,11 @@ document.addEventListener('DOMContentLoaded', () => {
     initMultiplexingPinsAnimation();
     initTwoArraysAnimation();
     initCounterTimerAnimation();
+    // New animations for DMA, Fixed-Point, DAC, ADC, Quantization, and ADC-DAC integration.
+    initDmaAnimation();
+    initFixedPointAnimation();
+    initDacAnimation();
+    initAdcAnimation();
+    initQuantizationAnimation();
+    initAdcDacIntegrationAnimation();
 });

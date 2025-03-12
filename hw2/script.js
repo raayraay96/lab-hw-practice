@@ -1,4 +1,6 @@
 // Problem 1: Interrupt Vector Table Contents
+// Animation: Visualizes ISR function pointers stored in the interrupt vector table,
+// highlighting what is stored (ISR pointers) versus what is not (CPU state, priority levels).
 function initVectorTableAnimation() {
     const optionsBits = document.getElementById('vector-table-options');
     const steps = document.getElementById('vector-table-steps');
@@ -6,7 +8,8 @@ function initVectorTableAnimation() {
     const stepsBtn = document.getElementById('vector-table-steps-btn');
     const resetBtn = document.getElementById('vector-table-reset-btn');
 
-    const options = ['a', 'b', 'c', 'd', 'e'];
+    // Updated to show ISR names instead of generic letters.
+    const options = ['ISR0', 'ISR1', 'ISR2', 'ISR3', 'ISR4'];
     options.forEach(opt => optionsBits.innerHTML += `<span class="bit low">${opt}</span>`);
 
     function animate() {
@@ -37,6 +40,8 @@ function initVectorTableAnimation() {
 }
 
 // Problem 2: ISR Trigger Source
+// Animation: Illustrates how hardware events (e.g., a button press) trigger an ISR,
+// causing the CPU to pause the main program and jump to the ISR handler.
 function initIsrCallAnimation() {
     const sourceBits = document.getElementById('isr-call-source');
     const steps = document.getElementById('isr-call-steps');
@@ -75,6 +80,7 @@ function initIsrCallAnimation() {
 }
 
 // Problem 3: Exception Priority & State Saves
+// Animation: Demonstrates the CPU saving its state when multiple interrupts occur.
 function initException1Animation() {
     const flowDiagram = document.getElementById('exception1-flow');
     const steps = document.getElementById('exception1-steps');
@@ -152,6 +158,7 @@ function initException1Animation() {
 }
 
 // Problem 4: Exception Priority & State Saves
+// Animation: Illustrates higher-priority interrupt handling with layered state saves.
 function initException2Animation() {
     const flowDiagram = document.getElementById('exception2-flow');
     const steps = document.getElementById('exception2-steps');
@@ -232,6 +239,7 @@ function initException2Animation() {
 }
 
 // Problem 5: CPU State Stack at t=16 ms
+// Animation: Displays CPU state being saved onto the stack during an interrupt.
 function initStackAnimation() {
     const stackVisual = document.getElementById('cpu-stack-visual');
     const steps = document.getElementById('stack-steps');
@@ -272,6 +280,8 @@ function initStackAnimation() {
 }
 
 // Problem 6: Program Counter Properties
+// Animation: Visualizes how the Program Counter is saved, updated for the ISR,
+// and then restored back after execution.
 function initPcAnimation() {
     const optionsBits = document.getElementById('pc-options');
     const steps = document.getElementById('pc-steps');
@@ -313,6 +323,7 @@ function initPcAnimation() {
 }
 
 // Problem 7: Interrupt Priority (Main Thread)
+// Animation: Highlights how interrupt priorities determine which ISR executes first.
 function initPriority1Animation() {
     const interruptBits = document.getElementById('priority1-interrupts');
     const steps = document.getElementById('priority1-steps');
@@ -365,6 +376,7 @@ function initPriority1Animation() {
 }
 
 // Problem 8: Interrupt Priority (ISR_3)
+// Animation: Demonstrates priority handling with focus on ISR_3, the higher-level interrupt.
 function initPriority2Animation() {
     const interruptBits = document.getElementById('priority2-interrupts');
     const steps = document.getElementById('priority2-steps');
@@ -426,6 +438,7 @@ function initPriority2Animation() {
 }
 
 // Problem 9: Cycles Between Interrupts
+// Animation: Depicts periodic interrupts along with clock cycle counts for timing.
 function initCyclesAnimation() {
     const cyclesBits = document.getElementById('cycles-cycles');
     const steps = document.getElementById('cycles-steps');
@@ -476,6 +489,7 @@ function initCyclesAnimation() {
 }
 
 // Problem 10: Flag Reads Between Interrupts
+// Animation: Illustrates flag state changes and read-out operations during interrupts.
 function initFlagAnimation() {
     const flagBits = document.getElementById('flag-flag');
     const steps = document.getElementById('flag-steps');
