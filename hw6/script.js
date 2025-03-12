@@ -1171,6 +1171,15 @@ function initI2cConfigAnimation() {
     const animateBtn = document.getElementById('i2c-config-animate-btn');
     const stepsBtn = document.getElementById('i2c-config-steps-btn');
     const resetBtn = document.getElementById('i2c-config-reset-btn');
+    
+    // NEW: Initialize waveContainer before use
+    const waveContainer = document.createElement('div');
+    waveContainer.className = 'wave-container';
+    waveContainer.style.marginTop = '30px';
+    const section = document.getElementById('i2c-config-section');
+    if (section) {
+        section.insertBefore(waveContainer, steps);
+    }
 
     sdaBits.innerHTML = '';
     for (let i = 0; i < 5; i++) {
