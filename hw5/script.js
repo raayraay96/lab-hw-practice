@@ -1,10 +1,12 @@
 // Utility Functions
 function toggleSteps(steps, btn) {
+    if (!steps || !btn) return;
     steps.classList.toggle('visible');
     btn.textContent = steps.classList.contains('visible') ? 'Hide Steps' : 'Show Steps';
 }
 
 function highlightSteps(steps) {
+    if (!steps) return;
     steps.classList.add('visible');
     const paragraphs = steps.querySelectorAll('p');
     paragraphs.forEach((p, i) => {
@@ -44,6 +46,10 @@ function scrollToTop() {
 function initSysTickLimitationsAnimation() {
     const optionsBits = document.getElementById('systick-limitations-options');
     const steps = document.getElementById('systick-limitations-steps');
+    if (!optionsBits || !steps) {
+        console.warn("SysTick Limitations elements not found.");
+        return;
+    }
     const animateBtn = document.getElementById('systick-limitations-animate-btn');
     const stepsBtn = document.getElementById('systick-limitations-steps-btn');
     const resetBtn = document.getElementById('systick-limitations-reset-btn');
