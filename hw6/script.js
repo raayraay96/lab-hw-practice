@@ -1340,11 +1340,13 @@ function initI2cDataAnimation() {
 // Utility Functions
 // -----------------------------------
 function toggleSteps(steps, btn) {
+    if (!steps || !btn) return;
     steps.classList.toggle('visible');
     btn.textContent = steps.classList.contains('visible') ? 'Hide Steps' : 'Show Steps';
 }
 
 function highlightSteps(steps) {
+    if (!steps) return;
     steps.classList.add('visible');
     const paragraphs = steps.querySelectorAll('p');
     paragraphs.forEach((p, i) => {
@@ -1354,6 +1356,49 @@ function highlightSteps(steps) {
         }, i * 800);
     });
 }
+
+function resetBits(container) {
+    if (!container) return;
+    const bits = container.querySelectorAll('.signal-bits div');
+    bits.forEach(bit => {
+        bit.classList.remove('high', 'active');
+        bit.classList.add('low');
+    });
+}
+
+// Initialize all animations for HW6
+function initSPIWordAnimation() {
+    const nss = document.getElementById('spi-word-nss');
+    const sck = document.getElementById('spi-word-sck');
+    const mosi = document.getElementById('spi-word-mosi');
+    const steps = document.getElementById('spi-word-steps');
+    // ... rest of animation setup
+}
+
+// Add similar init functions for other animations
+function initSPIValueAnimation() { /* ... */ }
+function initUARTEncodeAnimation() { /* ... */ }
+function initUARTWordAnimation() { /* ... */ }
+function initParityAnimation() { /* ... */ }
+function initBaudWordsAnimation() { /* ... */ }
+function initBaudRateAnimation() { /* ... */ }
+function initParityErrorAnimation() { /* ... */ }
+function initI2CAddressAnimation() { /* ... */ }
+function initI2CACKAnimation() { /* ... */ }
+
+// Initialize all animations on page load
+document.addEventListener('DOMContentLoaded', () => {
+    initSPIWordAnimation();
+    initSPIValueAnimation();
+    initUARTEncodeAnimation();
+    initUARTWordAnimation();
+    initParityAnimation();
+    initBaudWordsAnimation();
+    initBaudRateAnimation();
+    initParityErrorAnimation();
+    initI2CAddressAnimation();
+    initI2CACKAnimation();
+});
 
 // Back to Top Functionality
 // -------------------------

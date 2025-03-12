@@ -264,6 +264,23 @@ function initCounterTimerAnimation() {
     reset();
 }
 
+// Problem 10: Max Sinewave Frequency Animation
+function initSinewaveAnimation() {
+    const samples = document.getElementById('sinewave-samples');
+    const steps = document.getElementById('sinewave-steps');
+    const animateBtn = document.getElementById('sinewave-animate-btn');
+    const stepsBtn = document.getElementById('sinewave-steps-btn');
+    const resetBtn = document.getElementById('sinewave-reset-btn');
+    
+    // Add animation logic
+}
+
+// Add remaining animation initializations
+function initCenterAnimation() { /* ... */ }
+function initWavetableAnimation() { /* ... */ }
+function initBJTAnimation() { /* ... */ }
+function initPWMAnimation() { /* ... */ }
+
 // Initialize animations
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('systick-limitations-options') &&
@@ -293,5 +310,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (document.getElementById('counter-timer-interval-ms')) {
         initCounterTimerAnimation();
+    }
+    if (document.getElementById('sinewave-samples')) {
+        initSinewaveAnimation();
+    }
+    if (document.getElementById('center-counter')) {
+        initCenterAnimation();
+    }
+    if (document.getElementById('wavetable-step')) {
+        initWavetableAnimation();
+    }
+    if (document.getElementById('dac-signal')) {
+        initBJTAnimation();
+    }
+    if (document.getElementById('pwm-signal')) {
+        initPWMAnimation();
     }
 });
