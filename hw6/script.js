@@ -1,6 +1,7 @@
 // Problem 1: SPI Word Size Animation
 // -----------------------------------
 function initSpiWordAnimation() {
+    // Get DOM elements with null checks
     const nssBits = document.getElementById('spi-word-nss');
     const sckBits = document.getElementById('spi-word-sck');
     const mosiBits = document.getElementById('spi-word-mosi');
@@ -9,29 +10,41 @@ function initSpiWordAnimation() {
     const stepsBtn = document.getElementById('spi-word-steps-btn');
     const resetBtn = document.getElementById('spi-word-reset-btn');
 
-    nssBits.innerHTML = '';
-    sckBits.innerHTML = '';
-    mosiBits.innerHTML = `
-        <div class="spi-timeline">
-            <div class="timeline-marker">Idle</div>
-            <div class="timeline-marker">Start</div>
-            <div class="timeline-marker">Transfer</div>
-            <div class="timeline-marker">End</div>
-        </div>
-        <span class="read-counter">Rising Edges: <span id="rising-edge-count">0</span></span>
-    `;
-
-    for (let i = 0; i < 15; i++) {
-        nssBits.innerHTML += `<span class="bit high" style="left: ${i * 44}px;">1</span>`;
-        sckBits.innerHTML += `<span class="bit low" style="left: ${i * 44}px;">0</span>`;
-        mosiBits.innerHTML += `<span class="bit low" style="left: ${i * 44}px;">${'110001000010110'[i]}</span>`;
+    // Exit if required elements are missing
+    if (!nssBits || !sckBits || !mosiBits || !steps || !animateBtn || !stepsBtn || !resetBtn) {
+        console.warn('Required elements for SPI Word Animation not found');
+        return;
     }
 
-    // Add container for square wave visualization
-    const waveContainer = document.createElement('div');
-    waveContainer.className = 'wave-container';
-    waveContainer.style.marginTop = '30px';
-    document.getElementById('spi-word-section').insertBefore(waveContainer, steps);
+    // Initialize elements before adding event listeners
+    function initialize() {
+        nssBits.innerHTML = '';
+        sckBits.innerHTML = '';
+        mosiBits.innerHTML = `
+            <div class="spi-timeline">
+                <div class="timeline-marker">Idle</div>
+                <div class="timeline-marker">Start</div>
+                <div class="timeline-marker">Transfer</div>
+                <div class="timeline-marker">End</div>
+            </div>
+            <span class="read-counter">Rising Edges: <span id="rising-edge-count">0</span></span>
+        `;
+
+        for (let i = 0; i < 15; i++) {
+            nssBits.innerHTML += `<span class="bit high" style="left: ${i * 44}px;">1</span>`;
+            sckBits.innerHTML += `<span class="bit low" style="left: ${i * 44}px;">0</span>`;
+            mosiBits.innerHTML += `<span class="bit low" style="left: ${i * 44}px;">${'110001000010110'[i]}</span>`;
+        }
+
+        // Add wave container
+        const waveContainer = document.createElement('div');
+        waveContainer.className = 'wave-container';
+        waveContainer.style.marginTop = '30px';
+        const section = document.getElementById('spi-word-section');
+        if (section) {
+            section.insertBefore(waveContainer, steps);
+        }
+    }
 
     function animate() {
         reset();
@@ -145,87 +158,69 @@ function initSpiWordAnimation() {
     }
 
     function reset() {
-        // Clear wave container
-        waveContainer.innerHTML = '';
+        // Clear wave container if it exists
+        const waveContainer = document.querySelector('.wave-container');
+        if (waveContainer) {
+            waveContainer.innerHTML = '';
+        }
         
-        [...nssBits.children].forEach(bit => {
-            bit.classList.remove('active', 'connection', 'visible', 'low');
-            bit.classList.add('high');
-            bit.textContent = '1';
-        });
+        // Reset bits with null checks
+        if (nssBits) {
+            [...nssBits.children].forEach(bit => {
+                bit.classList.remove('active', 'connection', 'visible', 'low');
+                bit.classList.add('high');
+                bit.textContent = '1';
+            });
+        }
 
-        [...sckBits.children].forEach((bit, i) => {
-            bit.classList.remove('active', 'connection', 'visible', 'high');
-            bit.classList.add('low');
-            bit.textContent = '0';
-        });
-
-        const mosiPattern = '110001000010110';
-        [...mosiBits.children].forEach((bit, i) => {
-            if (i > 0) {
+        if (sckBits) {
+            [...sckBits.children].forEach(bit => {
                 bit.classList.remove('active', 'connection', 'visible', 'high');
                 bit.classList.add('low');
-                bit.textContent = mosiPattern[i - 1];
-            }
-        });
+                bit.textContent = '0';
+            });
+        }
 
-        document.getElementById('rising-edge-count').textContent = '0';
-        const markers = mosiBits.querySelectorAll('.timeline-marker');
-        markers.forEach(m => m.classList.remove('active'));
-        markers[0].classList.add('active');
-        steps.classList.remove('visible');
-        stepsBtn.textContent = 'Show Steps';
+        if (mosiBits) {
+            const mosiPattern = '110001000010110';
+            [...mosiBits.children].forEach((bit, i) => {
+                if (i > 0) { // Skip the first element (timeline)
+                    bit.classList.remove('active', 'connection', 'visible', 'high');
+                    bit.classList.add('low');
+                    bit.textContent = mosiPattern[i - 1];
+                }
+            });
+        }
+
+        // Reset counter and markers
+        const counter = document.getElementById('rising-edge-count');
+        if (counter) {
+            counter.textContent = '0';
+        }
+
+        if (mosiBits) {
+            const markers = mosiBits.querySelectorAll('.timeline-marker');
+            markers.forEach(m => m.classList.remove('active'));
+            markers[0]?.classList.add('active');
+        }
+
+        if (steps) {
+            steps.classList.remove('visible');
+        }
+        if (stepsBtn) {
+            stepsBtn.textContent = 'Show Steps';
+        }
     }
 
+    // Initialize first, then add event listeners
+    initialize();
+    
+    // Add event listeners
     animateBtn.addEventListener('click', animate);
     stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
     resetBtn.addEventListener('click', reset);
 
-    const style = document.createElement('style');
-    style.textContent = `
-        .spi-timeline {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            background: #333;
-            padding: 5px;
-            border-radius: 8px;
-        }
-        .timeline-marker {
-            padding: 5px 10px;
-            border-radius: 5px;
-            background: #444;
-            transition: all 0.3s;
-            font-size: 0.9em;
-        }
-        .timeline-marker.active {
-            background: #00ff88;
-            color: #000;
-            transform: scale(1.1);
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-        }
-        .read-counter {
-            position: absolute;
-            top: 110px;
-            left: 90px;
-            font-size: 1.2em;
-            color: #00ff88;
-            font-weight: bold;
-        }
-        #rising-edge-count {
-            display: inline-block;
-            min-width: 30px;
-            text-align: right;
-        }
-        .wave-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-    `;
-    document.head.appendChild(style);
-
+    // Initial reset
     reset();
 }
 
@@ -862,8 +857,6 @@ function initBaudWordsAnimation() {
     reset();
 }
 
-// Problem 7: UART Baud Rate
-// -----------------------------------
 // Problem 7: UART Baud Rate
 // -----------------------------------
 function initBaudRateAnimation() {
