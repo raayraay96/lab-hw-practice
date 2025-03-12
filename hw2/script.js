@@ -9,13 +9,13 @@ function initVectorTableAnimation() {
     const resetBtn = document.getElementById('vector-table-reset-btn');
 
     // Updated to show ISR names instead of generic letters.
-    const options = ['ISR0', 'ISR1', 'ISR2', 'ISR3', 'ISR4'];
+    const options = ['ISR0', 'ISR1', 'ISR2', 'ISR3'];
     options.forEach(opt => optionsBits.innerHTML += `<span class="bit low">${opt}</span>`);
 
     function animate() {
         reset();
         setTimeout(() => {
-            const bit = optionsBits.children[2];
+            const bit = optionsBits.children[2]; // Highlight ISR2 as an example
             bit.classList.remove('low');
             bit.classList.add('high', 'connection');
             setTimeout(() => bit.classList.add('visible'), 100);
@@ -49,13 +49,13 @@ function initIsrCallAnimation() {
     const stepsBtn = document.getElementById('isr-call-steps-btn');
     const resetBtn = document.getElementById('isr-call-reset-btn');
 
-    const sources = ['Soft', 'Hard'];
+    const sources = ['Software', 'Hardware'];
     sources.forEach(src => sourceBits.innerHTML += `<span class="bit low">${src}</span>`);
 
     function animate() {
         reset();
         setTimeout(() => {
-            const bit = sourceBits.children[1];
+            const bit = sourceBits.children[1]; // Highlight Hardware
             bit.classList.remove('low');
             bit.classList.add('high', 'connection');
             setTimeout(() => bit.classList.add('visible'), 100);
@@ -289,12 +289,12 @@ function initPcAnimation() {
     const stepsBtn = document.getElementById('pc-steps-btn');
     const resetBtn = document.getElementById('pc-reset-btn');
 
-    const options = ['a', 'b', 'c', 'd', 'e'];
+    const options = ['Counts instructions', 'Next instruction pointer', 'Modified by interrupts', 'Changes as program executes', 'Stored in memory'];
     options.forEach(opt => optionsBits.innerHTML += `<span class="bit low">${opt}</span>`);
 
     function animate() {
         reset();
-        const correct = [1, 2, 3];
+        const correct = [1, 2, 3]; // Correct options based on explanation
         correct.forEach((idx, i) => {
             setTimeout(() => {
                 const bit = optionsBits.children[idx];
@@ -506,7 +506,7 @@ function initFlagAnimation() {
         reset();
         const bit = flagBits.querySelector('.bit');
         const readCountDisplay = document.getElementById('zero-reads');
-        
+
         setTimeout(() => {
             bit.classList.remove('low');
             bit.classList.add('high', 'connection', 'visible');
