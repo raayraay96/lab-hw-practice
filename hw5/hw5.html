@@ -23,6 +23,12 @@
             <div class="description">
                 This problem asks you to find which timer settings produce a <strong>1 Hz</strong> square wave with a <strong>50% duty cycle</strong> (half on, half off) using a <span class="tooltip" data-tooltip="Prescaler: Divides the clock frequency to slow down the timer.">prescaler</span> of 999 and a 100 kHz clock. You’re given options with <strong>ARR</strong> (reload value) and <strong>CCR</strong> (compare value) in different modes (e.g., Toggle, PWM). The animation shows Option e (Count Up, PWM, ARR=99, CCR=50), where the timer counts to 99, resets, and the output is high when the counter is less than 50, giving 50% duty cycle at 1 Hz.
             </div>
+            <!-- NEW: Interactive controls for Timer settings -->
+            <div class="interactive-controls" id="timer-controls">
+                <label>Prescaler: <input type="range" id="timer-prescaler" min="0" max="2000" value="999"></label>
+                <label>ARR: <input type="range" id="timer-arr" min="10" max="200" value="99"></label>
+                <label>CCR: <input type="range" id="timer-ccr" min="0" max="200" value="50"></label>
+            </div>
             <div class="signal-container">
                 <div class="signal-row">
                     <span class="signal-label">Counter</span>
@@ -121,6 +127,10 @@
             <div class="description">
                 This problem demonstrates how a <strong>BJT transistor</strong> operates with a DAC signal. The animation shows the relationship between the <strong>DAC output</strong>, <strong>base current</strong>, and <strong>collector current</strong>, illustrating why slow-moving DAC signals are more power efficient.
             </div>
+            <!-- NEW: Button to toggle driving methods -->
+            <div class="interactive-controls" id="bjt-controls">
+                <button id="toggle-dac-method">Toggle Driving Method</button>
+            </div>
             <div class="signal-container">
                 <div class="signal-row">
                     <span class="signal-label">DAC</span>
@@ -147,6 +157,11 @@
             <h2>Problem 3: PWM Duty Cycle</h2>
             <div class="description">
                 This problem explores PWM duty cycle calculation with a <strong>100kHz</strong> clock source, <strong>prescaler=999</strong>, and <strong>ARR=24</strong>. The animation demonstrates how the PWM signal is off for 24 cycles and on for 1 cycle, resulting in a <strong>4%</strong> duty cycle.
+            </div>
+            <!-- NEW: Interactive controls for PWM settings -->
+            <div class="interactive-controls" id="pwm-controls">
+                <label>ARR: <input type="range" id="pwm-arr" min="1" max="100" value="24"></label>
+                <label>CCR: <input type="range" id="pwm-ccr" min="0" max="100" value="1"></label>
             </div>
             <div class="signal-container">
                 <div class="signal-row">

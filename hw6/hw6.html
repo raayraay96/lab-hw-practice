@@ -22,6 +22,10 @@
         <!-- Problem 1 -->
         <div class="section" id="spi-word-section">
             <h2>Problem 1: SPI Word Size</h2>
+            <!-- NEW: Add SPI interactive control -->
+            <div class="interactive-controls" id="spi-controls">
+                <label>Word Size: <input type="number" id="spi-word-size" min="8" max="32" value="15"></label>
+            </div>
             <div class="description">
                 Given the <span class="tooltip" data-tooltip="Serial Peripheral Interface: A synchronous protocol using clock (SCK) and data (MOSI) lines.">SPI</span> signal below, find the <strong>word size</strong> in bits, read on <strong>rising edges</strong> of SCK. The signal has <strong>15 rising edges</strong>, indicating <strong>15 bits</strong>.
             </div>
@@ -77,6 +81,10 @@
         <!-- Problem 3 -->
         <div class="section" id="uart-encode-section">
             <h2>Problem 3: UART Encoding</h2>
+            <!-- NEW: Add UART interactive control -->
+            <div class="interactive-controls" id="uart-controls">
+                <label>Input Byte (Hex): <input type="text" id="uart-input-byte" value="53"></label>
+            </div>
             <div class="description">
                 Encode <strong>0x53</strong> for <span class="tooltip" data-tooltip="Universal Asynchronous Receiver/Transmitter: Sends data serially with start/stop bits.">UART</span> with 1 start bit, 8-bit word, no parity, 1 stop bit. The animation shows <strong>0110010101</strong>.
             </div>
@@ -249,6 +257,10 @@
         <!-- Problem 10 -->
         <div class="section" id="i2c-ack-section">
             <h2>Problem 10: I2C ACK/NACK</h2>
+            <!-- NEW: Add I2C interactive control -->
+            <div class="interactive-controls" id="i2c-controls">
+                <button id="simulate-i2c-error">Simulate Communication Error</button>
+            </div>
             <div class="description">
                 Explain <strong>ACK/NACK</strong> in I2C. The animation shows both signals, with ACK being a low bit and NACK being a high bit.
             </div>
@@ -263,4 +275,15 @@
                 </div>
             </div>
             <div class="calculation-steps" id="i2c-ack-steps">
-                <p>ACK: SDA pulle
+                <p>ACK: SDA pulled low</p>
+                <p>NACK: SDA remains high</p>
+            </div>
+            <div class="controls">
+                <button id="i2c-ack-animate-btn">Animate</button>
+                <button id="i2c-ack-steps-btn">Show Steps</button>
+                <button id="i2c-ack-reset-btn">Reset</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
