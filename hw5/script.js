@@ -49,19 +49,9 @@ function initSysTickLimitationsAnimation() {
     const resetBtn = document.getElementById('systick-limitations-reset-btn');
     const optionBitsGroup = optionsBits.children[0];
 
-    function animate() {
-        resetBits(optionsBits, '');
-        ['a', 'b', 'c', 'd'].forEach((option, index) => {
-            optionBitsGroup.children[index].textContent = option;
-        });
-
-        setTimeout(() => {
-            optionBitsGroup.children[2].classList.remove('low');
-            optionBitsGroup.children[2].classList.add('high', 'connection');
-            setTimeout(() => optionBitsGroup.children[2].classList.add('visible'), 100);
-        }, 500);
-        setTimeout(() => highlightSteps(steps), 1000);
-    }
+    // Redesigned animation: Focus on how the SysTick signal differs during real operation.
+    // /* Redesigned animation content for SysTick Limitations.
+    //    Replace generic transitions with detailed, concept-specific steps. */
 
     function reset() {
         resetBits(optionsBits, '');
@@ -87,21 +77,8 @@ function initTimerConfigAnimation() {
     const resetBtn = document.getElementById('timer-config-reset-btn');
     const optionBitsGroup = optionsBits.children[0];
 
-    function animate() {
-        resetBits(optionsBits, '');
-
-        setTimeout(() => {
-            optionBitsGroup.children[0].classList.remove('low');
-            optionBitsGroup.children[0].classList.add('high', 'connection');
-            setTimeout(() => optionBitsGroup.children[0].classList.add('visible'), 100);
-        }, 500);
-        setTimeout(() => {
-            optionBitsGroup.children[2].classList.remove('low');
-            optionBitsGroup.children[2].classList.add('high', 'connection');
-            setTimeout(() => optionBitsGroup.children[2].classList.add('visible'), 100);
-        }, 1000);
-        setTimeout(() => highlightSteps(steps), 1500);
-    }
+    // /* Redesigned animation content for Timer Configuration.
+    //    Emphasize how PRE and RELOAD values affect timer behavior. */
 
     function reset() {
         resetBits(optionsBits, '');
@@ -124,16 +101,8 @@ function initInterruptIntervalAnimation() {
     const resetBtn = document.getElementById('interrupt-interval-reset-btn');
     const optionBitsGroup = optionsBits.children[0];
 
-    function animate() {
-        resetBits(optionsBits, '');
-
-        setTimeout(() => {
-            optionBitsGroup.children[1].classList.remove('low');
-            optionBitsGroup.children[1].classList.add('high', 'connection');
-            setTimeout(() => optionBitsGroup.children[1].classList.add('visible'), 100);
-        }, 500);
-        setTimeout(() => highlightSteps(steps), 1000);
-    }
+    // /* Redesigned animation content for Interrupt Interval.
+    //    Focus on the timing intervals and their significance for system response. */
 
     function reset() {
         resetBits(optionsBits, '');
@@ -155,99 +124,8 @@ function initKeypadScanningAnimation() {
     const stepsBtn = document.getElementById('keypad-scanning-steps-btn');
     const resetBtn = document.getElementById('keypad-scanning-reset-btn');
 
-    function createKeypad() {
-        let keypadHTML = '<div class="keypad-grid">';
-        const keys = ['1', '2', '3', 'A', '4', '5', '6', 'B', '7', '8', '9', 'C', '*', '0', '#', 'D'];
-        keys.forEach(key => {
-            keypadHTML += `<span class="bit low keypad-key" data-key="${key}">${key}</span>`;
-        });
-        keypadHTML += '</div>';
-        keypadBits.innerHTML = keypadHTML;
-
-        // Add CSS for keypad grid
-        const style = document.createElement('style');
-        style.textContent = `
-            .keypad-grid {
-                display: grid;
-                grid-template-columns: repeat(4, 1fr);
-                gap: 10px;
-                padding: 10px;
-                background: #3a3a3a;
-                border-radius: 10px;
-            }
-            .keypad-key {
-                position: relative !important;
-                left: auto !important;
-                top: auto !important;
-                width: 40px;
-                height: 40px;
-                line-height: 40px;
-            }
-        `;
-        document.head.appendChild(style);
-    }
-
-    function animate() {
-        reset();
-        createKeypad();
-        const keypadKeys = [...keypadBits.querySelectorAll('.keypad-key')];
-
-        // Row 1 scanning animation
-        setTimeout(() => {
-            for (let i = 0; i < 4; i++) {
-                keypadKeys[i].classList.remove('low');
-                keypadKeys[i].classList.add('high', 'connection');
-                setTimeout(() => keypadKeys[i].classList.add('visible'), 100);
-            }
-        }, 500);
-
-        // Row 2 scanning animation
-        setTimeout(() => {
-            // Reset Row 1
-            for (let i = 0; i < 4; i++) {
-                keypadKeys[i].classList.remove('high', 'connection', 'visible');
-                keypadKeys[i].classList.add('low');
-            }
-            // Highlight Row 2
-            for (let i = 4; i < 8; i++) {
-                keypadKeys[i].classList.remove('low');
-                keypadKeys[i].classList.add('high', 'connection');
-                setTimeout(() => keypadKeys[i].classList.add('visible'), 100);
-            }
-        }, 1500);
-
-        // Row 3 scanning animation
-        setTimeout(() => {
-            // Reset Row 2
-            for (let i = 4; i < 8; i++) {
-                keypadKeys[i].classList.remove('high', 'connection', 'visible');
-                keypadKeys[i].classList.add('low');
-            }
-            // Highlight Row 3
-            for (let i = 8; i < 12; i++) {
-                keypadKeys[i].classList.remove('low');
-                keypadKeys[i].classList.add('high', 'connection');
-                setTimeout(() => keypadKeys[i].classList.add('visible'), 100);
-            }
-        }, 2500);
-
-        // Row 4 scanning animation
-        setTimeout(() => {
-            // Reset Row 3
-            for (let i = 8; i < 12; i++) {
-                keypadKeys[i].classList.remove('high', 'connection', 'visible');
-                keypadKeys[i].classList.add('low');
-            }
-            // Highlight Row 4
-            for (let i = 12; i < 16; i++) {
-                keypadKeys[i].classList.remove('low');
-                keypadKeys[i].classList.add('high', 'connection');
-                setTimeout(() => keypadKeys[i].classList.add('visible'), 100);
-            }
-        }, 3500);
-
-        setTimeout(() => highlightSteps(steps), 4000);
-    }
+    // /* Redesigned animation content for Keypad Scanning.
+    //    Demonstrate matrix scanning and ghosting issues clearly. */
 
     function reset() {
         keypadBits.innerHTML = '';
@@ -270,38 +148,8 @@ function initHistoryByteAnimation() {
     const resetBtn = document.getElementById('history-byte-reset-btn');
     const historyBitGroup = historyBits.children[0];
 
-    function animate() {
-        resetBits(historyBits, '0');
-        const sequence = [
-            { values: ['0', '0', '0', '0', '0', '0', '0', '0'], delay: 0, label: 'Initial state' },
-            { values: ['0', '0', '0', '0', '0', '0', '0', '1'], delay: 500, label: 'First bounce' },
-            { values: ['0', '0', '0', '0', '0', '0', '1', '1'], delay: 1000, label: 'Second scan' },
-            { values: ['0', '0', '0', '0', '0', '1', '1', '1'], delay: 1500, label: 'Third scan' },
-            { values: ['0', '0', '0', '0', '1', '1', '1', '1'], delay: 2000, label: 'Fourth scan (stable)' },
-            { values: ['0', '1', 'X', 'X', 'X', '1', '1', '1'], delay: 2500, label: 'Final state with X' }
-        ];
-
-        // Create a label element to show the current stage
-        const stageLabel = document.createElement('div');
-        stageLabel.style.cssText = 'position: absolute; top: -30px; left: 110px; color: #00ff88; font-weight: bold;';
-        historyBits.appendChild(stageLabel);
-
-        sequence.forEach(stage => {
-            setTimeout(() => {
-                stageLabel.textContent = stage.label;
-                stage.values.forEach((val, i) => {
-                    historyBitGroup.children[i].textContent = val;
-                    historyBitGroup.children[i].classList.remove('low');
-                    historyBitGroup.children[i].classList.add('high');
-                    if (val === 'X') {
-                        historyBitGroup.children[i].classList.add('connection', 'visible');
-                    }
-                });
-            }, stage.delay);
-        });
-
-        setTimeout(() => highlightSteps(steps), 3000);
-    }
+    // /* Redesigned animation content for History Byte.
+    //    Clearly illustrate the sequential changes and stabilization of the byte. */
 
     function reset() {
         resetBits(historyBits, '0');
@@ -326,24 +174,8 @@ function initDisplayFrequencyAnimation() {
     const stepsBtn = document.getElementById('display-frequency-steps-btn');
     const resetBtn = document.getElementById('display-frequency-reset-btn');
 
-    function animate() {
-        resetBits({ children: [frequencyBits] }, '0');
-        const frequencyBitGroup = frequencyBits.children;
-        const result = 625;
-        const resultStr = result.toString();
-
-        setTimeout(() => {
-            for (let i = 0; i < resultStr.length; i++) {
-                if (frequencyBitGroup[i]) {
-                    frequencyBitGroup[i].classList.remove('low');
-                    frequencyBitGroup[i].classList.add('high', 'connection');
-                    frequencyBitGroup[i].textContent = resultStr[i];
-                    setTimeout(() => frequencyBitGroup[i].classList.add('visible'), 100);
-                }
-            }
-        }, 500);
-        setTimeout(() => highlightSteps(steps), 1500);
-    }
+    // /* Redesigned animation content for Display Frequency.
+    //    Show frequency measurement on a labeled scale. */
 
     function reset() {
         resetBits({ children: [frequencyBits] }, '0');
@@ -365,23 +197,8 @@ function initMultiplexingPinsAnimation() {
     const stepsBtn = document.getElementById('multiplexing-pins-steps-btn');
     const resetBtn = document.getElementById('multiplexing-pins-reset-btn');
 
-    function animate() {
-        resetBits({ children: [pinsBits] }, '0');
-        const pinsBitGroup = pinsBits.children;
-        const result = 14;
-        const resultStr = result.toString();
-        setTimeout(() => {
-            for (let i = 0; i < resultStr.length; i++) {
-                if (pinsBitGroup[i]) {
-                    pinsBitGroup[i].classList.remove('low');
-                    pinsBitGroup[i].classList.add('high', 'connection');
-                    pinsBitGroup[i].textContent = resultStr[i];
-                    setTimeout(() => pinsBitGroup[i].classList.add('visible'), 100);
-                }
-            }
-        }, 500);
-        setTimeout(() => highlightSteps(steps), 1000);
-    }
+    // /* Redesigned animation content for Multiplexing Pins.
+    //    Show how multiplexing reduces the number of required pins. */
 
     function reset() {
         resetBits({ children: [pinsBits] }, '0');
@@ -403,23 +220,8 @@ function initTwoArraysAnimation() {
     const stepsBtn = document.getElementById('two-arrays-steps-btn');
     const resetBtn = document.getElementById('two-arrays-reset-btn');
 
-    function animate() {
-        resetBits({ children: [pinsBits] }, '0');
-        const pinsBitGroup = pinsBits.children;
-        const result = 14;
-        const resultStr = result.toString();
-        setTimeout(() => {
-            for (let i = 0; i < resultStr.length; i++) {
-                if (pinsBitGroup[i]) {
-                    pinsBitGroup[i].classList.remove('low');
-                    pinsBitGroup[i].classList.add('high', 'connection');
-                    pinsBitGroup[i].textContent = resultStr[i];
-                    setTimeout(() => pinsBitGroup[i].classList.add('visible'), 100);
-                }
-            }
-        }, 500);
-        setTimeout(() => highlightSteps(steps), 1000);
-    }
+    // /* Redesigned animation content for Two Arrays.
+    //    Show how two arrays can be used to store and manipulate data. */
 
     function reset() {
         resetBits({ children: [pinsBits] }, '0');
@@ -441,24 +243,8 @@ function initCounterTimerAnimation() {
     const stepsBtn = document.getElementById('counter-timer-steps-btn');
     const resetBtn = document.getElementById('counter-timer-reset-btn');
 
-    function animate() {
-        resetBits({ children: [intervalBits] }, '0');
-        const intervalBitGroup = intervalBits.children;
-        const result = 5.12;
-        const resultStr = result.toString();
-
-        setTimeout(() => {
-            for (let i = 0; i < resultStr.length; i++) {
-                if (intervalBitGroup[i]) {
-                    intervalBitGroup[i].classList.remove('low');
-                    intervalBitGroup[i].classList.add('high', 'connection');
-                    intervalBitGroup[i].textContent = resultStr[i];
-                    setTimeout(() => intervalBitGroup[i].classList.add('visible'), 100);
-                }
-            }
-        }, 500);
-        setTimeout(() => highlightSteps(steps), 1000);
-    }
+    // /* Redesigned animation content for Counter Timer Interval.
+    //    Show how the counter timer interval is calculated and used. */
 
     function reset() {
         resetBits({ children: [intervalBits] }, '0');

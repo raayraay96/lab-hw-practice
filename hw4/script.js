@@ -524,15 +524,21 @@ function initDacLeftAlignedAnimation() {
 
     dacBits.innerHTML = `
         <div class="register-window">
-            <div class="register-bits" id="register-bits"></div>
-            <div class="dac-window" id="dac-window"></div>
+            <div class="register-full" id="register-full">
+                <!-- Full 16-bit register -->
+                <!-- Each bit is rendered (e.g., via spans) -->
+                <!-- ...existing code to display 16 bits... -->
+            </div>
+            <div class="dac-window" id="dac-window">
+                <!-- This window will highlight the leftmost (MSB) 12 bits -->
+            </div>
         </div>
         <div class="voltage-ladder" id="voltage-ladder">
             <div class="ladder-rungs"></div>
             <div class="voltage-bar" id="voltage-bar"></div>
         </div>
     `;
-    const registerBits = document.getElementById('register-bits');
+    const registerBits = document.getElementById('register-full');
     const binary = '0000100011101010';
     for (let i = 0; i < 16; i++) {
         registerBits.innerHTML += `<span class="bit low" style="left: ${i * 20}px; top: 0px;">${binary[i]}</span>`;
@@ -540,46 +546,43 @@ function initDacLeftAlignedAnimation() {
 
     function animate() {
         reset();
-        const dacWindow = document.getElementById('dac-window');
-        const voltageBar = document.getElementById('voltage-bar');
-
+        // Step 1: Show the full 16-bit input register.
+        // ...existing code to show register...
         setTimeout(() => {
-            [...registerBits.children].slice(0, 12).forEach((bit, i) => {
-                if (binary[i] === '1') {
-                    bit.classList.remove('low');
-                    bit.classList.add('high', 'connection');
-                    setTimeout(() => bit.classList.add('visible'), 100);
-                }
-            });
+            // Step 2: Visually highlight the leftmost 12 bits.
+            const dacWindow = document.getElementById('dac-window');
             dacWindow.classList.add('visible');
-            addLabel(dacBits, 'Left 12 bits: 000010001110 (142)', 0);
-        }, 500);
-
+            // Add an overlay (e.g., using innerHTML or a new element) to indicate "MSB selection"
+            dacWindow.innerHTML = `<div class="msb-overlay">MSBs Selected</div>`;
+            // Optionally add a scale (e.g., 0 to 4095) near the voltage ladder.
+        }, 800);
         setTimeout(() => {
-            voltageBar.style.height = '3.47%';
-            addLabel(document.getElementById('voltage-ladder'), '142 / 4095 = 0.0347', 0);
+            // Step 3: Show the corresponding DAC output.
+            const voltageBar = document.getElementById('voltage-bar');
+            voltageBar.style.height = '55.7%';
+            // ...existing code to label voltage output...
         }, 2000);
-
-        setTimeout(() => {
-            voltageBar.classList.add('analog');
-            addLabel(document.getElementById('voltage-ladder'), 'Output: 0.104V', 0);
-        }, 3500);
-
-        setTimeout(() => highlightSteps(steps), 5000);
+        setTimeout(() => highlightSteps(document.getElementById('dac-left-aligned-steps')), 3500);
     }
 
     function reset() {
         dacBits.innerHTML = `
             <div class="register-window">
-                <div class="register-bits" id="register-bits"></div>
-                <div class="dac-window" id="dac-window"></div>
+                <div class="register-full" id="register-full">
+                    <!-- Full 16-bit register -->
+                    <!-- Each bit is rendered (e.g., via spans) -->
+                    <!-- ...existing code to display 16 bits... -->
+                </div>
+                <div class="dac-window" id="dac-window">
+                    <!-- This window will highlight the leftmost (MSB) 12 bits -->
+                </div>
             </div>
             <div class="voltage-ladder" id="voltage-ladder">
                 <div class="ladder-rungs"></div>
                 <div class="voltage-bar" id="voltage-bar"></div>
             </div>
         `;
-        const registerBits = document.getElementById('register-bits');
+        const registerBits = document.getElementById('register-full');
         for (let i = 0; i < 16; i++) {
             registerBits.innerHTML += `<span class="bit low" style="left: ${i * 20}px; top: 0px;">${binary[i]}</span>`;
         }

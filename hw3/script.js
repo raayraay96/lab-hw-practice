@@ -1,3 +1,6 @@
+// NOTE: Future animations for HW3 Problems 6–9 should be redesigned
+// to clearly illustrate each key concept rather than using generic transitions.
+
 // Utility Functions
 function toggleSteps(steps, btn) {
     steps.classList.toggle('visible');
