@@ -266,13 +266,32 @@ function initCounterTimerAnimation() {
 
 // Initialize animations
 document.addEventListener('DOMContentLoaded', () => {
-    initSysTickLimitationsAnimation();
-    initTimerConfigAnimation();
-    initInterruptIntervalAnimation();
-    initKeypadScanningAnimation();
-    initHistoryByteAnimation();
-    initDisplayFrequencyAnimation();
-    initMultiplexingPinsAnimation();
-    initTwoArraysAnimation();
-    initCounterTimerAnimation();
+    if (document.getElementById('systick-limitations-options') &&
+        document.getElementById('systick-limitations-steps')) {
+        initSysTickLimitationsAnimation();
+    }
+    if (document.getElementById('timer-config-options')) {
+        initTimerConfigAnimation();
+    }
+    if (document.getElementById('interrupt-interval-options')) {
+        initInterruptIntervalAnimation();
+    }
+    if (document.getElementById('keypad-scanning-keypad')) {
+        initKeypadScanningAnimation();
+    }
+    if (document.getElementById('history-byte-bits')) {
+        initHistoryByteAnimation();
+    }
+    if (document.getElementById('display-frequency-hz')) {
+        initDisplayFrequencyAnimation();
+    }
+    if (document.getElementById('multiplexing-pins-count')) {
+        initMultiplexingPinsAnimation();
+    }
+    if (document.getElementById('two-arrays-pins-count')) {
+        initTwoArraysAnimation();
+    }
+    if (document.getElementById('counter-timer-interval-ms')) {
+        initCounterTimerAnimation();
+    }
 });
