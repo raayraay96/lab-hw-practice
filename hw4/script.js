@@ -1319,6 +1319,81 @@ function initAdcGuessAnimation() {
     document.head.appendChild(style);
 }
 
+// Problem 1: DMA Controller Animation
+function initDmaAnimation() {
+    const dmaBits = document.getElementById('dma-options');
+    const steps = document.getElementById('dma-steps');
+    const animateBtn = document.getElementById('dma-animate-btn');
+    const stepsBtn = document.getElementById('dma-steps-btn');
+    const resetBtn = document.getElementById('dma-reset-btn');
+
+    const options = ['Processor Involvement', 'Bus Residence', 'Flow-through DMA', 'Fly-by DMA', 'Multiple Channels'];
+    options.forEach(opt => dmaBits.innerHTML += `<span class="bit low">${opt}</span>`);
+
+    function animate() {
+        reset();
+        setTimeout(() => {
+            const bit = dmaBits.children[4]; // Highlight Multiple Channels
+            bit.classList.remove('low');
+            bit.classList.add('high', 'connection');
+            setTimeout(() => bit.classList.add('visible'), 100);
+        }, 500);
+        setTimeout(() => highlightSteps(steps), 1000);
+    }
+
+    function reset() {
+        [...dmaBits.children].forEach((bit, i) => {
+            bit.classList.remove('high', 'connection', 'visible');
+            bit.classList.add('low');
+            bit.textContent = options[i];
+        });
+        steps.classList.remove('visible');
+        stepsBtn.textContent = 'Show Steps';
+    }
+
+    animateBtn.addEventListener('click', animate);
+    stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+    resetBtn.addEventListener('click', reset);
+    reset();
+}
+
+// Problem 2: Fixed-Point Arithmetic Animation
+function initFixedPointAnimation() {
+    const fixedPointBits = document.getElementById('fixed-point-bits');
+    const steps = document.getElementById('fixed-point-steps');
+    const animateBtn = document.getElementById('fixed-point-animate-btn');
+    const stepsBtn = document.getElementById('fixed-point-steps-btn');
+    const resetBtn = document.getElementById('fixed-point-reset-btn');
+
+    const value = '15.1897';
+    fixedPointBits.innerHTML = `<span class="bit low">${value}</span>`;
+
+    function animate() {
+        reset();
+        setTimeout(() => {
+            const bit = fixedPointBits.children[0];
+            bit.classList.remove('low');
+            bit.classList.add('high', 'connection');
+            setTimeout(() => bit.classList.add('visible'), 100);
+        }, 500);
+        setTimeout(() => highlightSteps(steps), 1000);
+    }
+
+    function reset() {
+        const bit = fixedPointBits.children[0];
+        bit.classList.remove('high', 'connection', 'visible');
+        bit.classList.add('low');
+        bit.textContent = value;
+        steps.classList.remove('visible');
+        stepsBtn.textContent = 'Show Steps';
+    }
+
+    animateBtn.addEventListener('click', animate);
+    stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+    resetBtn.addEventListener('click', reset);
+    reset();
+}
+
 // Initialize animations
 document.addEventListener('DOMContentLoaded', () => {
     initDmaStatementsAnimation();
@@ -1331,6 +1406,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initAdcQuantizationErrorAnimation();
     initAdcResolutionBitsAnimation();
     initAdcGuessAnimation();
+    initDmaAnimation();
+    initFixedPointAnimation();
 });
 
 // Back to Top Functionality

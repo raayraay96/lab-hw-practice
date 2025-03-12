@@ -73,34 +73,32 @@ function showExplanation(text) {
 }
 
 // Problem 1: SysTick Limitations Animation
-function initSysTickLimitationsAnimation() {
-    const optionsBits = document.getElementById('systick-limitations-options');
-    const steps = document.getElementById('systick-limitations-steps');
-    const animateBtn = document.getElementById('systick-limitations-animate-btn');
-    const stepsBtn = document.getElementById('systick-limitations-steps-btn');
-    const resetBtn = document.getElementById('systick-limitations-reset-btn');
-    const optionBitsGroup = optionsBits.children[0];
+function initSysTickAnimation() {
+    const optionsBits = document.getElementById('systick-options');
+    const steps = document.getElementById('systick-steps');
+    const animateBtn = document.getElementById('systick-animate-btn');
+    const stepsBtn = document.getElementById('systick-steps-btn');
+    const resetBtn = document.getElementById('systick-reset-btn');
+
+    const options = ['Delay Function', 'Clear Variable', 'Flash Memory Latency', 'Consistent SysTick_Handler'];
+    options.forEach(opt => optionsBits.innerHTML += `<span class="bit low">${opt}</span>`);
 
     function animate() {
         reset();
-        showExplanation("Starting SysTick: All options at baseline.");
         setTimeout(() => {
-            const bit = optionBitsGroup.children[2];
+            const bit = optionsBits.children[2]; // Highlight Flash Memory Latency as not possible
             bit.classList.remove('low');
             bit.classList.add('high', 'connection');
-            showExplanation("Activating SysTick: Signal is raised.");
             setTimeout(() => bit.classList.add('visible'), 100);
-        }, 800);
-        setTimeout(() => {
-            showExplanation("Reviewing SysTick limitations step-by-step.");
-            highlightSteps(steps);
-        }, 1500);
+        }, 500);
+        setTimeout(() => highlightSteps(steps), 1000);
     }
 
     function reset() {
-        resetBits(optionsBits, '');
-        ['a', 'b', 'c', 'd'].forEach((option, index) => {
-            optionBitsGroup.children[index].textContent = option;
+        [...optionsBits.children].forEach((bit, i) => {
+            bit.classList.remove('high', 'connection', 'visible');
+            bit.classList.add('low');
+            bit.textContent = options[i];
         });
         steps.classList.remove('visible');
         stepsBtn.textContent = 'Show Steps';
@@ -114,44 +112,32 @@ function initSysTickLimitationsAnimation() {
 
 // Problem 2: Timer Configuration Animation
 function initTimerConfigAnimation() {
-    const optionsBits = document.getElementById('timer-config-options');
+    const timerBits = document.getElementById('timer-config');
     const steps = document.getElementById('timer-config-steps');
     const animateBtn = document.getElementById('timer-config-animate-btn');
     const stepsBtn = document.getElementById('timer-config-steps-btn');
     const resetBtn = document.getElementById('timer-config-reset-btn');
-    const optionBitsGroup = optionsBits.children[0];
+
+    const options = ['PRESCALER = 99', 'RELOAD = 999'];
+    options.forEach(opt => timerBits.innerHTML += `<span class="bit low">${opt}</span>`);
 
     function animate() {
         reset();
-        showExplanation("Starting Timer Configuration: Initiating timer settings.");
         setTimeout(() => {
-            const bit0 = optionBitsGroup.children[0];
-            bit0.classList.remove('low');
-            bit0.classList.add('high', 'connection');
-            showExplanation("Setting PRE value: Timer starts counting.");
-            setTimeout(() => bit0.classList.add('visible'), 100);
-            setTimeout(() => {
-                const bit2 = optionBitsGroup.children[2];
-                bit2.classList.remove('low');
-                bit2.classList.add('high', 'connection');
-                showExplanation("Setting RELOAD value: Defines timer reset.");
-                setTimeout(() => bit2.classList.add('visible'), 100);
-            }, 800);
-        }, 800);
-        setTimeout(() => {
-            showExplanation("Timer configuration complete. Review the steps.");
-            highlightSteps(steps);
-        }, 1800);
+            const bit = timerBits.children[0];
+            bit.classList.remove('low');
+            bit.classList.add('high', 'connection');
+            setTimeout(() => bit.classList.add('visible'), 100);
+        }, 500);
+        setTimeout(() => highlightSteps(steps), 1000);
     }
 
     function reset() {
-        resetBits(optionsBits, '');
-        const options = [
-            'PRE=100-1,<br>RELOAD=1000-1',
-            'PRE=100000-1,<br>RELOAD=1-1',
-            'PRE=10000-1,<br>RELOAD=10-1'
-        ];
-        options.forEach((opt, i) => optionBitsGroup.children[i].innerHTML = opt);
+        [...timerBits.children].forEach((bit, i) => {
+            bit.classList.remove('high', 'connection', 'visible');
+            bit.classList.add('low');
+            bit.textContent = options[i];
+        });
         steps.classList.remove('visible');
         stepsBtn.textContent = 'Show Steps';
     }
@@ -162,35 +148,34 @@ function initTimerConfigAnimation() {
     reset();
 }
 
-// Problem 3: Interrupt Interval Animation
-function initInterruptIntervalAnimation() {
-    const optionsBits = document.getElementById('interrupt-interval-options');
-    const steps = document.getElementById('interrupt-interval-steps');
-    const animateBtn = document.getElementById('interrupt-interval-animate-btn');
-    const stepsBtn = document.getElementById('interrupt-interval-steps-btn');
-    const resetBtn = document.getElementById('interrupt-interval-reset-btn');
-    const optionBitsGroup = optionsBits.children[0];
+// Problem 3: Keypad Scanning Animation
+function initKeypadScanAnimation() {
+    const keypadBits = document.getElementById('keypad-scan');
+    const steps = document.getElementById('keypad-scan-steps');
+    const animateBtn = document.getElementById('keypad-scan-animate-btn');
+    const stepsBtn = document.getElementById('keypad-scan-steps-btn');
+    const resetBtn = document.getElementById('keypad-scan-reset-btn');
+
+    const keys = ['1', '2', '4', '5'];
+    keys.forEach(key => keypadBits.innerHTML += `<span class="bit low">${key}</span>`);
 
     function animate() {
         reset();
-        showExplanation("Starting Interrupt Interval: Monitoring signal timing.");
         setTimeout(() => {
-            const bit = optionBitsGroup.children[1];
+            const bit = keypadBits.children[0]; // Highlight key '1'
             bit.classList.remove('low');
             bit.classList.add('high', 'connection');
-            showExplanation("Interrupt detected: Interval recognized.");
             setTimeout(() => bit.classList.add('visible'), 100);
-        }, 800);
-        setTimeout(() => {
-            showExplanation("Reviewing interrupt timing details.");
-            highlightSteps(steps);
-        }, 1500);
+        }, 500);
+        setTimeout(() => highlightSteps(steps), 1000);
     }
 
     function reset() {
-        resetBits(optionsBits, '');
-        const options = ['a) 2.5 ms', 'b) 5 ms', 'c) 10 ms', 'd) 7 ms'];
-        options.forEach((opt, i) => optionBitsGroup.children[i].innerHTML = opt);
+        [...keypadBits.children].forEach((bit, i) => {
+            bit.classList.remove('high', 'connection', 'visible');
+            bit.classList.add('low');
+            bit.textContent = keys[i];
+        });
         steps.classList.remove('visible');
         stepsBtn.textContent = 'Show Steps';
     }
@@ -577,9 +562,9 @@ function initAdcDacIntegrationAnimation() {
 
 // Initialize animations
 document.addEventListener('DOMContentLoaded', () => {
-    initSysTickLimitationsAnimation();
+    initSysTickAnimation();
     initTimerConfigAnimation();
-    initInterruptIntervalAnimation();
+    initKeypadScanAnimation();
     initKeypadScanningAnimation();
     initHistoryByteAnimation();
     initDisplayFrequencyAnimation();
