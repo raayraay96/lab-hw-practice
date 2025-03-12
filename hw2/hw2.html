@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECE362 HW2 Study Animations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="hw2.html">HW2</a>
+        <a href="hw3.html">HW3</a>
+        <a href="hw4.html">HW4</a>
+        <a href="hw5.html">HW5</a>
+        <a href="hw6.html">HW6</a>
+    </div>
+    <h1>ECE362 HW2 Study Animations</h1>
+    <div class="content">
+        <!-- Problem 1 -->
+        <div class="section" id="vector-table-section">
+            <h2>Problem 1: Interrupt Vector Table Contents</h2>
+            <div class="description">
+                What does the <span class="tooltip" data-tooltip="Interrupt Vector Table: Maps interrupt numbers to ISR addresses.">interrupt vector table</span> hold? The animation highlights <strong>ISR function pointers</strong> (option c).
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Options</span>
+                    <div class="signal-bits" id="vector-table-options"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="vector-table-steps">
+                <p>a: Saved CPU state - Incorrect (stack)</p>
+                <p>b,d: Priority levels - Incorrect (registers)</p>
+                <p>c: ISR pointers - Correct</p>
+                <p>e: ISR inputs - Incorrect (registers)</p>
+            </div>
+            <div class="controls">
+                <button id="vector-table-animate-btn">Animate</button>
+                <button id="vector-table-steps-btn">Show Steps</button>
+                <button id="vector-table-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 2 -->
+        <div class="section" id="isr-call-section">
+            <h2>Problem 2: ISR Trigger Source</h2>
+            <div class="description">
+                What calls <span class="tooltip" data-tooltip="ISR: Interrupt Service Routine executed on interrupt.">ISRs</span>? The animation shows <strong>Hardware</strong> (option b).
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Source</span>
+                    <div class="signal-bits" id="isr-call-source"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="isr-call-steps">
+                <p>a: Software - Incorrect</p>
+                <p>b: Hardware - Correct (periodic/spontaneous events)</p>
+            </div>
+            <div class="controls">
+                <button id="isr-call-animate-btn">Animate</button>
+                <button id="isr-call-steps-btn">Show Steps</button>
+                <button id="isr-call-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 3 -->
+        <div class="section" id="exception1-section">
+            <h2>Problem 3: Exception Priority & State Saves</h2>
+            <div class="description">
+                Is the 2nd exception higher or lower priority than the 1st, and how many state saves? The animation shows <strong>Lower/Saved once</strong> (option a).
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Program Flow</span>
+                    <div class="signal-bits flow-diagram" id="exception1-flow"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="exception1-steps">
+                <p>ISR2 lower priority (not immediate)</p>
+                <p>Saved once (Main, ISR1 complete)</p>
+            </div>
+            <div class="controls">
+                <button id="exception1-animate-btn">Animate</button>
+                <button id="exception1-steps-btn">Show Steps</button>
+                <button id="exception1-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 4 -->
+        <div class="section" id="exception2-section">
+            <h2>Problem 4: Exception Priority & State Saves</h2>
+            <div class="description">
+                ISR2 interrupts ISR1. The animation shows <strong>Higher/Saved twice</strong> (option d).
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Program Flow</span>
+                    <div class="signal-bits flow-diagram" id="exception2-flow"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="exception2-steps">
+                <p>ISR2 higher (interrupts ISR1)</p>
+                <p>Saved twice (Main, ISR1)</p>
+            </div>
+            <div class="controls">
+                <button id="exception2-animate-btn">Animate</button>
+                <button id="exception2-steps-btn">Show Steps</button>
+                <button id="exception2-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 5 -->
+        <div class="section" id="stack-section">
+            <h2>Problem 5: CPU State Stack at t=16 ms</h2>
+            <div class="description">
+                What’s on the <span class="tooltip" data-tooltip="Stack: Saves CPU state during interrupts.">stack</span> at <strong>t=16 ms</strong>? Animation shows <strong>[Main, handle_button]</strong> (option a).
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">CPU Stack</span>
+                    <div class="signal-bits" id="stack-stack">
+                        <span class="stack-indicator">Stack Top</span>
+                        <div class="stack-icon" id="cpu-stack-visual"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="stack-steps">
+                <p>t=10 ms: Main → Stack, handle_button runs</p>
+                <p>t=15 ms: handle_button → Stack, handle_pwm runs</p>
+                <p>Stack: [Main, handle_button]</p>
+            </div>
+            <div class="controls">
+                <button id="stack-animate-btn">Animate</button>
+                <button id="stack-steps-btn">Show Steps</button>
+                <button id="stack-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 6 -->
+        <div class="section" id="pc-section">
+            <h2>Problem 6: Program Counter Properties</h2>
+            <div class="description">
+                Which are true about the <span class="tooltip" data-tooltip="Program Counter: Points to next instruction.">program counter</span>? Animation highlights <strong>b, c, d</strong>.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Options</span>
+                    <div class="signal-bits" id="pc-options"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="pc-steps">
+                <p>a: Counts instructions - Incorrect</p>
+                <p>b: Next instruction pointer - Correct</p>
+                <p>c: Modified by interrupts - Correct</p>
+                <p>d: Changes during execution - Correct</p>
+                <p>e: Stored in memory - Incorrect (register)</p>
+            </div>
+            <div class="controls">
+                <button id="pc-animate-btn">Animate</button>
+                <button id="pc-steps-btn">Show Steps</button>
+                <button id="pc-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 7 -->
+        <div class="section" id="priority1-section">
+            <h2>Problem 7: Interrupt Priority (Main Thread)</h2>
+            <div class="description">
+                From <strong>main thread</strong> (PRI=100), next PC with EN=0011, PEND=0011, PRI=1100? ISR_2 wins, PC = <strong>0x2200</strong>.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Interrupts</span>
+                    <div class="signal-bits" id="priority1-interrupts"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="priority1-steps">
+                <p>ISR_2: EN=1, PEND=1, PRI=0</p>
+                <p>ISR_3: EN=1, PEND=1, PRI=0</p>
+                <p>ISR_2 wins (lower number), PC = 0x2200</p>
+            </div>
+            <div class="controls">
+                <button id="priority1-animate-btn">Animate</button>
+                <button id="priority1-steps-btn">Show Steps</button>
+                <button id="priority1-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 8 -->
+        <div class="section" id="priority2-section">
+            <h2>Problem 8: Interrupt Priority (ISR_3)</h2>
+            <div class="description">
+                In <strong>ISR_3</strong>, next PC with EN=1101, PEND=1101, PRI=1100? ISR_2 wins, PC = <strong>0x2200</strong>.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Interrupts</span>
+                    <div class="signal-bits" id="priority2-interrupts"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="priority2-steps">
+                <p>ISR_0: EN=1, PEND=1, PRI=1</p>
+                <p>ISR_2: EN=1, PEND=1, PRI=0</p>
+                <p>ISR_3: EN=1, PEND=1, PRI=0</p>
+                <p>ISR_2 wins (PRI=0, lower number), PC = 0x2200</p>
+            </div>
+            <div class="controls">
+                <button id="priority2-animate-btn">Animate</button>
+                <button id="priority2-steps-btn">Show Steps</button>
+                <button id="priority2-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 9 -->
+        <div class="section" id="cycles-section">
+            <h2>Problem 9: Cycles Between Interrupts</h2>
+            <div class="description">
+                Periodic interrupt every <strong>50 ms</strong> at <strong>100 kHz</strong>. Animation calculates <strong>5000 cycles</strong>.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Cycles</span>
+                    <div class="signal-bits" id="cycles-cycles"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="cycles-steps">
+                <p>Cycles = 50 ms * 100 kHz</p>
+                <p>Cycles = 0.05 s * 100,000 Hz = 5000</p>
+            </div>
+            <div class="controls">
+                <button id="cycles-animate-btn">Animate</button>
+                <button id="cycles-steps-btn">Show Steps</button>
+                <button id="cycles-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 10 -->
+        <div class="section" id="flag-section">
+            <h2>Problem 10: Flag Reads Between Interrupts</h2>
+            <div class="description">
+                ISR every <strong>50 ms</strong> (5000 cycles at 100 kHz) sets <strong>*pProcessinterrupt=1</strong>. Animation shows <strong>2450 reads</strong> of 0.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Flag</span>
+                    <div class="signal-bits" id="flag-flag"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="flag-steps">
+                <p>ISR: 4 cycles, sets flag=1</p>
+                <p>Main: 100 cycles, flag=0</p>
+                <p>Reads 0: (5000 - 104) / 2 = 2450</p>
+            </div>
+            <div class="controls">
+                <button id="flag-animate-btn">Animate</button>
+                <button id="flag-steps-btn">Show Steps</button>
+                <button id="flag-reset-btn">Reset</button>
+            </div>
+        </div>
+    </div>
+    <div id="back-to-top" onclick="scrollToTop()">↑</div>
+
+    <script src="script.js"></script>
+</body>
+</html>

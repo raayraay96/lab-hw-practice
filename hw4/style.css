@@ -1,0 +1,379 @@
+/* style.css - Complete Styles for Educational Animations */
+
+/* General Styles */
+body {
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+    color: #e0e0e0;
+    overflow-x: hidden; /* Prevent horizontal scrollbar on body */
+}
+
+.navbar {
+    background-color: #1e3a8a;
+    padding: 15px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar a {
+    float: left;
+    color: #fff;
+    text-align: center;
+    padding: 12px 20px;
+    text-decoration: none;
+    font-size: 18px;
+    font-family: 'Roboto', sans-serif;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+.navbar a:hover {
+    background-color: #3b82f6;
+    transform: scale(1.05);
+}
+
+h1 {
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    color: #00ff88;
+    margin: 40px 0;
+    font-size: 2.5em;
+    text-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+}
+
+.content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.section {
+    background: #2a2a2a;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s;
+    overflow: hidden; /* Ensure sections clip content nicely */
+}
+
+.section:hover {
+    transform: translateY(-5px);
+}
+
+h2 {
+    font-family: 'Roboto', sans-serif;
+    color: #00ff88;
+    margin-bottom: 15px;
+}
+
+.description {
+    font-size: 1.1em;
+    color: #b0b0b0;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.description strong {
+    color: #00ff88;
+}
+
+/* Signal Container and Bits (Common Styles - Modified for wider bits) */
+.signal-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    background: #3a3a3a;
+    padding: 30px;
+    border-radius: 10px;
+    position: relative;
+    width: 100%;
+    min-height: 200px;
+    box-sizing: border-box;
+    overflow: hidden;
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+
+.signal-row {
+    display: flex;
+    align-items: center;
+    height: 120px; /* Further increased height to accommodate high/low bit states */
+    position: relative;
+    margin-bottom: 10px; /* Add some bottom margin for better spacing */
+}
+
+.signal-label {
+    width: 120px; /* Wider label area */
+    font-weight: 600;
+    color: #b0b0b0;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: right; /* Align text to the right in label area */
+    padding-right: 10px; /* Add some padding for spacing */
+}
+
+.signal-bits {
+    display: flex;
+    flex: 1;
+    margin-left: 130px; /* Increased margin to accommodate wider label */
+    align-items: center; /* Vertically center bits in row */
+    min-height: 70px;  /* Ensure space for bits in both high and low states */
+    flex-wrap: wrap; /* Allow bits to wrap to next line if needed */
+    justify-content: flex-start; /* Align bits to the start of the container */
+    min-width: 0; /* Allow container to shrink below content size */
+}
+
+.bit {
+    width: 50px;
+    height: 70px;
+    line-height: 70px;
+    text-align: center;
+    border: 2px solid #555;
+    border-radius: 8px;
+    margin: 5px 4px;
+    background: #2a2a2a;
+    font-size: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+    transition: transform 0.3s ease, background-color 0.3s, border-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.bit.low {
+    transform: translateY(30px); /* Increased translateY for taller bits */
+    background: #2a2a2a;
+    border-color: #555;
+    color: #b0b0b0;
+}
+
+.bit.high {
+    transform: translateY(-30px); /* Increased translateY for taller bits */
+    background: #00ff88;
+    color: #000;
+    border-color: #00ff88;
+    box-shadow: 0 4px 8px rgba(0, 255, 136, 0.4);
+}
+
+.bit.connection::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 60px; /* Increased height to connect to taller bits */
+    background: #facc15;
+    top: -30px;     /* Adjust top to start from top of taller bits */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s, height 0.3s;
+}
+
+.bit.connection.visible::after {
+    opacity: 1;
+}
+
+/* Controls - No Changes Needed */
+.controls {
+    margin-top: 25px;
+    text-align: center;
+}
+
+button {
+    padding: 12px 25px;
+    margin: 0 10px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #00ff88, #00cc66);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #00cc66, #009944);
+    transform: scale(1.05);
+}
+
+/* Calculation Steps - No Changes Needed */
+.calculation-steps {
+    background: #3a3a3a;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    display: none;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.calculation-steps.visible {
+    display: block;
+}
+
+.calculation-steps p {
+    margin: 10px 0;
+    font-family: 'Roboto Mono', monospace;
+    color: #b0b0b0;
+    transition: color 0.3s;
+}
+
+.calculation-steps p.step-highlight {
+    color: #00ff88;
+    font-weight: bold;
+}
+
+/* Animations - No Changes Needed */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Square Wave Visualization - No Changes Needed */
+.wave-container {
+    background: #2a2a2a;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    position: relative; /* Added for label positioning */
+}
+
+.square-wave {
+    margin: 10px 0;
+    display: block; /* Ensure SVG takes full width */
+}
+
+.wave-label {
+    position: absolute;
+    color: #b0b0b0;
+    font-size: 0.8em;
+    pointer-events: none; /* Prevent labels from interfering with mouse events */
+}
+
+.x-label {
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 100%; /* Ensure label centers correctly for longer text */
+}
+
+.y-label {
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    transform-origin: top left;
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+
+/* Back to Top Button - No Changes Needed */
+#back-to-top {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99;
+    border: none;
+    outline: none;
+    background-color: #1e3a8a;
+    color: white;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 50%;
+    font-size: 18px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s;
+}
+
+#back-to-top:hover {
+    background-color: #3b82f6;
+}
+
+/* I2C ACK/NACK Visualization - No Changes Needed */
+.ack-container { /* ... styles for ack-container ... */ }
+.ack-title { /* ... styles for ack-title ... */ }
+.ack-row { /* ... styles for ack-row ... */ }
+.ack-label { /* ... styles for ack-label ... */ }
+.ack-value { /* ... styles for ack-value ... */ }
+.ack-meaning { /* ... styles for ack-meaning ... */ }
+.ack-usage { /* ... styles for ack-usage ... */ }
+.i2c-section-title { /* ... styles for i2c-section-title ... */ }
+
+/* SPI Timeline - No Changes Needed */
+.spi-timeline { /* ... styles for spi-timeline ... */ }
+.timeline-marker { /* ... styles for timeline-marker ... */ }
+.timeline-marker.active { /* ... styles for timeline-marker.active ... */ }
+.read-counter { /* ... styles for read-counter ... */ }
+
+/* Problem 8: ADC Maximum Quantization Error (Improved CSS) */
+.quantization-staircase { /* ... styles for quantization-staircase ... */ }
+.staircase-levels { /* ... styles for staircase-levels ... */ }
+.stair-step { /* ... styles for stair-step ... */ }
+.analog-input-line, .quantized-output-line { /* ... styles for analog-input-line, quantized-output-line ... */ }
+.analog-input-line.analog { /* ... styles for analog-input-line.analog ... */ }
+.quantized-output-line { /* ... styles for quantized-output-line ... */ }
+.quantized-output-line.quantized { /* ... styles for quantized-output-line.quantized ... */ }
+#analog-input-line { /* ... styles for #analog-input-line ... */ }
+#quantized-output-line { /* ... styles for #quantized-output-line ... */ }
+.quantized-output-line .output-label { /* ... styles for .quantized-output-line .output-label ... */ }
+.error-arrow { /* ... styles for error-arrow ... */ }
+.error-arrow.error { /* ... styles for error-arrow.error ... */ }
+.error-arrow .error-label { /* ... styles for .error-arrow .error-label ... */ }
+.error-value-text { /* ... styles for error-value-text ... */ }
+
+
+/* Problem 6: ADC Sampling Rate Statements (Improved CSS) */
+.sine-wave-container { /* ... styles for sine-wave-container ... */ }
+.original-wave, .sample-points, .reconstructed-wave { /* ... styles for .original-wave, .sample-points, .reconstructed-wave ... */ }
+.original-wave .sine-wave { /* ... styles for .original-wave .sine-wave ... */ }
+.reconstructed-wave.aliased .sine-wave { /* ... styles for .reconstructed-wave.aliased .sine-wave ... */ }
+.reconstructed-wave.correct .sine-wave { /* ... styles for .reconstructed-wave.correct .sine-wave ... */ }
+.sample-points { /* ... styles for .sample-points ... */ }
+.sample-points::before, .sample-points::after { /* ... styles for .sample-points::before, .sample-points::after ... */ }
+.sample-points.undersampled::before { /* ... styles for .sample-points.undersampled::before ... */ }
+.sample-points.nyquist::before, .sample-points.nyquist::after { /* ... styles for .sample-points.nyquist::before, .sample-points.nyquist::after ... */ }
+@keyframes undersample-points { /* ... keyframes for undersample-points ... */ }
+@keyframes nyquist-points { /* ... keyframes for nyquist-points ... */ }
+.sampling-rate-label { /* ... styles for .sampling-rate-label ... */ }
+.original-wave .wave-label.original,
+.sample-points .wave-label.samples,
+.reconstructed-wave .wave-label.reconstructed { /* ... styles for .original-wave .wave-label.original, .sample-points .wave-label.samples, .reconstructed-wave .wave-label.reconstructed ... */ }
+
+
+/* Responsive adjustments - No Changes Needed */
+@media (max-width: 1200px) { /* ... responsive adjustments for 1200px width ... */ }
+@media (max-width: 768px) {
+    .navbar a {
+        float: none;
+        display: block;
+        text-align: left;
+    }
+    h1 { font-size: 2em; }
+    .section { padding: 20px; }
+    .bit {
+        width: 40px;
+        height: 50px;
+        line-height: 50px;
+        font-size: 14px;
+        margin: 4px 2px;
+    }
+    .signal-label {
+        width: 80px;
+        font-size: 14px;
+    }
+    .signal-bits {
+        margin-left: 90px;
+    }
+    .bit.low { transform: translateY(25px); }
+    .bit.high { transform: translateY(-25px); }
+    .bit.connection::after { height: 50px; }
+    .signal-row { height: 100px; }
+}

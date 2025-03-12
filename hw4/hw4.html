@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECE362 HW4 Study Animations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="../index.html">Home</a>
+        <a href="../hw2/hw2.html">HW2</a>
+        <a href="../hw3/hw3.html">HW3</a>
+        <a href="hw4.html">HW4</a>
+        <a href="../hw5/hw5.html">HW5</a>
+        <a href="../hw6/hw6.html">HW6</a>
+        <a href="hw7.html">HW7</a>
+    </div>
+    <h1>ECE362 HW4 Study Animations</h1>
+    <div class="content">
+        <!-- Problem 1 -->
+        <div class="section" id="dma-statements-section">
+            <h2>Problem 1: DMA Controller Statements</h2>
+            <div class="description">
+                Select all statements true for Direct Memory Access Controller. The animation highlights the correct statements.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Options</span>
+                    <div class="signal-bits" id="dma-statements-options"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="dma-statements-steps">
+                <p>a: Processor involvement - Incorrect</p>
+                <p>b: Bus access - Correct</p>
+                <p>c: Flow-through same cycle - Incorrect</p>
+                <p>d: Flow-through memory transfer - Incorrect</p>
+                <p>e: Multi-channel - Correct</p>
+            </div>
+            <div class="controls">
+                <button id="dma-statements-animate-btn">Animate</button>
+                <button id="dma-statements-steps-btn">Show Steps</button>
+                <button id="dma-statements-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 2 -->
+        <div class="section" id="q44-binary-section">
+            <h2>Problem 2: Q4.4 Fixed Point Binary Fraction</h2>
+            <div class="description">
+                What is the unsigned Q4.4 fixed point binary fraction representation of 15.1897? The animation shows the binary equivalent (11110011).
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Binary</span>
+                    <div class="signal-bits" id="q44-binary-bits"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="q44-binary-steps">
+                <p>Integer part: 15 (1111)</p>
+                <p>Fractional part: 0.1875 (0011)</p>
+                <p>Q4.4: 11110011</p>
+            </div>
+            <div class="controls">
+                <button id="q44-binary-animate-btn">Animate</button>
+                <button id="q44-binary-steps-btn">Show Steps</button>
+                <button id="q44-binary-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 3 -->
+        <div class="section" id="dac-section">
+            <h2>Problem 3: DAC Output (Right Aligned)</h2>
+            <div class="description">
+                A 12-bit DAC with Vref=3V reads 0x08EA (right-aligned). The animation converts the rightmost 12 bits (2282) to a voltage of 1.671V.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Bits</span>
+                    <div class="signal-bits" id="dac-bits"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="dac-steps">
+                <p>0x08EA (right 12 bits) = 2282</p>
+                <p>Vout = 3 * 2282 / (2^12 - 1)</p>
+                <p>Vout = 1.671 V</p>
+            </div>
+            <div class="controls">
+                <button id="dac-animate-btn">Animate</button>
+                <button id="dac-steps-btn">Show Steps</button>
+                <button id="dac-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 4 -->
+        <div class="section" id="dac-left-aligned-section">
+            <h2>Problem 4: DAC Output (Left Aligned)</h2>
+            <div class="description">
+                A 12-bit DAC with Vref=3V reads 0x08EA (left-aligned). The animation converts the leftmost 12 bits (142) to a voltage of 0.104V.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Bits</span>
+                    <div class="signal-bits" id="dac-left-aligned-bits"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="dac-left-aligned-steps">
+                <p>0x08EA (left 12 bits) = 142</p>
+                <p>Vout = 3 * 142 / (2^12 - 1)</p>
+                <p>Vout = 0.104 V</p>
+            </div>
+            <div class="controls">
+                <button id="dac-left-aligned-animate-btn">Animate</button>
+                <button id="dac-left-aligned-steps-btn">Show Steps</button>
+                <button id="dac-left-aligned-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 5 -->
+        <div class="section" id="dac-error-section">
+            <h2>Problem 5: 1-bit DAC Maximum Error</h2>
+            <div class="description">
+                In a 1-bit DAC, if R value can vary +/-10%, what is the maximum error on Vout? The animation highlights 0.05 Vref.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Options</span>
+                    <div class="signal-bits" id="dac-error-options"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="dac-error-steps">
+                <p>R1 = 1.1, R2 = 0.9</p>
+                <p>Vout = Vref * 0.9 / (1.1 + 0.9) = 0.45 Vref</p>
+                <p>Error = |0.45 Vref - 0.5 Vref| = 0.05 Vref</p>
+            </div>
+            <div class="controls">
+                <button id="dac-error-animate-btn">Animate</button>
+                <button id="dac-error-steps-btn">Show Steps</button>
+                <button id="dac-error-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 6 -->
+        <div class="section" id="adc-sampling-rate-section">
+            <h2>Problem 6: ADC Sampling Rate Statements</h2>
+            <div class="description">
+                Which statement is true regarding the ADC sampling rate? The animation highlights the Nyquist theorem.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Options</span>
+                    <div class="signal-bits" id="adc-sampling-rate-options"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="adc-sampling-rate-steps">
+                <p>a: Clock frequency - Incorrect</p>
+                <p>b: Nyquist theorem - Correct</p>
+                <p>c: Minimum time - Incorrect</p>
+                <p>d: High sampling rate - Incorrect</p>
+            </div>
+            <div class="controls">
+                <button id="adc-sampling-rate-animate-btn">Animate</button>
+                <button id="adc-sampling-rate-steps-btn">Show Steps</button>
+                <button id="adc-sampling-rate-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 7 -->
+        <div class="section" id="adc-cycles-section">
+            <h2>Problem 7: ADC Total Cycles</h2>
+            <div class="description">
+                A 12-bit ADC has a sampling time of 10 cycles. The animation shows the total cycles for one conversion as 22 (10 sampling + 12 conversion).
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Cycles</span>
+                    <div class="signal-bits" id="adc-cycles"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="adc-cycles-steps">
+                <p>Sampling: 10 cycles</p>
+                <p>Conversion: 12 cycles</p>
+                <p>Total: 10 + 12 = 22 cycles</p>
+            </div>
+            <div class="controls">
+                <button id="adc-cycles-animate-btn">Animate</button>
+                <button id="adc-cycles-steps-btn">Show Steps</button>
+                <button id="adc-cycles-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 8 -->
+        <div class="section" id="adc-quantization-error-section">
+            <h2>Problem 8: ADC Maximum Quantization Error</h2>
+            <div class="description">
+                If Vref = 6V and ADC resolution is 12 bits, what is the max quantization error? The animation highlights 0.73 mV.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Options</span>
+                    <div class="signal-bits" id="adc-quantization-error-options"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="adc-quantization-error-steps">
+                <p>LSB = 6 / (2^12 - 1)</p>
+                <p>Max Error = 1/2 * LSB</p>
+                <p>Max Error = 0.73 mV</p>
+            </div>
+            <div class="controls">
+                <button id="adc-quantization-error-animate-btn">Animate</button>
+                <button id="adc-quantization-error-steps-btn">Show Steps</button>
+                <button id="adc-quantization-error-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 9 -->
+        <div class="section" id="adc-resolution-bits-section">
+            <h2>Problem 9: ADC Bits of Resolution</h2>
+            <div class="description">
+                How many bits of resolution are required for an ADC to distinguish 1µV over a range from 0V to 6V? The animation shows 23 bits.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Values</span>
+                    <div class="signal-bits" id="adc-resolution-bits"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="adc-resolution-bits-steps">
+                <p>Range: 6V</p>
+                <p>Resolution: 1µV</p>
+                <p>Bits Needed: 23</p>
+            </div>
+            <div class="controls">
+                <button id="adc-resolution-bits-animate-btn">Animate</button>
+                <button id="adc-resolution-bits-steps-btn">Show Steps</button>
+                <button id="adc-resolution-bits-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 10 -->
+        <div class="section" id="adc-guess-section">
+            <h2>Problem 10: ADC Guess After 6 Cycles</h2>
+            <div class="description">
+                A 12-bit ADC takes 14 cycles (2 sampling + 12 conversion) with Vref=10V for 8.225V input. After 6 cycles, the guess is 8.125V. The animation shows a 4-bit resolution.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Bits</span>
+                    <div class="signal-bits" id="adc-guess"></div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="adc-guess-steps">
+                <p>6 cycles = 2 sampling + 4 conversion</p>
+                <p>After 4 bits: 1101 (0.8125 * 10V)</p>
+                <p>Guess: 8.125V</p>
+            </div>
+            <div class="controls">
+                <button id="adc-guess-animate-btn">Animate</button>
+                <button id="adc-guess-steps-btn">Show Steps</button>
+                <button id="adc-guess-reset-btn">Reset</button>
+            </div>
+        </div>
+    </div>
+    <div id="back-to-top" onclick="scrollToTop()">↑</div>
+    <script src="script.js"></script>
+</body>
+</html>

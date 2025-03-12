@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECE362 HW3 Study Animations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css"> <!-- Assuming you have styles.css from previous version -->
+    <style>
+         /* Add or override styles in this block if needed. */
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="../index.html">Home</a>
+        <a href="../hw2/hw2.html">HW2</a>
+        <a href="hw3.html">HW3</a>
+        <a href="../hw4/hw4.html">HW4</a>
+        <a href="../hw5/hw5.html">HW5</a>
+        <a href="../hw6/hw6.html">HW6</a>
+    </div>
+    <h1>ECE362 HW3 Study Animations</h1>
+    <div class="content">
+
+        <!-- Problem 1: SysTick Limitations -->
+        <div class="section" id="systick-limitations-section">
+            <h2>Problem 1: SysTick Limitations</h2>
+            <div class="description">
+                Which cannot be implemented using SysTick? Animation explains why measuring <span class="tooltip" data-tooltip="Flash memory latency: Time taken to access data from flash memory.">flash memory latency</span> (option c) is problematic due to SysTick's granularity.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Options</span>
+                    <div class="signal-bits" id="systick-limitations-options">
+                        <div>
+                            <span class="bit low">a</span>
+                            <span class="bit low">b</span>
+                            <span class="bit low">c</span>
+                            <span class="bit low">d</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="systick-limitations-steps">
+                <p>SysTick measures core clock periods.</p>
+                <p><span class="step-highlight">Flash memory latency</span> is seen as 2 clock cycles by SysTick.</p>
+                <p>Insufficient granularity for accurate latency measurement.</p>
+            </div>
+            <div class="controls">
+                <button id="systick-limitations-animate-btn">Animate</button>
+                <button id="systick-limitations-steps-btn">Show Steps</button>
+                <button id="systick-limitations-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 2: Timer Prescaler and Reload Values -->
+        <div class="section" id="timer-config-section">
+            <h2>Problem 2: Timer Configuration for 1s Interval</h2>
+            <div class="description">
+                With a 100kHz clock, which <span class="tooltip" data-tooltip="Prescaler: Divides the clock frequency.">prescaler</span> and <span class="tooltip" data-tooltip="Reload: Value to reset the timer counter to.">reload</span> values give a 1s timer interval? Animation highlights the correct option using the formula.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Options</span>
+                    <div class="signal-bits" id="timer-config-options">
+                        <div>
+                            <span class="bit low">PRE=100-1,<br>RELOAD=1000-1</span>
+                            <span class="bit low">PRE=100000-1,<br>RELOAD=1-1</span>
+                            <span class="bit low">PRE=10000-1,<br>RELOAD=10-1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="timer-config-steps">
+                <p>Formula:  f<sub>timer update</sub> = f<sub>clock</sub> / ((1 + RELOAD) * (1 + PRESCALER))</p>
+                <p>Option 1: (1 + 999) * (1 + 99) = 1000 * 100 = 100000. f<sub>timer update</sub> = 10<sup>5</sup> / 10<sup>5</sup> = <span class="step-highlight">1 Hz</span> (1s)</p>
+                <p>Option 2: Reload=0 is invalid (timer blocked)</p>
+                <p>Option 3: (1 + 9) * (1 + 9999) = 10 * 10000 = 100000. f<sub>timer update</sub> = 10<sup>5</sup> / 10<sup>5</sup> = <span class="step-highlight">1 Hz</span> (1s)</p>
+            </div>
+            <div class="controls">
+                <button id="timer-config-animate-btn">Animate</button>
+                <button id="timer-config-steps-btn">Show Steps</button>
+                <button id="timer-config-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 3: Interrupt Interval Calculation -->
+        <div class="section" id="interrupt-interval-section">
+            <h2>Problem 3: Interrupt Interval with Prescaler and Reload</h2>
+            <div class="description">
+                100kHz clock, RELOAD=499, PRESCALER=0. What's the interrupt interval? Animation calculates and shows the interval.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Options</span>
+                    <div class="signal-bits" id="interrupt-interval-options">
+                        <div>
+                            <span class="bit low">a) 2.5 ms</span>
+                            <span class="bit low">b) 5 ms</span>
+                            <span class="bit low">c) 10 ms</span>
+                            <span class="bit low">d) 7 ms</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="interrupt-interval-steps">
+                <p>Formula:  f<sub>timer update</sub> = f<sub>clock</sub> / ((1 + RELOAD) * (1 + PRESCALER))</p>
+                <p>f<sub>timer update</sub> = 10<sup>5</sup> Hz / ((1 + 499) * (1 + 0)) = 10<sup>5</sup> Hz / 500 = 200 Hz</p>
+                <p>Interval = 1 / f<sub>timer update</sub> = 1 / 200 Hz = 0.005 s = <span class="step-highlight">5 ms</span></p>
+            </div>
+            <div class="controls">
+                <button id="interrupt-interval-animate-btn">Animate</button>
+                <button id="interrupt-interval-steps-btn">Show Steps</button>
+                <button id="interrupt-interval-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 4: Keypad Scanning -->
+        <div class="section" id="keypad-scanning-section">
+            <h2>Problem 4: 4x4 Keypad Scanning</h2>
+            <div class="description">
+                4x4 keypad scanned using timer interrupts. Analyze key detection scenarios. Animation illustrates row-by-row scanning and key detection.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Keypad</span>
+                    <div class="signal-bits" id="keypad-scanning-keypad">
+                        <!-- Keypad visualization will be generated here -->
+                    </div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="keypad-scanning-steps">
+                <p>4.1: Keys 1 & 2 pressed - <span class="step-highlight">True</span> (same row, same ISR iteration)</p>
+                <p>4.2: Keys 1 & 4 pressed - <span class="step-highlight">False</span> (different rows, different ISR iterations)</p>
+                <p>4.3: Unstable bits before solid read - <span class="step-highlight">7 bits</span> (calculated based on bounce time and scan rate)</p>
+            </div>
+            <div class="controls">
+                <button id="keypad-scanning-animate-btn">Animate</button>
+                <button id="keypad-scanning-steps-btn">Show Steps</button>
+                <button id="keypad-scanning-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 5: History Byte for Debouncing -->
+        <div class="section" id="history-byte-section">
+            <h2>Problem 5: History Byte for Key Debouncing</h2>
+            <div class="description">
+                Keypad debouncing using a history byte.  Analyze history byte values after button press and bouncing. Animation shows the history byte shifting and unstable bits.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">History Byte</span>
+                    <div class="signal-bits" id="history-byte-bits">
+                        <div>
+                            <span class="bit low">0</span>
+                            <span class="bit low">0</span>
+                            <span class="bit low">0</span>
+                            <span class="bit low">0</span>
+                            <span class="bit low">0</span>
+                            <span class="bit low">0</span>
+                            <span class="bit low">0</span>
+                            <span class="bit low">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="history-byte-steps">
+                <p>Scan every 1ms, bounce 14ms (4 scans).</p>
+                <p>At t=25ms (7 scans), 7 bits in history.</p>
+                <p>First unstable bit is 1, previous steady state 0.</p>
+                <p>Possible values: <span class="step-highlight">01XXX111</span> (X=don't care)</p>
+            </div>
+            <div class="controls">
+                <button id="history-byte-animate-btn">Animate</button>
+                <button id="history-byte-steps-btn">Show Steps</button>
+                <button id="history-byte-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 6: 8-Segment Display Minimum Frequency -->
+        <div class="section" id="display-frequency-section">
+            <h2>Problem 6: Minimum Frequency for 8-Segment Displays</h2>
+            <div class="description">
+                8-segment displays can be off for 80ms without flicker. Find minimum switching frequency for 50 displays. Animation calculates and shows frequency.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Frequency</span>
+                    <div class="signal-bits" id="display-frequency-hz">
+                        <div>
+                            <span class="bit low">0</span>
+                            <span class="bit low">0</span>
+                            <span class="bit low">0</span>
+                        </div>
+                        <span class="bit">Hz</span>
+                    </div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="display-frequency-steps">
+                <p>Total off time: 80 ms.</p>
+                <p>Time per display: 80 ms / 50 displays = 1.6 ms/display</p>
+                <p>Minimum frequency = 1 / 1.6 ms = <span class="step-highlight">625 Hz</span></p>
+            </div>
+            <div class="controls">
+                <button id="display-frequency-animate-btn">Animate</button>
+                <button id="display-frequency-steps-btn">Show Steps</button>
+                <button id="display-frequency-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 7: Multiplexing 8-Segment Displays - Pins -->
+        <div class="section" id="multiplexing-pins-section">
+            <h2>Problem 7: Microcontroller Pins for Multiplexing Displays</h2>
+            <div class="description">
+                Minimum pins to drive fifty 8-segment displays using multiplexing. Animation illustrates pin calculation based on display count.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Pins Needed</span>
+                    <div class="signal-bits" id="multiplexing-pins-count">
+                        <div>
+                            <span class="bit low">0</span>
+                            <span class="bit low">0</span>
+                        </div>
+                        <span class="bit">pins</span>
+                    </div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="multiplexing-pins-steps">
+                <p>Pins = log<sub>2</sub>(n) + 8, where n = number of displays.</p>
+                <p>Pins = log<sub>2</sub>(50) + 8 ≈ 5.64 + 8 ≈ 13.64</p>
+                <p>Round up to nearest integer: <span class="step-highlight">14 pins</span></p>
+            </div>
+            <div class="controls">
+                <button id="multiplexing-pins-animate-btn">Animate</button>
+                <button id="multiplexing-pins-steps-btn">Show Steps</button>
+                <button id="multiplexing-pins-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 8: Multiplexing Two Arrays -->
+        <div class="section" id="two-arrays-section">
+            <h2>Problem 8: Pins for Two Identical Display Arrays</h2>
+            <div class="description">
+                Pins needed for two arrays of fifty 8-segment displays each, showing identical information. Animation explains why pin count remains the same as problem 7.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Pins Needed</span>
+                    <div class="signal-bits" id="two-arrays-pins-count">
+                        <div>
+                            <span class="bit low">0</span>
+                            <span class="bit low">0</span>
+                        </div>
+                        <span class="bit">pins</span>
+                    </div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="two-arrays-steps">
+                <p>Displaying identical information means <span class="step-highlight">same addressing logic</span>.</p>
+                <p>Tie the second array in parallel to the first.</p>
+                <p>No additional pins needed. Still <span class="step-highlight">14 pins</span>.</p>
+            </div>
+            <div class="controls">
+                <button id="two-arrays-animate-btn">Animate</button>
+                <button id="two-arrays-steps-btn">Show Steps</button>
+                <button id="two-arrays-reset-btn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Problem 9: 8-bit Counter Timer Interval -->
+        <div class="section" id="counter-timer-section">
+            <h2>Problem 9: 8-bit Counter Timer Interval</h2>
+            <div class="description">
+                8-bit counter timer, 100kHz clock, sawtooth waveform. Find maximum interval (x in ms). Animation calculates interval based on prescaler and counter size.
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">Interval (x)</span>
+                    <div class="signal-bits" id="counter-timer-interval-ms">
+                        <div>
+                            <span class="bit low">0</span>
+                            <span class="bit low">0</span>
+                            <span class="bit low">0</span>
+                            <span class="bit low">0</span>
+                        </div>
+                        <span class="bit">ms</span>
+                    </div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="counter-timer-steps">
+                <p>Prescaler = 2-1 = 1 (increments every 2nd clock edge).</p>
+                <p>8-bit counter, max values = 2<sup>8</sup> = 256, RELOAD = 256 - 1 = 255.</p>
+                <p>f<sub>timer update</sub> = 10<sup>5</sup> Hz / ((1 + 255) * (1 + 1)) = 10<sup>5</sup> Hz / 512 ≈ 195.3 Hz</p>
+                <p>Interval = 1 / 195.3 Hz ≈ 0.00512 s = <span class="step-highlight">5.12 ms</span></p>
+            </div>
+            <div class="controls">
+                <button id="counter-timer-animate-btn">Animate</button>
+                <button id="counter-timer-steps-btn">Show Steps</button>
+                <button id="counter-timer-reset-btn">Reset</button>
+            </div>
+        </div>
+
+
+    </div>
+    <div id="back-to-top" onclick="scrollToTop()">↑</div>
+
+    <script>
+        // Utility Functions (from HW2 - keep these)
+        function toggleSteps(steps, btn) { /* ... */ }
+        function highlightSteps(steps) { /* ... */ }
+        function resetBits(bitContainer, initialText) { /* ... */ } // Ensure this is in your script
+        window.onscroll = function() { scrollFunction() };
+        function scrollFunction() { /* ... */ }
+        function scrollToTop() { /* ... */ }
+
+
+        // Problem 1: SysTick Limitations Animation
+        function initSysTickLimitationsAnimation() {
+            const optionsBits = document.getElementById('systick-limitations-options');
+            const steps = document.getElementById('systick-limitations-steps');
+            const animateBtn = document.getElementById('systick-limitations-animate-btn');
+            const stepsBtn = document.getElementById('systick-limitations-steps-btn');
+            const resetBtn = document.getElementById('systick-limitations-reset-btn');
+            const optionBitsGroup = optionsBits.children[0];
+
+            function animate() {
+                resetBits(optionsBits, '');
+                ['a', 'b', 'c', 'd'].forEach((option, index) => {
+                    optionBitsGroup.children[index].textContent = option;
+                });
+
+                setTimeout(() => {
+                    optionBitsGroup.children[2].classList.remove('low');
+                    optionBitsGroup.children[2].classList.add('high', 'connection');
+                    setTimeout(() => optionBitsGroup.children[2].classList.add('visible'), 100)
+                }, 500);
+                setTimeout(() => highlightSteps(steps), 1000);
+            }
+
+            function reset() {
+                resetBits(optionsBits, '');
+                ['a', 'b', 'c', 'd'].forEach((option, index) => {
+                    optionBitsGroup.children[index].textContent = option;
+                });
+                steps.classList.remove('visible');
+                stepsBtn.textContent = 'Show Steps';
+            }
+
+            animateBtn.addEventListener('click', animate);
+            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+            resetBtn.addEventListener('click', reset);
+            reset();
+        }
+
+        // Problem 2: Timer Configuration Animation
+        function initTimerConfigAnimation() {
+            const optionsBits = document.getElementById('timer-config-options');
+            const steps = document.getElementById('timer-config-steps');
+            const animateBtn = document.getElementById('timer-config-animate-btn');
+            const stepsBtn = document.getElementById('timer-config-steps-btn');
+            const resetBtn = document.getElementById('timer-config-reset-btn');
+            const optionBitsGroup = optionsBits.children[0];
+
+
+            function animate() {
+                resetBits(optionsBits, '');
+
+                setTimeout(() => {
+                    optionBitsGroup.children[0].classList.remove('low');
+                    optionBitsGroup.children[0].classList.add('high', 'connection');
+                    setTimeout(() => optionBitsGroup.children[0].classList.add('visible'), 100)
+                }, 500);
+                 setTimeout(() => {
+                    optionBitsGroup.children[2].classList.remove('low');
+                    optionBitsGroup.children[2].classList.add('high', 'connection');
+                     setTimeout(() => optionBitsGroup.children[2].classList.add('visible'), 100)
+                }, 1000);
+                setTimeout(() => highlightSteps(steps), 1500);
+            }
+
+            function reset() {
+                resetBits(optionsBits, '');
+                steps.classList.remove('visible');
+                stepsBtn.textContent = 'Show Steps';
+            }
+
+            animateBtn.addEventListener('click', animate);
+            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+            resetBtn.addEventListener('click', reset);
+            reset();
+        }
+
+        // Problem 3: Interrupt Interval Animation
+        function initInterruptIntervalAnimation() {
+            const optionsBits = document.getElementById('interrupt-interval-options');
+            const steps = document.getElementById('interrupt-interval-steps');
+            const animateBtn = document.getElementById('interrupt-interval-animate-btn');
+            const stepsBtn = document.getElementById('interrupt-interval-steps-btn');
+            const resetBtn = document.getElementById('interrupt-interval-reset-btn');
+            const optionBitsGroup = optionsBits.children[0];
+
+
+            function animate() {
+                resetBits(optionsBits, '');
+
+                setTimeout(() => {
+                    optionBitsGroup.children[1].classList.remove('low');
+                    optionBitsGroup.children[1].classList.add('high', 'connection');
+                    setTimeout(() => optionBitsGroup.children[1].classList.add('visible'), 100)
+                }, 500);
+                setTimeout(() => highlightSteps(steps), 1000);
+            }
+
+            function reset() {
+                resetBits(optionsBits, '');
+                steps.classList.remove('visible');
+                stepsBtn.textContent = 'Show Steps';
+            }
+
+            animateBtn.addEventListener('click', animate);
+            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+            resetBtn.addEventListener('click', reset);
+            reset();
+        }
+
+
+        // Problem 4: Keypad Scanning Animation (Conceptual - you'll need to build keypad visualization)
+        function initKeypadScanningAnimation() {
+            const keypadBits = document.getElementById('keypad-scanning-keypad');
+            const steps = document.getElementById('keypad-scanning-steps');
+            const animateBtn = document.getElementById('keypad-scanning-animate-btn');
+            const stepsBtn = document.getElementById('keypad-scanning-steps-btn');
+            const resetBtn = document.getElementById('keypad-scanning-reset-btn');
+
+            function createKeypad() {
+                let keypadHTML = '<div>';
+                const keys = ['1', '2', '3', 'A', '4', '5', '6', 'B', '7', '8', '9', 'C', '*', '0', '#', 'D'];
+                for (let i = 0; i < keys.length; i++) {
+                    keypadHTML += `<span class="bit low keypad-key" data-key="${keys[i]}">${keys[i]}</span>`;
+                    if ((i + 1) % 4 === 0) {
+                        keypadHTML += '</div><div>'; // Start new row
+                    }
+                }
+                keypadHTML += '</div>';
+                keypadBits.innerHTML = keypadHTML;
+            }
+
+
+            function animate() {
+                reset();
+                createKeypad(); // Generate keypad if not already there.
+                 const keypadKeys = [...keypadBits.querySelectorAll('.keypad-key')];
+
+
+                // Example animation (you'll need to refine this to show row scanning)
+                setTimeout(() => {
+                    keypadKeys[0].classList.remove('low'); // Highlight key '1'
+                    keypadKeys[0].classList.add('high', 'connection');
+                     setTimeout(() => keypadKeys[0].classList.add('visible'), 100);
+                }, 500);
+                 setTimeout(() => {
+                    keypadKeys[1].classList.remove('low'); // Highlight key '2'
+                    keypadKeys[1].classList.add('high', 'connection');
+                     setTimeout(() => keypadKeys[1].classList.add('visible'), 100);
+                }, 1000);
+
+
+                setTimeout(() => highlightSteps(steps), 1500);
+            }
+
+            function reset() {
+                 if(keypadBits.querySelector('.keypad-key')) {
+                     const keypadKeys = [...keypadBits.querySelectorAll('.keypad-key')];
+                     keypadKeys.forEach(key => {
+                        key.classList.remove('high', 'connection', 'visible');
+                        key.classList.add('low');
+                     });
+                 }
+
+                steps.classList.remove('visible');
+                stepsBtn.textContent = 'Show Steps';
+            }
+
+            animateBtn.addEventListener('click', animate);
+            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+            resetBtn.addEventListener('click', reset);
+            reset();
+        }
+
+
+        // Problem 5: History Byte Animation
+        function initHistoryByteAnimation() {
+            const historyBits = document.getElementById('history-byte-bits');
+            const steps = document.getElementById('history-byte-steps');
+            const animateBtn = document.getElementById('history-byte-animate-btn');
+            const stepsBtn = document.getElementById('history-byte-steps-btn');
+            const resetBtn = document.getElementById('history-byte-reset-btn');
+            const historyBitGroup = historyBits.children[0];
+
+
+            function animate() {
+                resetBits(historyBits, '0');
+
+                const targetValues = ['0', '1', 'X', 'X', 'X', '1', '1', '1']; // Example target values
+                setTimeout(() => {
+                    for (let i = 0; i < targetValues.length; i++) {
+                        if(historyBitGroup.children[i]) {
+                            historyBitGroup.children[i].classList.remove('low');
+                            historyBitGroup.children[i].classList.add('high'); // Or keep 'low' if 0
+                            historyBitGroup.children[i].textContent = targetValues[i]; // Set value
+                        }
+
+                    }
+                }, 500);
+
+
+                setTimeout(() => highlightSteps(steps), 1000);
+            }
+
+            function reset() {
+                resetBits(historyBits, '0');
+                steps.classList.remove('visible');
+                stepsBtn.textContent = 'Show Steps';
+            }
+
+            animateBtn.addEventListener('click', animate);
+            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+            resetBtn.addEventListener('click', reset);
+            reset();
+        }
+
+        // Problem 6: Display Frequency Animation
+        function initDisplayFrequencyAnimation() {
+            const frequencyBits = document.getElementById('display-frequency-hz').querySelector('div');
+            const steps = document.getElementById('display-frequency-steps');
+            const animateBtn = document.getElementById('display-frequency-animate-btn');
+            const stepsBtn = document.getElementById('display-frequency-steps-btn');
+            const resetBtn = document.getElementById('display-frequency-reset-btn');
+
+
+            function animate() {
+                resetBits( {children: [frequencyBits]}, '0'); //Need to pass in object to match resetBits param
+                const frequencyBitGroup = frequencyBits.children;
+                const result = 625;  // Hz
+                const resultStr = result.toString();
+
+                setTimeout(() => {
+                    for (let i = 0; i < resultStr.length; i++) {
+                        if (frequencyBitGroup[i]) {
+                            frequencyBitGroup[i].classList.remove('low');
+                            frequencyBitGroup[i].classList.add('high', 'connection');
+                            frequencyBitGroup[i].textContent = resultStr[i];
+                             setTimeout(() => frequencyBitGroup[i].classList.add('visible'), 100);
+                        }
+                    }
+                }, 500);
+                setTimeout(() => highlightSteps(steps), 1500);
+            }
+
+            function reset() {
+                resetBits( {children: [frequencyBits]}, '0'); //Need to pass in object to match resetBits param
+                steps.classList.remove('visible');
+                stepsBtn.textContent = 'Show Steps';
+            }
+
+            animateBtn.addEventListener('click', animate);
+            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+            resetBtn.addEventListener('click', reset);
+            reset();
+        }
+
+        // Problem 7: Multiplexing Pins Animation
+        function initMultiplexingPinsAnimation() {
+            const pinsBits = document.getElementById('multiplexing-pins-count').querySelector('div');
+            const steps = document.getElementById('multiplexing-pins-steps');
+            const animateBtn = document.getElementById('multiplexing-pins-animate-btn');
+            const stepsBtn = document.getElementById('multiplexing-pins-steps-btn');
+            const resetBtn = document.getElementById('multiplexing-pins-reset-btn');
+            const pinsBitGroup = pinsBits.children;
+
+
+            function animate() {
+                resetBits({children: [pinsBits]}, '0'); //Need to pass in object to match resetBits param
+                const result = 14;
+                const resultStr = result.toString();
+                setTimeout(() => {
+                    for (let i = 0; i < resultStr.length; i++) {
+                        if (pinsBitGroup[i]) {
+                            pinsBitGroup[i].classList.remove('low');
+                            pinsBitGroup[i].classList.add('high', 'connection');
+                            pinsBitGroup[i].textContent = resultStr[i];
+                             setTimeout(() => pinsBitGroup[i].classList.add('visible'), 100);
+                        }
+                    }
+                }, 500);
+                setTimeout(() => highlightSteps(steps), 1000);
+            }
+
+            function reset() {
+                resetBits({children: [pinsBits]}, '0'); //Need to pass in object to match resetBits param
+                steps.classList.remove('visible');
+                stepsBtn.textContent = 'Show Steps';
+            }
+
+            animateBtn.addEventListener('click', animate);
+            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+            resetBtn.addEventListener('click', reset);
+            reset();
+        }
+
+        // Problem 8: Two Arrays Animation
+        function initTwoArraysAnimation() {
+            const pinsBits = document.getElementById('two-arrays-pins-count').querySelector('div');
+            const steps = document.getElementById('two-arrays-steps');
+            const animateBtn = document.getElementById('two-arrays-animate-btn');
+            const stepsBtn = document.getElementById('two-arrays-steps-btn');
+            const resetBtn = document.getElementById('two-arrays-reset-btn');
+             const pinsBitGroup = pinsBits.children;
+
+
+            function animate() {
+                resetBits({children: [pinsBits]}, '0'); //Need to pass in object to match resetBits param
+                const result = 14;
+                const resultStr = result.toString();
+                setTimeout(() => {
+                    for (let i = 0; i < resultStr.length; i++) {
+                        if (pinsBitGroup[i]) {
+                            pinsBitGroup[i].classList.remove('low');
+                            pinsBitGroup[i].classList.add('high', 'connection');
+                            pinsBitGroup[i].textContent = resultStr[i];
+                             setTimeout(() =>  pinsBitGroup[i].classList.add('visible'), 100);
+                        }
+                    }
+                }, 500);
+                setTimeout(() => highlightSteps(steps), 1000);
+            }
+
+            function reset() {
+                resetBits({children: [pinsBits]}, '0'); //Need to pass in object to match resetBits param
+                steps.classList.remove('visible');
+                stepsBtn.textContent = 'Show Steps';
+            }
+
+            animateBtn.addEventListener('click', animate);
+            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+            resetBtn.addEventListener('click', reset);
+            reset();
+        }
+
+        // Problem 9: Counter Timer Interval Animation
+        function initCounterTimerAnimation() {
+            const intervalBits = document.getElementById('counter-timer-interval-ms').querySelector('div');
+            const steps = document.getElementById('counter-timer-steps');
+            const animateBtn = document.getElementById('counter-timer-animate-btn');
+            const stepsBtn = document.getElementById('counter-timer-steps-btn');
+            const resetBtn = document.getElementById('counter-timer-reset-btn');
+            const intervalBitGroup = intervalBits.children;
+
+
+            function animate() {
+                resetBits({children: [intervalBits]}, '0'); //Need to pass in object to match resetBits param
+                const result = 5.12;
+                const resultStr = result.toString();
+
+                setTimeout(() => {
+                    for (let i = 0; i < resultStr.length; i++) {
+                        if (intervalBitGroup[i]) {
+                            intervalBitGroup[i].classList.remove('low');
+                            intervalBitGroup[i].classList.add('high', 'connection');
+                            intervalBitGroup[i].textContent = resultStr[i];
+                             setTimeout(() => intervalBitGroup[i].classList.add('visible'), 100);
+                        }
+                    }
+                }, 500);
+                setTimeout(() => highlightSteps(steps), 1000);
+            }
+
+            function reset() {
+                resetBits({children: [intervalBits]}, '0'); //Need to pass in object to match resetBits param
+                steps.classList.remove('visible');
+                stepsBtn.textContent = 'Show Steps';
+            }
+
+            animateBtn.addEventListener('click', animate);
+            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+            resetBtn.addEventListener('click', reset);
+            reset();
+        }
+
+
+        // Initialize animations
+        document.addEventListener('DOMContentLoaded', () => {
+            initVectorTableAnimation();
+            initIsrCallAnimation();
+            initException1Animation();
+            initException2Animation();
+            initStackAnimation();
+            initPcAnimation();
+            initPriority1Animation();
+            initPriority2Animation();
+            initCyclesAnimation();
+            initFlagAnimation();
+
+            initSysTickLimitationsAnimation();
+            initTimerConfigAnimation();
+            initInterruptIntervalAnimation();
+            initKeypadScanningAnimation();
+            initHistoryByteAnimation();
+            initDisplayFrequencyAnimation();
+            initMultiplexingPinsAnimation();
+            initTwoArraysAnimation();
+            initCounterTimerAnimation();
+        });
+
+
+        // Tooltip functionality (from HW2 - keep this)
+        document.querySelectorAll('.tooltip').forEach(tooltipElement => { /* ... */ });
+
+    </script>
+</body>
+</html>
