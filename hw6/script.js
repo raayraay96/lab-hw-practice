@@ -48,39 +48,32 @@ function highlightSteps(steps) {
     }
 }
 
+// Initialize each animation section
 function initSpiWordAnimation() {
-    const canvas = document.getElementById('spiCanvas');
-    const ctx = canvas.getContext('2d');
+    const signalBitsMOSI = document.getElementById('spi-word-mosi');
+    const signalBitsNSS = document.getElementById('spi-word-nss');
+    const signalBitsSCK = document.getElementById('spi-word-sck');
+
+    if (!signalBitsMOSI || !signalBitsNSS || !signalBitsSCK) {
+        console.error("One or more SPI word elements not found!");
+        return;
+    }
+
+    signalBitsMOSI.innerHTML = Array(15).fill('<span class="bit low">0</span>').join('');
+    signalBitsNSS.innerHTML = Array(15).fill('<span class="bit low">0</span>').join('');
+    signalBitsSCK.innerHTML = Array(15).fill('<span class="bit low">0</span>').join('');
 
     const animateBtn = document.getElementById('spi-word-animate-btn');
     const stepsBtn = document.getElementById('spi-word-steps-btn');
     const resetBtn = document.getElementById('spi-word-reset-btn');
     const steps = document.getElementById('spi-word-steps');
 
-    // Remove the bit-based elements
-    const signalBitsMOSI = document.getElementById('spi-word-mosi');
-    const signalBitsNSS = document.getElementById('spi-word-nss');
-    const signalBitsSCK = document.getElementById('spi-word-sck');
-
-    if (signalBitsMOSI) {
-        signalBitsMOSI.remove(); // Remove the element from the DOM
-    }
-    if (signalBitsNSS) {
-        signalBitsNSS.remove();
-    }
-    if (signalBitsSCK) {
-        signalBitsSCK.remove();
-    }
-
     animateBtn?.addEventListener('click', () => {
-        drawSpiSignals(ctx);
+        animateSpiWord([signalBitsMOSI, signalBitsNSS, signalBitsSCK], steps, stepsBtn);
     });
 
     stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));
-    resetBtn?.addEventListener('click', () => {
-        ctx.clearRect(0, 0, 800, 200); // Clear the canvas on reset
-        hideSteps(steps, stepsBtn);
-    });
+    resetBtn?.addEventListener('click', () => resetAnimation([signalBitsMOSI, signalBitsNSS, signalBitsSCK], steps, stepsBtn));
 }
 
 function initSpiValueAnimation() {
