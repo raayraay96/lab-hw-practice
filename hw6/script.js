@@ -1641,3 +1641,26 @@ document.addEventListener('DOMContentLoaded', () => {
     initI2cDataAnimation();
     initI2cAckAnimation();
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize all HW6 animations
+    if (document.getElementById('spi-word-section')) {
+        initSpiWordAnimation();
+    }
+
+    // Back to top button functionality
+    const backToTopBtn = document.getElementById('back-to-top');
+    if (backToTopBtn) {
+        window.onscroll = function() {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                backToTopBtn.style.display = 'block';
+            } else {
+                backToTopBtn.style.display = 'none';
+            }
+        };
+        
+        backToTopBtn.onclick = function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+    }
+});

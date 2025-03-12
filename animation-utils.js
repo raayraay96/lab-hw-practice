@@ -347,3 +347,18 @@ function createConnection(fromElement, toElement, options = {}) {
     svg.style.pointerEvents = 'none';
     svg.style.zIndex = '1';
 }
+
+// Utility function for toggling steps visibility
+function toggleSteps(steps, btn) {
+    if (!steps || !btn) return;
+    steps.classList.toggle('visible');
+    btn.textContent = steps.classList.contains('visible') ? 'Hide Steps' : 'Show Steps';
+}
+
+// Export utilities if using modules
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        toggleSteps,
+        createSquareWave
+    };
+}
