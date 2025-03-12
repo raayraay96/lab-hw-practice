@@ -13,23 +13,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Initialize each animation section
 function initSpiWordAnimation() {
-    const signalBits = document.getElementById('spi-word-signal');
-    if (!signalBits) return;
+    // Corrected ID to target spi-word-mosi
+    const signalBitsMOSI = document.getElementById('spi-word-mosi');
+    if (!signalBitsMOSI) {
+        console.error("Element with ID 'spi-word-mosi' not found!"); // Error logging for debugging
+        return;
+    }
 
-    signalBits.innerHTML = Array(15).fill('<span class="bit low">0</span>').join('');
-    
+    signalBitsMOSI.innerHTML = Array(15).fill('<span class="bit low">0</span>').join('');
+
     const animateBtn = document.getElementById('spi-word-animate-btn');
     const stepsBtn = document.getElementById('spi-word-steps-btn');
     const resetBtn = document.getElementById('spi-word-reset-btn');
     const steps = document.getElementById('spi-word-steps');
 
     animateBtn?.addEventListener('click', () => {
-        const containers = [signalBits];
+        // Pass the correct container to animateSpiWord
+        const containers = [signalBitsMOSI];
         animateSpiWord(containers, steps);
     });
 
     stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));
-    resetBtn?.addEventListener('click', () => resetAnimation([signalBits], steps, stepsBtn));
+    resetBtn?.addEventListener('click', () => resetAnimation(containers, steps, stepsBtn));
 }
 
 function initSpiValueAnimation() {

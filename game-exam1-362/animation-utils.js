@@ -1,3 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>I2C Configuration Animation</title>
+<style>
+/* Basic styling - adjust as needed */
+.container {
+    margin-bottom: 20px;
+}
+
+#i2c-config-steps {
+    display: none;
+}
+
+#i2c-config-steps.show {
+    display: block;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>I2C Configuration Animation</h2>
+    <div id="i2c-config-sda">
+        <!-- Waveform will be inserted here -->
+    </div>
+    <button id="i2c-config-animate-btn">Animate</button>
+    <button id="i2c-config-steps-btn">Show Steps</button>
+    <button id="i2c-config-reset-btn">Reset</button>
+    <ol id="i2c-config-steps">
+        <li>Start Condition: SDA goes low while SCL is high.</li>
+        <li>Send Slave Address.</li>
+        <li>Send Register Address.</li>
+        <li>Send Data.</li>
+        <li>Stop Condition: SDA goes high while SCL is high.</li>
+    </ol>
+</div>
+
+<script>
 /**
  * Enhanced Animation Utilities for ECE362 Study Animations
  * This file contains utility functions to improve animations across all homework pages
@@ -250,3 +289,91 @@ function createLogicGate(container, type, inputs, output) {
     
     return gateContainer;
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    initI2cConfigAnimation();
+});
+
+function initI2cConfigAnimation() {
+    const signalBits = document.getElementById('i2c-config-sda');
+    if (!signalBits) {
+        console.error("Element with ID 'i2c-config-sda' not found!");
+        return;
+    }
+
+    const animateBtn = document.getElementById('i2c-config-animate-btn');
+    const stepsBtn = document.getElementById('i2c-config-steps-btn');
+    const resetBtn = document.getElementById('i2c-config-reset-btn');
+    const steps = document.getElementById('i2c-config-steps');
+
+    animateBtn?.addEventListener('click', () => {
+        const containers = [signalBits];
+        animateI2cConfig(containers, steps);
+    });
+
+    stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));
+    resetBtn?.addEventListener('click', () => resetAnimation([signalBits], steps, stepsBtn));
+}
+
+function animateI2cConfig(containers, steps) {
+  resetAnimation(containers, steps);
+
+  const i2cContainer = containers[0];
+
+  // Define the I2C sequence as an array of 0s and 1s (for low and high).
+  // This example shows a simplified sequence. Adjust for more complex scenarios.
+  const sclData = [1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1];
+  const sdaData = [1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1]; // Start condition, data, stop condition
+
+  // Create square wave visualizations for SCL and SDA
+  createSquareWave(i2cContainer, sclData, {
+      lineColor: '#29abe2', // Light blue for SCL
+      animationDuration: 3000,
+      labels: { x: 'Time', y: 'SCL' },
+      height: 75, //Half of total height
+      width: 600,
+  });
+  createSquareWave(i2cContainer, sdaData, {
+      lineColor: '#f9ca24', // Yellow for SDA
+      animationDuration: 3000,
+      labels: { x: 'Time', y: 'SDA' },
+      height: 75,  //Half of total height
+      width: 600,
+  });
+
+  setTimeout(() => highlightSteps(steps), 3500); // Highlight steps after animation
+}
+
+function resetAnimation(containers, steps, stepsBtn) {
+    containers.forEach(container => {
+        // Remove all child nodes (including the canvas)
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+    });
+    steps.classList.remove('show');  // Hide steps
+    if (stepsBtn) {
+      stepsBtn.textContent = 'Show Steps'; // Reset button text
+    }
+}
+
+
+function toggleSteps(steps, stepsBtn) {
+    steps.classList.toggle('show');
+    stepsBtn.textContent = steps.classList.contains('show') ? 'Hide Steps' : 'Show Steps';
+}
+
+
+function highlightSteps(steps) {
+    const stepItems = steps.querySelectorAll('li');
+    stepItems.forEach((step, index) => {
+        setTimeout(() => {
+            step.classList.add('active'); // Or any other highlighting style
+        }, index * 500); // Stagger the highlighting
+    });
+}
+
+</script>
+
+</body>
+</html>
