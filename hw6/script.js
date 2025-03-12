@@ -1,226 +1,151 @@
 // Problem 1: SPI Word Size Animation
 // -----------------------------------
 function initSpiWordAnimation() {
-    // Get DOM elements with null checks
-    const nssBits = document.getElementById('spi-word-nss');
-    const sckBits = document.getElementById('spi-word-sck');
-    const mosiBits = document.getElementById('spi-word-mosi');
+    const nss = document.getElementById('spi-word-nss');
+    const sck = document.getElementById('spi-word-sck');
+    const mosi = document.getElementById('spi-word-mosi');
     const steps = document.getElementById('spi-word-steps');
     const animateBtn = document.getElementById('spi-word-animate-btn');
     const stepsBtn = document.getElementById('spi-word-steps-btn');
     const resetBtn = document.getElementById('spi-word-reset-btn');
-
-    // Exit if required elements are missing
-    if (!nssBits || !sckBits || !mosiBits || !steps || !animateBtn || !stepsBtn || !resetBtn) {
-        console.warn('Required elements for SPI Word Animation not found');
-        return;
-    }
-
-    // Initialize elements before adding event listeners
-    function initialize() {
-        nssBits.innerHTML = '';
-        sckBits.innerHTML = '';
-        mosiBits.innerHTML = `
-            <div class="spi-timeline">
-                <div class="timeline-marker">Idle</div>
-                <div class="timeline-marker">Start</div>
-                <div class="timeline-marker">Transfer</div>
-                <div class="timeline-marker">End</div>
-            </div>
-            <span class="read-counter">Rising Edges: <span id="rising-edge-count">0</span></span>
-        `;
-
-        for (let i = 0; i < 15; i++) {
-            nssBits.innerHTML += `<span class="bit high" style="left: ${i * 44}px;">1</span>`;
-            sckBits.innerHTML += `<span class="bit low" style="left: ${i * 44}px;">0</span>`;
-            mosiBits.innerHTML += `<span class="bit low" style="left: ${i * 44}px;">${'110001000010110'[i]}</span>`;
+    const wordSizeInput = document.getElementById('spi-word-size');
+    
+    // Create arrays to hold the signal values
+    let nssValues = [];
+    let sckValues = [];
+    let mosiValues = [];
+    
+    function generateSignals(wordSize) {
+        // Reset arrays
+        nssValues = [];
+        sckValues = [];
+        mosiValues = [];
+        
+        // Generate NSS signal (active low)
+        // Start with idle high, then go low for the transfer, then back to high
+        nssValues.push({value: 0, label: 'Idle'});
+        for (let i = 0; i < wordSize; i++) {
+            nssValues.push({value: 1, label: 'Start Transfer'});
         }
-
-        // Add wave container
-        const waveContainer = document.createElement('div');
-        waveContainer.className = 'wave-container';
-        waveContainer.style.marginTop = '30px';
-        const section = document.getElementById('spi-word-section');
-        if (section) {
-            section.insertBefore(waveContainer, steps);
-        }
-    }
-
-    function animate() {
-        reset();
-        const mosiValue = '110001000010110';
-        let sckState = 0;
-        let risingEdgeCount = 0;
-
-        // Prepare data for square wave visualization
-        const nssData = Array(30).fill(1); // Initially all high
-        const sckData = [];
-        const mosiData = [];
-
-        // Fill in the first part (idle)
-        for (let i = 0; i < 5; i++) {
-            sckData.push(0);
-            mosiData.push(0);
-        }
-
-        // NSS goes low at start
-        for (let i = 5; i < 25; i++) {
-            nssData[i] = 0;
-        }
-
-        // Fill in SCK and MOSI data
-        for (let i = 0; i < 15; i++) {
-            // Each bit takes 2 positions in our visualization
-            const idx = 5 + i;
-            sckData.push(0); // SCK starts low
-            sckData.push(1); // SCK goes high
-            
-            // MOSI value follows the pattern
-            const bitValue = mosiValue[i] === '1' ? 1 : 0;
-            mosiData.push(bitValue);
-            mosiData.push(bitValue);
-        }
-
-        // Create square wave visualizations
-        createSquareWave(waveContainer, nssData, {
-            width: 600,
-            height: 100,
-            labels: { x: 'Time', y: 'NSS' },
-            animationDuration: 2000
-        });
-
-        createSquareWave(waveContainer, sckData, {
-            width: 600,
-            height: 100,
-            labels: { x: 'Time', y: 'SCK' },
-            animationDuration: 2000
-        });
-
-        createSquareWave(waveContainer, mosiData, {
-            width: 600,
-            height: 100,
-            labels: { x: 'Time', y: 'MOSI' },
-            animationDuration: 2000
-        });
-
-        setTimeout(() => {
-            const markers = mosiBits.querySelectorAll('.timeline-marker');
-            markers.forEach(m => m.classList.remove('active'));
-            markers[1].classList.add('active');
-            for (let i = 0; i < 15; i++) {
-                nssBits.children[i].classList.add('active');
-                nssBits.children[i].classList.remove('high');
-                nssBits.children[i].classList.add('low');
-                nssBits.children[i].textContent = '0';
-            }
-        }, 500);
-
-        for (let i = 0; i < 15; i++) {
-            setTimeout(() => {
-                const markers = mosiBits.querySelectorAll('.timeline-marker');
-                if (i === 0) {
-                    markers.forEach(m => m.classList.remove('active'));
-                    markers[2].classList.add('active');
-                }
-
-                sckBits.children[i].classList.add('active');
-                sckBits.children[i].classList.toggle('high', sckState === 1);
-                sckBits.children[i].classList.toggle('low', sckState === 0);
-                sckBits.children[i].textContent = sckState ? '1' : '0';
-
-                mosiBits.children[i + 1].classList.add('active');
-                mosiBits.children[i + 1].classList.toggle('high', mosiValue[i] === '1');
-                mosiBits.children[i + 1].classList.toggle('low', mosiValue[i] === '0');
-                mosiBits.children[i + 1].textContent = mosiValue[i];
-
-                if (sckState === 1) {
-                    risingEdgeCount++;
-                    document.getElementById('rising-edge-count').textContent = risingEdgeCount;
-                    mosiBits.children[i + 1].classList.add('connection');
-                    setTimeout(() => mosiBits.children[i + 1].classList.add('visible'), 100);
-                }
-                sckState = !sckState;
-            }, 1000 + i * 500);
-        }
-
-        setTimeout(() => {
-            const markers = mosiBits.querySelectorAll('.timeline-marker');
-            markers.forEach(m => m.classList.remove('active'));
-            markers[3].classList.add('active');
-            for (let i = 0; i < 15; i++) {
-                nssBits.children[i].classList.remove('low');
-                nssBits.children[i].classList.add('high');
-                nssBits.children[i].textContent = '1';
-            }
-        }, 1000 + 15 * 500);
-
-        setTimeout(() => highlightSteps(steps), 1000 + 15 * 500 + 500);
-    }
-
-    function reset() {
-        // Clear wave container if it exists
-        const waveContainer = document.querySelector('.wave-container');
-        if (waveContainer) {
-            waveContainer.innerHTML = '';
+        nssValues.push({value: 0, label: 'End'});
+        
+        // Generate SCK signal (clock)
+        // Start with 0, then alternate between 0 and 1 for each bit
+        for (let i = 0; i < wordSize; i++) {
+            sckValues.push({value: 0, label: ''});
+            sckValues.push({value: 1, label: ''});
         }
         
-        // Reset bits with null checks
-        if (nssBits) {
-            [...nssBits.children].forEach(bit => {
-                bit.classList.remove('active', 'connection', 'visible', 'low');
-                bit.classList.add('high');
-                bit.textContent = '1';
-            });
-        }
-
-        if (sckBits) {
-            [...sckBits.children].forEach(bit => {
-                bit.classList.remove('active', 'connection', 'visible', 'high');
-                bit.classList.add('low');
-                bit.textContent = '0';
-            });
-        }
-
-        if (mosiBits) {
-            const mosiPattern = '110001000010110';
-            [...mosiBits.children].forEach((bit, i) => {
-                if (i > 0) { // Skip the first element (timeline)
-                    bit.classList.remove('active', 'connection', 'visible', 'high');
-                    bit.classList.add('low');
-                    bit.textContent = mosiPattern[i - 1];
-                }
-            });
-        }
-
-        // Reset counter and markers
-        const counter = document.getElementById('rising-edge-count');
-        if (counter) {
-            counter.textContent = '0';
-        }
-
-        if (mosiBits) {
-            const markers = mosiBits.querySelectorAll('.timeline-marker');
-            markers.forEach(m => m.classList.remove('active'));
-            markers[0]?.classList.add('active');
-        }
-
-        if (steps) {
-            steps.classList.remove('visible');
-        }
-        if (stepsBtn) {
-            stepsBtn.textContent = 'Show Steps';
+        // Generate MOSI signal (data)
+        // Random data bits for demonstration
+        for (let i = 0; i < wordSize; i++) {
+            const bit = Math.round(Math.random());
+            mosiValues.push({value: bit, label: ''});
+            mosiValues.push({value: bit, label: ''});  // Keep same value during entire clock cycle
         }
     }
-
-    // Initialize first, then add event listeners
-    initialize();
+    
+    function animate() {
+        reset();
+        
+        // Get word size from input
+        const wordSize = parseInt(wordSizeInput.value) || 15;
+        
+        // Generate signals based on word size
+        generateSignals(wordSize);
+        
+        // Create signal displays
+        createSignalDisplay(nss, nssValues, 'NSS');
+        createSignalDisplay(sck, sckValues, 'SCK');
+        createSignalDisplay(mosi, mosiValues, 'MOSI');
+        
+        // Highlight rising edges of SCK
+        setTimeout(() => {
+            const sckElements = sck.querySelectorAll('.bit');
+            let edgeCount = 0;
+            
+            // Function to highlight next rising edge
+            function highlightNextEdge(index) {
+                if (index >= sckElements.length - 1) {
+                    // All edges highlighted, show final count
+                    const countElement = document.createElement('div');
+                    countElement.className = 'edge-count';
+                    countElement.textContent = `Total: ${edgeCount} rising edges = ${edgeCount} bits`;
+                    countElement.style.color = '#16c79a';
+                    countElement.style.fontWeight = 'bold';
+                    countElement.style.marginTop = '10px';
+                    sck.appendChild(countElement);
+                    
+                    // Show steps
+                    setTimeout(() => highlightSteps(steps), 500);
+                    return;
+                }
+                
+                // Check if this is a rising edge (previous bit is 0, current bit is 1)
+                if (index > 0 && sckValues[index-1].value === 0 && sckValues[index].value === 1) {
+                    sckElements[index].classList.add('rising-edge');
+                    edgeCount++;
+                    
+                    // Add edge counter
+                    const edgeLabel = document.createElement('div');
+                    edgeLabel.className = 'edge-label';
+                    edgeLabel.textContent = edgeCount;
+                    edgeLabel.style.position = 'absolute';
+                    edgeLabel.style.top = '-20px';
+                    edgeLabel.style.left = '50%';
+                    edgeLabel.style.transform = 'translateX(-50%)';
+                    edgeLabel.style.color = '#16c79a';
+                    edgeLabel.style.fontWeight = 'bold';
+                    sckElements[index].appendChild(edgeLabel);
+                }
+                
+                // Move to next bit after delay
+                setTimeout(() => highlightNextEdge(index + 1), 300);
+            }
+            
+            // Start highlighting from the first bit
+            highlightNextEdge(0);
+        }, 1000);
+    }
+    
+    function createSignalDisplay(container, values, label) {
+        container.innerHTML = `<div class="signal-label">${label}</div>`;
+        const signalContainer = document.createElement('div');
+        signalContainer.className = 'signal-container';
+        
+        values.forEach((item, index) => {
+            const bit = document.createElement('div');
+            bit.className = 'bit';
+            bit.classList.add(item.value ? 'high' : 'low');
+            
+            // Add label if present
+            if (item.label) {
+                const bitLabel = document.createElement('div');
+                bitLabel.className = 'bit-label';
+                bitLabel.textContent = item.label;
+                bit.appendChild(bitLabel);
+            }
+            
+            signalContainer.appendChild(bit);
+        });
+        
+        container.appendChild(signalContainer);
+    }
+    
+    function reset() {
+        nss.innerHTML = '';
+        sck.innerHTML = '';
+        mosi.innerHTML = '';
+        steps.classList.remove('visible');
+        stepsBtn.textContent = 'Show Steps';
+    }
     
     // Add event listeners
     animateBtn.addEventListener('click', animate);
     stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
     resetBtn.addEventListener('click', reset);
-
-    // Initial reset
+    
+    // Initialize with default state
     reset();
 }
 
