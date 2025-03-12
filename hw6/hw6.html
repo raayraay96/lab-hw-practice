@@ -1,304 +1,337 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+<!DOCTYPE html>ntListener('DOMContentLoaded', () => {
+<html lang="en">nimation();
+<head>itSpiValueAnimation();
+    <meta charset="UTF-8">n();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ECE362 HW6 Study Animations</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="../animation-utils.js"></script>
     <script src="script.js"></script>
-</head>
-<body>
-    <div class="navbar">
-        <a href="../index.html">Home</a>
-        <a href="../hw2/hw2.html">HW2</a>
-        <a href="../hw3/hw3.html">HW3</a>
-        <a href="../hw4/hw4.html">HW4</a>
-        <a href="../hw5/hw5.html">HW5</a>
-        <a href="hw6.html">HW6</a>
-    </div>
-    <h1>ECE362 HW6 Study Animations</h1>
-    <div class="content">
-        <!-- Problem 1 -->
+</head>tI2cAddressAnimation();
+<body>nst animateBtn = document.getElementById('sine-wave-animate-btn');dy>
+    animateBtn?.addEventListener('click', initSineWaveAnimation);    <div class="navbar">
+});</a>
+>HW2</a>
+// Initialize each animation section
+function initSpiWordAnimation() {
+    // Corrected ID to target spi-word-mosi5.html">HW5</a>
+    const signalBitsMOSI = document.getElementById('spi-word-mosi');
+    if (!signalBitsMOSI) {
+        console.error("Element with ID 'spi-word-mosi' not found!"); // Error logging for debuggingh1>ECE362 HW6 Study Animations</h1>
+        return;    <div class="content">
+    }
         <div class="section" id="spi-word-section">
-            <h2>Problem 1: SPI Word Size</h2>
-            <!-- NEW: Add SPI interactive control -->
-            <div class="interactive-controls" id="spi-controls">
-                <label>Word Size: <input type="number" id="spi-word-size" min="8" max="32" value="15"></label>
-            </div>
-            <div class="description">
-                Given the <span class="tooltip" data-tooltip="Serial Peripheral Interface: A synchronous protocol using clock (SCK) and data (MOSI) lines.">SPI</span> signal below, find the <strong>word size</strong> in bits, read on <strong>rising edges</strong> of SCK. The signal has <strong>15 rising edges</strong>, indicating <strong>15 bits</strong>.
-            </div>
-            <div class="signal-container" style="min-height: 300px;">
-                <div class="signal-row">
-                    <span class="signal-label">NSS</span>
-                    <div class="signal-bits" id="spi-word-nss"></div>
-                </div>
-                <div class="signal-row">
-                    <span class="signal-label">SCK</span>
-                    <div class="signal-bits" id="spi-word-sck"></div>
-                </div>
-                <div class="signal-row">
-                    <span class="signal-label">MOSI</span>
-                    <div class="signal-bits" id="spi-word-mosi"></div>
-                </div>
-            </div>
-            <div class="calculation-steps" id="spi-word-steps">
-                <p>Count rising edges of SCK: 15</p>
-                <p>Word size = 15 bits</p>
-            </div>
-            <div class="controls">
-                <button id="spi-word-animate-btn">Animate</button>
-                <button id="spi-word-steps-btn">Show Steps</button>
-                <button id="spi-word-reset-btn">Reset</button>
-            </div>
-        </div>
+    signalBitsMOSI.innerHTML = Array(15).fill('<span class="bit low">0</span>').join('');
 
-        <!-- Problem 2 -->
-        <div class="section" id="spi-value-section">
-            <h2>Problem 2: SPI Transmitted Value</h2>
-            <div class="description">
-                For the same SPI signal (<strong>110001000010110</strong>), find the <strong>value transmitted</strong> (LSB first). The animation flips it to <strong>0x3423</strong>.
-            </div>
-            <div class="signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">MOSI</span>
-                    <div class="signal-bits" id="spi-value-mosi"></div>
-                </div>
-            </div>
-            <div class="calculation-steps" id="spi-value-steps">
-                <p>MOSI: 110001000010110</p>
-                <p>Flip (LSB first): 0011010000010011</p>
-                <p>Value = 0x3423</p>
-            </div>
-            <div class="controls">
-                <button id="spi-value-animate-btn">Animate</button>
-                <button id="spi-value-steps-btn">Show Steps</button>
-                <button id="spi-value-reset-btn">Reset</button>
-            </div>
-        </div>
+    const animateBtn = document.getElementById('spi-word-animate-btn');
+    const stepsBtn = document.getElementById('spi-word-steps-btn');pi-word-size" min="8" max="32" value="15"></label>
+    const resetBtn = document.getElementById('spi-word-reset-btn');            </div>
+    const steps = document.getElementById('spi-word-steps');
+oltip="Serial Peripheral Interface: A synchronous protocol using clock (SCK) and data (MOSI) lines.">SPI</span> signal below, find the <strong>word size</strong> in bits, read on <strong>rising edges</strong> of SCK. The signal has <strong>15 rising edges</strong>, indicating <strong>15 bits</strong>.
+    animateBtn?.addEventListener('click', () => {
+        // Pass the correct container to animateSpiWordstyle="min-height: 300px;">
+        const containers = [signalBitsMOSI];         <div class="signal-row">
+        animateSpiWord(containers, steps);                    <span class="signal-label">NSS</span>
+    });
 
-        <!-- Problem 3 -->
-        <div class="section" id="uart-encode-section">
-            <h2>Problem 3: UART Encoding</h2>
-            <!-- NEW: Add UART interactive control -->
-            <div class="interactive-controls" id="uart-controls">
-                <label>Input Byte (Hex): <input type="text" id="uart-input-byte" value="53"></label>
-            </div>
-            <div class="description">
-                Encode <strong>0x53</strong> for <span class="tooltip" data-tooltip="Universal Asynchronous Receiver/Transmitter: Sends data serially with start/stop bits.">UART</span> with 1 start bit, 8-bit word, no parity, 1 stop bit. The animation shows <strong>0110010101</strong>.
-            </div>
-            <div class="signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">UART</span>
-                    <div class="signal-bits" id="uart-encode-signal"></div>
-                </div>
-            </div>
-            <div class="calculation-steps" id="uart-encode-steps">
-                <p>Start Bit: 0</p>
-                <p>Data (0x53 flipped): 11001010</p>
-                <p>Stop Bit: 1</p>
-                <p>Full Signal: 0110010101</p>
-            </div>
-            <div class="controls">
-                <button id="uart-encode-animate-btn">Animate</button>
-                <button id="uart-encode-steps-btn">Show Steps</button>
-                <button id="uart-encode-reset-btn">Reset</button>
-            </div>
-        </div>
+    stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));               <div class="signal-row">
+    resetBtn?.addEventListener('click', () => resetAnimation(containers, steps, stepsBtn));                    <span class="signal-label">SCK</span>
+}gnal-bits" id="spi-word-sck"></div>
 
-        <!-- Problem 4 -->
-        <div class="section" id="uart-word-section">
-            <h2>Problem 4: UART Decoded Word</h2>
-            <div class="description">
-                Decode an ASCII word from a UART signal (7-bit word, 1 parity, 1 stop). The animation shows the first frame (<strong>0100100110</strong>) for 'd', with steps for all ("desk").
+function initSpiValueAnimation() {signal-row">
+    const signalBits = document.getElementById('spi-value-mosi');                    <span class="signal-label">MOSI</span>
+    if (!signalBits) return;
             </div>
-            <div class="signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">UART</span>
-                    <div class="signal-bits" id="uart-word-signal"></div>
-                </div>
-            </div>
-            <div class="calculation-steps" id="uart-word-steps">
-                <p>First: 0100100110 → 0010011 → 1100100 (0x64 = 'd')</p>
-                <p>Second: 0100110110 → 1010011 → 1100101 (0x65 = 'e')</p>
-                <p>Third: 0110101110 → 1101011 → 1110011 (0x73 = 's')</p>
-                <p>Fourth: 0100111110 → 1111011 → 1101011 (0x6B = 'k')</p>
-                <p>Word: "desk"</p>
-            </div>
-            <div class="controls">
-                <button id="uart-word-animate-btn">Animate</button>
-                <button id="uart-word-steps-btn">Show Steps</button>
-                <button id="uart-word-reset-btn">Reset</button>
-            </div>
-        </div>
+    signalBits.innerHTML = Array(15).fill('<span class="bit low">0</span>').join('');
+    
+    const animateBtn = document.getElementById('spi-value-animate-btn');
+    const stepsBtn = document.getElementById('spi-value-steps-btn');
+    const resetBtn = document.getElementById('spi-value-reset-btn');            </div>
+    const steps = document.getElementById('spi-value-steps');
+mate-btn">Animate</button>
+    animateBtn?.addEventListener('click', () => {btn">Show Steps</button>
+        const containers = [signalBits];         <button id="spi-word-reset-btn">Reset</button>
+        animateSpiValue(containers, steps);            </div>
+    });
 
-        <!-- Problem 5 -->
-        <div class="section" id="parity-section">
-            <h2>Problem 5: Odd Parity Meaning</h2>
-            <div class="description">
-                Define <strong>odd parity</strong> in UART. The animation shows a frame where the total number of 1s (data + parity) is odd, confirming option c.
-            </div>
-            <div class="signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">Data</span>
-                    <div class="signal-bits" id="parity-data"></div>
-                </div>
-            </div>
-            <div class="calculation-steps" id="parity-steps">
-                <p>Data: 10101010 (4 ones)</p>
-                <p>Parity Bit: 1</p>
-                <p>Total 1s: 5 (odd)</p>
-            </div>
-            <div class="controls">
-                <button id="parity-animate-btn">Animate</button>
-                <button id="parity-steps-btn">Show Steps</button>
-                <button id="parity-reset-btn">Reset</button>
-            </div>
-        </div>
+    stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));       <!-- Problem 2 -->
+    resetBtn?.addEventListener('click', () => resetAnimation([signalBits], steps, stepsBtn));        <div class="section" id="spi-value-section">
+}mitted Value</h2>
 
-        <!-- Problem 6 -->
-        <div class="section" id="baud-words-section">
-            <h2>Problem 6: Words per Second</h2>
-            <div class="description">
-                Calculate <strong>useful words per second</strong> at 13540 baud with 1 start, 8 data, 1 stop bit. The animation simulates a frame, showing <strong>1354 words/s</strong>.
-            </div>
-            <div class="signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">Frame</span>
-                    <div class="signal-bits" id="baud-words-frame"></div>
-                </div>
-            </div>
-            <div class="calculation-steps" id="baud-words-steps">
-                <p>Total bits: 1 + 8 + 1 = 10</p>
-                <p>Baud rate: 13540</p>
-                <p>Words/s: 13540 / 10 = 1354</p>
-            </div>
-            <div class="controls">
-                <button id="baud-words-animate-btn">Animate</button>
-                <button id="baud-words-steps-btn">Show Steps</button>
-                <button id="baud-words-reset-btn">Reset</button>
-            </div>
-        </div>
+function initUartEncodeAnimation() { SPI signal (<strong>110001000010110</strong>), find the <strong>value transmitted</strong> (LSB first). The animation flips it to <strong>0x3423</strong>.
+    const signalBits = document.getElementById('uart-encode-signal');            </div>
+    if (!signalBits) return;
+            <div class="signal-row">
+    signalBits.innerHTML = Array(10).fill('<span class="bit low">0</span>').join('');
+    >
+    const animateBtn = document.getElementById('uart-encode-animate-btn');
+    const stepsBtn = document.getElementById('uart-encode-steps-btn');
+    const resetBtn = document.getElementById('uart-encode-reset-btn');            <div class="calculation-steps" id="spi-value-steps">
+    const steps = document.getElementById('uart-encode-steps');
+1010000010011</p>
+    animateBtn?.addEventListener('click', () => {
+        const containers = [signalBits];     </div>
+        animateUartEncode(containers, steps);            <div class="controls">
+    });
 
-        <!-- Problem 7 -->
-        <div class="section" id="baud-rate-section">
-            <h2>Problem 7: UART Baud Rate</h2>
-            <div class="description">
-                Find the <strong>baud rate</strong> for a UART frame where 10 bits take 50 ms. The animation shows signal changes, yielding <strong>200 baud</strong>.
-            </div>
-            <div class="signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">UART</span>
-                    <div class="signal-bits" id="baud-rate-signal"></div>
-                </div>
-            </div>
-            <div class="calculation-steps" id="baud-rate-steps">
-                <p>10 bits in 50 ms</p>
-                <p>Signal changes/s: 10 / 0.05 = 200</p>
-            </div>
-            <div class="controls">
-                <button id="baud-rate-animate-btn">Animate</button>
-                <button id="baud-rate-steps-btn">Show Steps</button>
-                <button id="baud-rate-reset-btn">Reset</button>
-            </div>
-        </div>
+    stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));               <button id="spi-value-reset-btn">Reset</button>
+    resetBtn?.addEventListener('click', () => resetAnimation([signalBits], steps, stepsBtn));            </div>
+}
 
-        <!-- Problem 8 -->
-        <div class="section" id="parity-error-section">
-            <h2>Problem 8: Parity Error</h2>
-            <div class="description">
-                Identify a <strong>parity error</strong> in a UART frame. The animation shows a frame with even parity when odd parity is expected.
-            </div>
-            <div class="signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">UART</span>
-                    <div class="signal-bits" id="parity-error-signal"></div>
-                </div>
-            </div>
-            <div class="calculation-steps" id="parity-error-steps">
-                <p>Data: 10101010 (4 ones)</p>
-                <p>Parity Bit: 0</p>
-                <p>Total 1s: 4 (even)</p>
-                <p>Expected: Odd parity (total should be odd)</p>
-                <p>Result: Parity Error</p>
-            </div>
-            <div class="controls">
-                <button id="parity-error-animate-btn">Animate</button>
-                <button id="parity-error-steps-btn">Show Steps</button>
-                <button id="parity-error-reset-btn">Reset</button>
-            </div>
-        </div>
+function initUartWordAnimation() {
+    const signalBits = document.getElementById('uart-word-signal');        <div class="section" id="uart-encode-section">
+    if (!signalBits) return;
+        <!-- NEW: Add UART interactive control -->
+    signalBits.innerHTML = Array(10).fill('<span class="bit low">0</span>').join('');
+    -input-byte" value="53"></label>
+    const animateBtn = document.getElementById('uart-word-animate-btn');
+    const stepsBtn = document.getElementById('uart-word-steps-btn');
+    const resetBtn = document.getElementById('uart-word-reset-btn');                Encode <strong>0x53</strong> for <span class="tooltip" data-tooltip="Universal Asynchronous Receiver/Transmitter: Sends data serially with start/stop bits.">UART</span> with 1 start bit, 8-bit word, no parity, 1 stop bit. The animation shows <strong>0110010101</strong>.
+    const steps = document.getElementById('uart-word-steps');
+">
+    animateBtn?.addEventListener('click', () => {
+        const containers = [signalBits];             <span class="signal-label">UART</span>
+        animateUartWord(containers, steps);                    <div class="signal-bits" id="uart-encode-signal"></div>
+    });
 
-        <!-- Problem 9 -->
-        <div class="section" id="i2c-address-section">
-            <h2>Problem 9: I2C Address</h2>
-            <div class="description">
-                Find the <strong>I2C address</strong> from a signal. The animation shows the address bits, yielding <strong>0x3A</strong>.
-            </div>
-            <div class="signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">SDA</span>
-                    <div class="signal-bits" id="i2c-address-sda"></div>
-                </div>
-            </div>
-            <div class="calculation-steps" id="i2c-address-steps">
-                <p>Address bits: 0111010</p>
-                <p>R/W bit: 0 (write)</p>
-                <p>7-bit address: 0x3A</p>
-            </div>
-            <div class="controls">
-                <button id="i2c-address-animate-btn">Animate</button>
-                <button id="i2c-address-steps-btn">Show Steps</button>
-                <button id="i2c-address-reset-btn">Reset</button>
-            </div>
-        </div>
+    stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));           <div class="calculation-steps" id="uart-encode-steps">
+    resetBtn?.addEventListener('click', () => resetAnimation([signalBits], steps, stepsBtn));                <p>Start Bit: 0</p>
+}ipped): 11001010</p>
 
-        <!-- Problem 10 -->
-        <div class="section" id="i2c-ack-section">
-            <h2>Problem 10: I2C ACK/NACK</h2>
-            <!-- NEW: Add I2C interactive control -->
-            <div class="interactive-controls" id="i2c-controls">
-                <button id="simulate-i2c-error">Simulate Communication Error</button>
-            </div>
-            <div class="description">
-                Explain <strong>ACK/NACK</strong> in I2C. The animation shows both signals, with ACK being a low bit and NACK being a high bit.
-            </div>
-            <div class="signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">ACK</span>
-                    <div class="signal-bits" id="i2c-ack-signal"></div>
-                </div>
-                <div class="signal-row">
-                    <span class="signal-label">NACK</span>
-                    <div class="signal-bits" id="i2c-nack-signal"></div>
-                </div>
-            </div>
-            <div class="calculation-steps" id="i2c-ack-steps">
-                <p>ACK: SDA pulled low</p>
-                <p>NACK: SDA remains high</p>
-            </div>
-            <div class="controls">
-                <button id="i2c-ack-animate-btn">Animate</button>
-                <button id="i2c-ack-steps-btn">Show Steps</button>
-                <button id="i2c-ack-reset-btn">Reset</button>
-            </div>
-        </div>
+function initParityAnimation() {al: 0110010101</p>
+    const signalBits = document.getElementById('parity-data');            </div>
+    if (!signalBits) return;
+            <button id="uart-encode-animate-btn">Animate</button>
+    signalBits.innerHTML = Array(9).fill('<span class="bit low">0</span>').join('');>
+    
+    const animateBtn = document.getElementById('parity-animate-btn');
+    const stepsBtn = document.getElementById('parity-steps-btn');
+    const resetBtn = document.getElementById('parity-reset-btn');
+    const steps = document.getElementById('parity-steps');
+rd-section">
+    animateBtn?.addEventListener('click', () => {ord</h2>
+        const containers = [signalBits];     <div class="description">
+        animateParity(containers, steps);                Decode an ASCII word from a UART signal (7-bit word, 1 parity, 1 stop). The animation shows the first frame (<strong>0100100110</strong>) for 'd', with steps for all ("desk").
+    });
 
-        <!-- NEW: I2C Configuration Section -->
-        <div class="section" id="i2c-config-section">
-            <h2>Problem ?: I2C Configuration</h2>
-            <div class="description">
-                This animation demonstrates I2C open-drain behavior.
+    stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));               <div class="signal-row">
+    resetBtn?.addEventListener('click', () => resetAnimation([signalBits], steps, stepsBtn));                    <span class="signal-label">UART</span>
+}gnal-bits" id="uart-word-signal"></div>
+
+function initBaudRateAnimation() {
+    const signalBits = document.getElementById('baud-rate-signal');            <div class="calculation-steps" id="uart-word-steps">
+    if (!signalBits) return;
+            <p>Second: 0100110110 → 1010011 → 1100101 (0x65 = 'e')</p>
+    signalBits.innerHTML = Array(10).fill('<span class="bit low">0</span>').join('');>
+    ')</p>
+    const animateBtn = document.getElementById('baud-rate-animate-btn');
+    const stepsBtn = document.getElementById('baud-rate-steps-btn');
+    const resetBtn = document.getElementById('baud-rate-reset-btn');            <div class="controls">
+    const steps = document.getElementById('baud-rate-steps');">Animate</button>
+eps-btn">Show Steps</button>
+    animateBtn?.addEventListener('click', () => {-btn">Reset</button>
+        const containers = [signalBits];     </div>
+        animateBaudRate(containers, steps);        </div>
+    });
+
+    stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));       <div class="section" id="parity-section">
+    resetBtn?.addEventListener('click', () => resetAnimation([signalBits], steps, stepsBtn));            <h2>Problem 5: Odd Parity Meaning</h2>
+}">
+nimation shows a frame where the total number of 1s (data + parity) is odd, confirming option c.
+function initI2cConfigAnimation() {
+    const signalBits = document.getElementById('i2c-config-sda');            <div class="signal-container">
+    if (!signalBits) return;
+                <span class="signal-label">Data</span>
+    signalBits.innerHTML = '<div class="i2c-config"></div>';
+    
+    const animateBtn = document.getElementById('i2c-config-animate-btn');
+    const stepsBtn = document.getElementById('i2c-config-steps-btn');
+    const resetBtn = document.getElementById('i2c-config-reset-btn');                <p>Data: 10101010 (4 ones)</p>
+    const steps = document.getElementById('i2c-config-steps');
+
+    animateBtn?.addEventListener('click', () => {
+        const containers = [signalBits];     <div class="controls">
+        animateI2cConfig(containers, steps);                <button id="parity-animate-btn">Animate</button>
+    });
+
+    stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));           </div>
+    resetBtn?.addEventListener('click', () => resetAnimation([signalBits], steps, stepsBtn));        </div>
+}
+
+function initI2cAckAnimation() {
+    const ackSignal = document.getElementById('i2c-ack-signal');d</h2>
+    const nackSignal = document.getElementById('i2c-nack-signal');            <div class="description">
+    if (!ackSignal || !nackSignal) return;th 1 start, 8 data, 1 stop bit. The animation simulates a frame, showing <strong>1354 words/s</strong>.
+
+    ackSignal.innerHTML = Array(5).fill('<span class="bit low">0</span>').join('');        <div class="signal-container">
+    nackSignal.innerHTML = Array(5).fill('<span class="bit low">0</span>').join('');
+    
+    const animateBtn = document.getElementById('i2c-ack-animate-btn');></div>
+    const stepsBtn = document.getElementById('i2c-ack-steps-btn');
+    const resetBtn = document.getElementById('i2c-ack-reset-btn');            </div>
+    const steps = document.getElementById('i2c-ack-steps');ud-words-steps">
+
+    animateBtn?.addEventListener('click', () => {
+        const containers = [ackSignal, nackSignal];         <p>Words/s: 13540 / 10 = 1354</p>
+        animateI2cAck(containers, steps);            </div>
+    });
+
+    stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));               <button id="baud-words-steps-btn">Show Steps</button>
+    resetBtn?.addEventListener('click', () => resetAnimation([ackSignal, nackSignal], steps, stepsBtn));                <button id="baud-words-reset-btn">Reset</button>
+}
+
+function initParityErrorAnimation() {
+    const signalBits = document.getElementById('parity-error-signal');        <!-- Problem 7 -->
+    if (!signalBits) return;
+        <h2>Problem 7: UART Baud Rate</h2>
+    signalBits.innerHTML = Array(10).fill('<span class="bit low">0</span>').join('');
+    ere 10 bits take 50 ms. The animation shows signal changes, yielding <strong>200 baud</strong>.
+    const animateBtn = document.getElementById('parity-error-animate-btn');
+    const stepsBtn = document.getElementById('parity-error-steps-btn');
+    const resetBtn = document.getElementById('parity-error-reset-btn');                <div class="signal-row">
+    const steps = document.getElementById('parity-error-steps');RT</span>
+its" id="baud-rate-signal"></div>
+    animateBtn?.addEventListener('click', () => {
+        const containers = [signalBits];     </div>
+        animateParityError(containers, steps);            <div class="calculation-steps" id="baud-rate-steps">
+    });
+
+    stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));           </div>
+    resetBtn?.addEventListener('click', () => resetAnimation([signalBits], steps, stepsBtn));            <div class="controls">
+}e-animate-btn">Animate</button>
+n>
+function initI2cAddressAnimation() {baud-rate-reset-btn">Reset</button>
+    const signalBits = document.getElementById('i2c-address-sda');            </div>
+    if (!signalBits) return;
+
+    signalBits.innerHTML = Array(8).fill('<span class="bit low">0</span>').join('');
+    
+    const animateBtn = document.getElementById('i2c-address-animate-btn');
+    const stepsBtn = document.getElementById('i2c-address-steps-btn');
+    const resetBtn = document.getElementById('i2c-address-reset-btn');                Identify a <strong>parity error</strong> in a UART frame. The animation shows a frame with even parity when odd parity is expected.
+    const steps = document.getElementById('i2c-address-steps');
+">
+    animateBtn?.addEventListener('click', () => {
+        const containers = [signalBits];             <span class="signal-label">UART</span>
+        animateI2cAddress(containers, steps);                    <div class="signal-bits" id="parity-error-signal"></div>
+    });
+
+    stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));           <div class="calculation-steps" id="parity-error-steps">
+    resetBtn?.addEventListener('click', () => resetAnimation([signalBits], steps, stepsBtn));                <p>Data: 10101010 (4 ones)</p>
+}
+/p>
+function animateSpiWord(containers, steps) {ty (total should be odd)</p>
+    resetAnimation(containers, steps);or</p>
+    const signalBits = containers[0];            </div>
+    const signal = '110001000010110';
+="parity-error-animate-btn">Animate</button>
+    signal.split('').forEach((bit, i) => {eps</button>
+        setTimeout(() => {
+            signalBits.children[i].classList.add('active');
+            signalBits.children[i].classList.toggle('high', bit === '1');
+            signalBits.children[i].classList.toggle('low', bit === '0');
+            signalBits.children[i].textContent = bit; <!-- Problem 9 -->
+        }, i * 300);        <div class="section" id="i2c-address-section">
+    });
+           <div class="description">
+    setTimeout(() => highlightSteps(steps), signal.length * 300 + 500);                Find the <strong>I2C address</strong> from a signal. The animation shows the address bits, yielding <strong>0x3A</strong>.
+}
+er">
+function animateSpiValue(containers, steps) {w">
+    resetAnimation(containers, steps);al-label">SDA</span>
+    const signalBits = containers[0];                    <div class="signal-bits" id="i2c-address-sda"></div>
+    const signal = '110001000010110';
+
+    signal.split('').forEach((bit, i) => {steps">
+        setTimeout(() => {
+            signalBits.children[i].classList.add('active');
+            signalBits.children[i].classList.toggle('high', bit === '1');
+            signalBits.children[i].classList.toggle('low', bit === '0');
+            signalBits.children[i].textContent = bit;     <div class="controls">
+        }, i * 300);                <button id="i2c-address-animate-btn">Animate</button>
+    });
+               <button id="i2c-address-reset-btn">Reset</button>
+    setTimeout(() => highlightSteps(steps), signal.length * 300 + 500);            </div>
+}
+
+function animateUartEncode(containers, steps) {
+    resetAnimation(containers, steps);
+    const signalBits = containers[0];            <h2>Problem 10: I2C ACK/NACK</h2>
+    const signal = '0110010101'; // Start bit (0) + Data (11001010) + Stop bit (1)control -->
+teractive-controls" id="i2c-controls">
+    signal.split('').forEach((bit, i) => {mmunication Error</button>
+        setTimeout(() => {
+            signalBits.children[i].classList.add('active');
+            signalBits.children[i].classList.toggle('high', bit === '1');I2C. The animation shows both signals, with ACK being a low bit and NACK being a high bit.
+            signalBits.children[i].classList.toggle('low', bit === '0');
+            signalBits.children[i].textContent = bit;     <div class="signal-container">
+        }, i * 300);                <div class="signal-row">
+    });
+                   <div class="signal-bits" id="i2c-ack-signal"></div>
+    setTimeout(() => highlightSteps(steps), signal.length * 300 + 500);                </div>
+}
+l-label">NACK</span>
+function animateUartWord(containers, steps) {l-bits" id="i2c-nack-signal"></div>
+    resetAnimation(containers, steps);
+    const signalBits = containers[0];            </div>
+    const signal = '0100100110'; // First frame for 'd' id="i2c-ack-steps">
+A pulled low</p>
+    signal.split('').forEach((bit, i) => {
+        setTimeout(() => {
+            signalBits.children[i].classList.add('active');
+            signalBits.children[i].classList.toggle('high', bit === '1');ate</button>
+            signalBits.children[i].classList.toggle('low', bit === '0');ton id="i2c-ack-steps-btn">Show Steps</button>
+            signalBits.children[i].textContent = bit;         <button id="i2c-ack-reset-btn">Reset</button>
+        }, i * 300);            </div>
+    });
+
+    setTimeout(() => highlightSteps(steps), signal.length * 300 + 500);        <!-- NEW: I2C Configuration Section -->
+}-section">
+ration</h2>
+function animateParity(containers, steps) {
+    resetAnimation(containers, steps);.
+    const signalBits = containers[0];            </div>
+    const signal = '101010101'; // Data (10101010) + Parity bit (1)>  <!-- Added element for initI2cConfigAnimation -->
+ntrols">
+    signal.split('').forEach((bit, i) => {</button>
+        setTimeout(() => {
+            signalBits.children[i].classList.add('active');
+            signalBits.children[i].classList.toggle('high', bit === '1');
+            signalBits.children[i].classList.toggle('low', bit === '0');
+            signalBits.children[i].textContent = bit;
+        }, i * 300);        <!-- NEW: Sine Wave Animation Section -->
+    });
+           <h2>Problem ?: Sine Wave Animation</h2>
+    setTimeout(() => highlightSteps(steps), signal.length * 300 + 500);            <div id="sine-wave-container" style="border:1px solid #ccc; margin-bottom:10px;"></div>
+}function animateBaudRate(containers, steps) {    resetAnimation(containers, steps);    const signalBits = containers[0];    const signal = '0101010101'; // Example UART frame    signal.split('').forEach((bit, i) => {        setTimeout(() => {            signalBits.children[i].classList.add('active');            signalBits.children[i].classList.toggle('high', bit === '1');            signalBits.children[i].classList.toggle('low', bit === '0');            signalBits.children[i].textContent = bit;        }, i * 300);    });    setTimeout(() => highlightSteps(steps), signal.length * 300 + 500);}function animateI2cConfig(containers, steps) {    // This would be a more complex animation showing I2C open-drain behavior    // For now, we'll just highlight the steps    setTimeout(() => highlightSteps(steps), 1000);}function animateI2cAck(containers, steps) {    resetAnimation(containers, steps);    const ackSignal = containers[0];    const nackSignal = containers[1];        const ackBits = '00100'; // SDA pulled low for ACK    const nackBits = '11111'; // SDA remains high for NACK    ackBits.split('').forEach((bit, i) => {        setTimeout(() => {            ackSignal.children[i].classList.add('active');            ackSignal.children[i].classList.toggle('high', bit === '1');            ackSignal.children[i].classList.toggle('low', bit === '0');            ackSignal.children[i].textContent = bit;        }, i * 300);    });    nackBits.split('').forEach((bit, i) => {        setTimeout(() => {            nackSignal.children[i].classList.add('active');            nackSignal.children[i].classList.toggle('high', bit === '1');            nackSignal.children[i].classList.toggle('low', bit === '0');            nackSignal.children[i].textContent = bit;        }, i * 300);    });    setTimeout(() => highlightSteps(steps), Math.max(ackBits.length, nackBits.length) * 300 + 500);}function animateParityError(containers, steps) {    resetAnimation(containers, steps);    const signalBits = containers[0];    const signal = '1010101000'; // Data (10101010) + Parity bit (0) - even parity when odd expected    signal.split('').forEach((bit, i) => {        setTimeout(() => {            signalBits.children[i].classList.add('active');            signalBits.children[i].classList.toggle('high', bit === '1');            signalBits.children[i].classList.toggle('low', bit === '0');            signalBits.children[i].textContent = bit;        }, i * 300);    });    setTimeout(() => highlightSteps(steps), signal.length * 300 + 500);}function animateI2cAddress(containers, steps) {    resetAnimation(containers, steps);    const signalBits = containers[0];    const signal = '01110100'; // Address bits (0111010) + R/W bit (0)    signal.split('').forEach((bit, i) => {        setTimeout(() => {            signalBits.children[i].classList.add('active');            signalBits.children[i].classList.toggle('high', bit === '1');            signalBits.children[i].classList.toggle('low', bit === '0');            signalBits.children[i].textContent = bit;        }, i * 300);    });
+                <button id="sine-wave-animate-btn">Animate Sine Wave</button>
             </div>
-            <div id="i2c-config-sda"></div>  <!-- Added element for initI2cConfigAnimation -->
-            <div class="controls">
-                <button id="i2c-config-animate-btn">Animate</button>
-                <button id="i2c-config-steps-btn">Show Steps</button>
-                <button id="i2c-config-reset-btn">Reset</button>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+        </div>    setTimeout(() => highlightSteps(steps), signal.length * 300 + 500);
+
+
+
+
+</html></body>    </div>}
+
+function initSineWaveAnimation() {
+    const container = document.getElementById('sine-wave-container');
+    if (!container) {
+        console.error("Sine wave container not found!");
+        return;
+    }
+    // Clear any old content
+    container.innerHTML = '';
+    const canvas = document.createElement('canvas');
+    canvas.width = 600;
+    canvas.height = 150;
+    container.appendChild(canvas);
+    
+    animateSineWave(canvas, {
+        animationDuration: 3000,
+        amplitude: 50,
+        frequency: 0.02,
+        lineColor: '#29abe2',
+        lineWidth: 2,
+    });
+}
