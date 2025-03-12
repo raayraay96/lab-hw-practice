@@ -11,30 +11,76 @@ document.addEventListener('DOMContentLoaded', () => {
     initI2cAddressAnimation();
 });
 
-// Initialize each animation section
-function initSpiWordAnimation() {
-    // Corrected ID to target spi-word-mosi
-    const signalBitsMOSI = document.getElementById('spi-word-mosi');
-    if (!signalBitsMOSI) {
-        console.error("Element with ID 'spi-word-mosi' not found!"); // Error logging for debugging
-        return;
-    }
+// Utility function to reset animation
+function resetAnimation(containers, steps, stepsBtn) {
+    containers.forEach(container => {
+        if (container) {
+            Array.from(container.children).forEach(bit => {
+                bit.classList.remove('active', 'high', 'low');
+                bit.textContent = '0';
+            });
+        }
+    });
+    hideSteps(steps, stepsBtn);
+}
 
-    signalBitsMOSI.innerHTML = Array(15).fill('<span class="bit low">0</span>').join('');
+// Utility function to toggle steps visibility
+function toggleSteps(steps, stepsBtn) {
+    if (steps.style.display === 'block') {
+        hideSteps(steps, stepsBtn);
+    } else {
+        steps.style.display = 'block';
+        stepsBtn.textContent = 'Hide Steps';
+    }
+}
+
+// Utility function to hide steps
+function hideSteps(steps, stepsBtn) {
+    steps.style.display = 'none';
+    stepsBtn.textContent = 'Show Steps';
+}
+
+// Utility function to highlight steps
+function highlightSteps(steps) {
+    if (steps) {
+        steps.classList.add('highlighted');
+        setTimeout(() => steps.classList.remove('highlighted'), 500);
+    }
+}
+
+function initSpiWordAnimation() {
+    const canvas = document.getElementById('spiCanvas');
+    const ctx = canvas.getContext('2d');
 
     const animateBtn = document.getElementById('spi-word-animate-btn');
     const stepsBtn = document.getElementById('spi-word-steps-btn');
     const resetBtn = document.getElementById('spi-word-reset-btn');
     const steps = document.getElementById('spi-word-steps');
 
+    // Remove the bit-based elements
+    const signalBitsMOSI = document.getElementById('spi-word-mosi');
+    const signalBitsNSS = document.getElementById('spi-word-nss');
+    const signalBitsSCK = document.getElementById('spi-word-sck');
+
+    if (signalBitsMOSI) {
+        signalBitsMOSI.remove(); // Remove the element from the DOM
+    }
+    if (signalBitsNSS) {
+        signalBitsNSS.remove();
+    }
+    if (signalBitsSCK) {
+        signalBitsSCK.remove();
+    }
+
     animateBtn?.addEventListener('click', () => {
-        // Pass the correct container to animateSpiWord
-        const containers = [signalBitsMOSI];
-        animateSpiWord(containers, steps);
+        drawSpiSignals(ctx);
     });
 
     stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));
-    resetBtn?.addEventListener('click', () => resetAnimation(containers, steps, stepsBtn));
+    resetBtn?.addEventListener('click', () => {
+        ctx.clearRect(0, 0, 800, 200); // Clear the canvas on reset
+        hideSteps(steps, stepsBtn);
+    });
 }
 
 function initSpiValueAnimation() {
@@ -42,15 +88,14 @@ function initSpiValueAnimation() {
     if (!signalBits) return;
 
     signalBits.innerHTML = Array(15).fill('<span class="bit low">0</span>').join('');
-    
+
     const animateBtn = document.getElementById('spi-value-animate-btn');
     const stepsBtn = document.getElementById('spi-value-steps-btn');
     const resetBtn = document.getElementById('spi-value-reset-btn');
     const steps = document.getElementById('spi-value-steps');
 
     animateBtn?.addEventListener('click', () => {
-        const containers = [signalBits];
-        animateSpiValue(containers, steps);
+        animateSpiValue([signalBits], steps, stepsBtn);
     });
 
     stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));
@@ -62,15 +107,16 @@ function initUartEncodeAnimation() {
     if (!signalBits) return;
 
     signalBits.innerHTML = Array(10).fill('<span class="bit low">0</span>').join('');
-    
+
     const animateBtn = document.getElementById('uart-encode-animate-btn');
     const stepsBtn = document.getElementById('uart-encode-steps-btn');
     const resetBtn = document.getElementById('uart-encode-reset-btn');
     const steps = document.getElementById('uart-encode-steps');
+    const inputByte = document.getElementById('uart-input-byte');
 
     animateBtn?.addEventListener('click', () => {
-        const containers = [signalBits];
-        animateUartEncode(containers, steps);
+        const byte = parseInt(inputByte.value, 16);
+        animateUartEncode([signalBits], steps, stepsBtn, byte);
     });
 
     stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));
@@ -82,15 +128,14 @@ function initUartWordAnimation() {
     if (!signalBits) return;
 
     signalBits.innerHTML = Array(10).fill('<span class="bit low">0</span>').join('');
-    
+
     const animateBtn = document.getElementById('uart-word-animate-btn');
     const stepsBtn = document.getElementById('uart-word-steps-btn');
     const resetBtn = document.getElementById('uart-word-reset-btn');
     const steps = document.getElementById('uart-word-steps');
 
     animateBtn?.addEventListener('click', () => {
-        const containers = [signalBits];
-        animateUartWord(containers, steps);
+        animateUartWord([signalBits], steps, stepsBtn);
     });
 
     stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));
@@ -102,15 +147,14 @@ function initParityAnimation() {
     if (!signalBits) return;
 
     signalBits.innerHTML = Array(9).fill('<span class="bit low">0</span>').join('');
-    
+
     const animateBtn = document.getElementById('parity-animate-btn');
     const stepsBtn = document.getElementById('parity-steps-btn');
     const resetBtn = document.getElementById('parity-reset-btn');
     const steps = document.getElementById('parity-steps');
 
     animateBtn?.addEventListener('click', () => {
-        const containers = [signalBits];
-        animateParity(containers, steps);
+        animateParity([signalBits], steps, stepsBtn);
     });
 
     stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));
@@ -122,15 +166,14 @@ function initBaudRateAnimation() {
     if (!signalBits) return;
 
     signalBits.innerHTML = Array(10).fill('<span class="bit low">0</span>').join('');
-    
+
     const animateBtn = document.getElementById('baud-rate-animate-btn');
     const stepsBtn = document.getElementById('baud-rate-steps-btn');
     const resetBtn = document.getElementById('baud-rate-reset-btn');
     const steps = document.getElementById('baud-rate-steps');
 
     animateBtn?.addEventListener('click', () => {
-        const containers = [signalBits];
-        animateBaudRate(containers, steps);
+        animateBaudRate([signalBits], steps, stepsBtn);
     });
 
     stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));
@@ -142,15 +185,14 @@ function initI2cConfigAnimation() {
     if (!signalBits) return;
 
     signalBits.innerHTML = '<div class="i2c-config"></div>';
-    
+
     const animateBtn = document.getElementById('i2c-config-animate-btn');
     const stepsBtn = document.getElementById('i2c-config-steps-btn');
     const resetBtn = document.getElementById('i2c-config-reset-btn');
     const steps = document.getElementById('i2c-config-steps');
 
     animateBtn?.addEventListener('click', () => {
-        const containers = [signalBits];
-        animateI2cConfig(containers, steps);
+        animateI2cConfig([signalBits], steps, stepsBtn);
     });
 
     stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));
@@ -164,15 +206,14 @@ function initI2cAckAnimation() {
 
     ackSignal.innerHTML = Array(5).fill('<span class="bit low">0</span>').join('');
     nackSignal.innerHTML = Array(5).fill('<span class="bit low">0</span>').join('');
-    
+
     const animateBtn = document.getElementById('i2c-ack-animate-btn');
     const stepsBtn = document.getElementById('i2c-ack-steps-btn');
     const resetBtn = document.getElementById('i2c-ack-reset-btn');
     const steps = document.getElementById('i2c-ack-steps');
 
     animateBtn?.addEventListener('click', () => {
-        const containers = [ackSignal, nackSignal];
-        animateI2cAck(containers, steps);
+        animateI2cAck([ackSignal, nackSignal], steps, stepsBtn);
     });
 
     stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));
@@ -184,15 +225,14 @@ function initParityErrorAnimation() {
     if (!signalBits) return;
 
     signalBits.innerHTML = Array(10).fill('<span class="bit low">0</span>').join('');
-    
+
     const animateBtn = document.getElementById('parity-error-animate-btn');
     const stepsBtn = document.getElementById('parity-error-steps-btn');
     const resetBtn = document.getElementById('parity-error-reset-btn');
     const steps = document.getElementById('parity-error-steps');
 
     animateBtn?.addEventListener('click', () => {
-        const containers = [signalBits];
-        animateParityError(containers, steps);
+        animateParityError([signalBits], steps, stepsBtn);
     });
 
     stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));
@@ -204,23 +244,52 @@ function initI2cAddressAnimation() {
     if (!signalBits) return;
 
     signalBits.innerHTML = Array(8).fill('<span class="bit low">0</span>').join('');
-    
+
     const animateBtn = document.getElementById('i2c-address-animate-btn');
     const stepsBtn = document.getElementById('i2c-address-steps-btn');
     const resetBtn = document.getElementById('i2c-address-reset-btn');
     const steps = document.getElementById('i2c-address-steps');
 
     animateBtn?.addEventListener('click', () => {
-        const containers = [signalBits];
-        animateI2cAddress(containers, steps);
+        animateI2cAddress([signalBits], steps, stepsBtn);
     });
 
     stepsBtn?.addEventListener('click', () => toggleSteps(steps, stepsBtn));
     resetBtn?.addEventListener('click', () => resetAnimation([signalBits], steps, stepsBtn));
 }
 
-function animateSpiWord(containers, steps) {
-    resetAnimation(containers, steps);
+function animateSpiWord(containers, steps, stepsBtn) {
+    resetAnimation(containers, steps, stepsBtn);
+    const signalBitsMOSI = containers[0];
+    const signalBitsNSS = containers[1];
+    const signalBitsSCK = containers[2];
+
+    const signal = '110001000010110';
+
+    signal.split('').forEach((bit, i) => {
+        setTimeout(() => {
+            signalBitsMOSI.children[i].classList.add('active');
+            signalBitsMOSI.children[i].classList.toggle('high', bit === '1');
+            signalBitsMOSI.children[i].classList.toggle('low', bit === '0');
+            signalBitsMOSI.children[i].textContent = bit;
+
+            signalBitsNSS.children[i].classList.add('active');
+            signalBitsNSS.children[i].classList.toggle('high', i === 0);
+            signalBitsNSS.children[i].classList.toggle('low', i !== 0);
+            signalBitsNSS.children[i].textContent = i === 0 ? '1' : '0';
+
+            signalBitsSCK.children[i].classList.add('active');
+            signalBitsSCK.children[i].classList.toggle('high', i % 2 !== 0);
+            signalBitsSCK.children[i].classList.toggle('low', i % 2 === 0);
+            signalBitsSCK.children[i].textContent = i % 2 !== 0 ? '1' : '0';
+        }, i * 300);
+    });
+
+    setTimeout(() => highlightSteps(steps), signal.length * 300 + 500);
+}
+
+function animateSpiValue(containers, steps, stepsBtn) {
+    resetAnimation(containers, steps, stepsBtn);
     const signalBits = containers[0];
     const signal = '110001000010110';
 
@@ -236,10 +305,11 @@ function animateSpiWord(containers, steps) {
     setTimeout(() => highlightSteps(steps), signal.length * 300 + 500);
 }
 
-function animateSpiValue(containers, steps) {
-    resetAnimation(containers, steps);
+function animateUartEncode(containers, steps, stepsBtn, byte) {
+    resetAnimation(containers, steps, stepsBtn);
     const signalBits = containers[0];
-    const signal = '110001000010110';
+    let binaryString = byte.toString(2).padStart(8, '0');
+    const signal = '0' + binaryString + '1'; // Start bit + Data + Stop bit
 
     signal.split('').forEach((bit, i) => {
         setTimeout(() => {
@@ -253,25 +323,8 @@ function animateSpiValue(containers, steps) {
     setTimeout(() => highlightSteps(steps), signal.length * 300 + 500);
 }
 
-function animateUartEncode(containers, steps) {
-    resetAnimation(containers, steps);
-    const signalBits = containers[0];
-    const signal = '0110010101'; // Start bit (0) + Data (11001010) + Stop bit (1)
-
-    signal.split('').forEach((bit, i) => {
-        setTimeout(() => {
-            signalBits.children[i].classList.add('active');
-            signalBits.children[i].classList.toggle('high', bit === '1');
-            signalBits.children[i].classList.toggle('low', bit === '0');
-            signalBits.children[i].textContent = bit;
-        }, i * 300);
-    });
-
-    setTimeout(() => highlightSteps(steps), signal.length * 300 + 500);
-}
-
-function animateUartWord(containers, steps) {
-    resetAnimation(containers, steps);
+function animateUartWord(containers, steps, stepsBtn) {
+    resetAnimation(containers, steps, stepsBtn);
     const signalBits = containers[0];
     const signal = '0100100110'; // First frame for 'd'
 
@@ -287,8 +340,8 @@ function animateUartWord(containers, steps) {
     setTimeout(() => highlightSteps(steps), signal.length * 300 + 500);
 }
 
-function animateParity(containers, steps) {
-    resetAnimation(containers, steps);
+function animateParity(containers, steps, stepsBtn) {
+    resetAnimation(containers, steps, stepsBtn);
     const signalBits = containers[0];
     const signal = '101010101'; // Data (10101010) + Parity bit (1)
 
@@ -304,8 +357,8 @@ function animateParity(containers, steps) {
     setTimeout(() => highlightSteps(steps), signal.length * 300 + 500);
 }
 
-function animateBaudRate(containers, steps) {
-    resetAnimation(containers, steps);
+function animateBaudRate(containers, steps, stepsBtn) {
+    resetAnimation(containers, steps, stepsBtn);
     const signalBits = containers[0];
     const signal = '0101010101'; // Example UART frame
 
@@ -321,17 +374,17 @@ function animateBaudRate(containers, steps) {
     setTimeout(() => highlightSteps(steps), signal.length * 300 + 500);
 }
 
-function animateI2cConfig(containers, steps) {
+function animateI2cConfig(containers, steps, stepsBtn) {
     // This would be a more complex animation showing I2C open-drain behavior
     // For now, we'll just highlight the steps
     setTimeout(() => highlightSteps(steps), 1000);
 }
 
-function animateI2cAck(containers, steps) {
-    resetAnimation(containers, steps);
+function animateI2cAck(containers, steps, stepsBtn) {
+    resetAnimation(containers, steps, stepsBtn);
     const ackSignal = containers[0];
     const nackSignal = containers[1];
-    
+
     const ackBits = '00100'; // SDA pulled low for ACK
     const nackBits = '11111'; // SDA remains high for NACK
 
@@ -356,8 +409,8 @@ function animateI2cAck(containers, steps) {
     setTimeout(() => highlightSteps(steps), Math.max(ackBits.length, nackBits.length) * 300 + 500);
 }
 
-function animateParityError(containers, steps) {
-    resetAnimation(containers, steps);
+function animateParityError(containers, steps, stepsBtn) {
+    resetAnimation(containers, steps, stepsBtn);
     const signalBits = containers[0];
     const signal = '1010101000'; // Data (10101010) + Parity bit (0) - even parity when odd expected
 
@@ -373,8 +426,8 @@ function animateParityError(containers, steps) {
     setTimeout(() => highlightSteps(steps), signal.length * 300 + 500);
 }
 
-function animateI2cAddress(containers, steps) {
-    resetAnimation(containers, steps);
+function animateI2cAddress(containers, steps, stepsBtn) {
+    resetAnimation(containers, steps, stepsBtn);
     const signalBits = containers[0];
     const signal = '01110100'; // Address bits (0111010) + R/W bit (0)
 
