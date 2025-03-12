@@ -37,4 +37,28 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 2000 + Math.random() * 3000);
     });
+
+    // Problem 5: Odd Parity Meaning animation
+    const parityBtn = document.getElementById("parity-animate-btn");
+    if(parityBtn){
+        parityBtn.addEventListener("click", function(){
+            const paritySteps = document.getElementById("parity-steps");
+            // Simple fade-out then fade-in effect
+            paritySteps.style.transition = "opacity 0.5s";
+            paritySteps.style.opacity = 0;
+            setTimeout(() => { paritySteps.style.opacity = 1; }, 500);
+        });
+    }
+    
+    // Problem 6: Words per Second animation
+    const baudBtn = document.getElementById("baud-words-animate-btn");
+    if(baudBtn){
+        baudBtn.addEventListener("click", function(){
+            const baudSteps = document.getElementById("baud-words-steps");
+            // Apply a simple scale effect
+            baudSteps.style.transition = "transform 0.5s";
+            baudSteps.style.transform = "scale(1.1)";
+            setTimeout(() => { baudSteps.style.transform = "scale(1)"; }, 500);
+        });
+    }
 });
