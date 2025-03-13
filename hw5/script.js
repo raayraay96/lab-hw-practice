@@ -71,7 +71,7 @@ function setupAnimation(config) {
     reset();
 }
 
-// ---- New Utility Functions for Drawing Waveforms and Counters ----
+// ---- Utility Functions for Drawing Waveforms and Counters ----
 
 function clearCanvas(canvas) {
     const ctx = canvas.getContext('2d');
@@ -117,23 +117,35 @@ function drawSineWave(canvas, amplitude = 0.8, frequency = 1, phase = 0) {
     ctx.stroke();
 }
 
-function drawTriangleWave(canvas, peakHeightPercent = 0.8) {
-    const ctx = canvas.getContext('2d');
-    clearCanvas(canvas);
-    ctx.strokeStyle = '#00ff88';
-    ctx.lineWidth = 2;
-    const width = canvas.width;
-    const height = canvas.height / 2;
-    const peakY = height - height * peakHeightPercent;
 
-    ctx.beginPath();
-    ctx.moveTo(0, height);
-    ctx.lineTo(width / 2, peakY);
-    ctx.lineTo(width, height);
-    ctx.stroke();
-    ctx.lineTo(0, height);
-    ctx.closePath();
-    ctx.stroke();
+// This function now DYNAMICALLY draws the triangle waveform.
+function drawCounterWaveform(waveformCanvas, counterValue, arrValue, countingUp) {
+	const ctx = waveformCanvas.getContext('2d');
+	clearCanvas(waveformCanvas);
+	ctx.strokeStyle = '#00ff88';
+	ctx.lineWidth = 2;
+	const width = waveformCanvas.width;
+	const height = waveformCanvas.height;
+
+	ctx.beginPath();
+	ctx.moveTo(0, height); // Start at bottom left
+
+	if (countingUp) {
+		// Calculate the x-coordinate for the upward line.
+		const x = (counterValue / arrValue) * (width / 2);
+		// Draw the line from the bottom left to the current counter position.
+		ctx.lineTo(x, height - (counterValue / arrValue) * height);
+	} else {
+		// If counting down, first draw a line to the top center.
+		ctx.lineTo(width / 2, 0);
+
+		// Calculate the x-coordinate for the downward line.
+		const x = width / 2 + ((arrValue - counterValue) / arrValue) * (width / 2);
+		// Draw the line from the top center to the current counter position.
+		ctx.lineTo(x, (arrValue - counterValue) / arrValue * height);
+	}
+
+	ctx.stroke();
 }
 
 function updateVisualCounter(elementId, value) {
@@ -150,7 +162,7 @@ function updateValueDisplay(elementId, value) {
     }
 }
 
-// Refactored Animation Functions (Updated for Problems 1, 3, 4, 5, 9)
+// ---- Animation Functions ----
 
 function initTimerConfigAnimation() {
     const prescalerSlider = document.getElementById('timer-prescaler');
@@ -168,42 +180,74 @@ function initTimerConfigAnimation() {
             const counterDisplay = document.getElementById('timer-counter-display');
             const waveformCanvas = document.getElementById('timer-output-waveform');
             let counterValue = 0;
+            let animationInterval;
 
-            const prescaler = parseInt(prescalerSlider.value, 10);
-            const arrValue = parseInt(arrSlider.value, 10);
-            const ccrValue = parseInt(ccrSlider.value, 10);
-            const timerFrequency = 100000 / (1 + prescaler) / (1 + arrValue);
-            const dutyCycle = (ccrValue / (arrValue + 1)) * 100;
+            const updateAnimation = () => {
+                const prescaler = parseInt(prescalerSlider.value, 10);
+                const arrValue = parseInt(arrSlider.value, 10);
+                const ccrValue = parseInt(ccrSlider.value, 10);
+                const timerFrequency = 100000 / (1 + prescaler) / (1 + arrValue);
+                const dutyCycle = (ccrValue / (arrValue + 1)) * 100;
 
-            updateTimerDisplay(prescaler, arrValue, ccrValue);
+                document.getElementById('timer-prescaler-val').textContent = prescaler;
+                document.getElementById('timer-arr-val').textContent = arrValue;
+                document.getElementById('timer-arr-val-duty').textContent = arrValue;
+                document.getElementById('timer-ccr-val').textContent = ccrValue;
+                document.getElementById('timer-calculated-freq').textContent = timerFrequency.toFixed(2);
+                document.getElementById('timer-calculated-duty').textContent = dutyCycle.toFixed(0);
 
-            const animationInterval = setInterval(() => {
                 updateVisualCounter('timer-counter-display', counterValue);
-                const currentDuty = (counterValue < ccrValue) ? 100 : 0;
-                drawSquareWave(waveformCanvas, currentDuty);
-                counterValue = (counterValue + 1) % (arrValue + 1);
-            }, 50); // Slower for visibility
+
+                const ctx = waveformCanvas.getContext('2d');
+                ctx.strokeStyle = '#00ff88';
+                ctx.lineWidth = 2;
+                const width = waveformCanvas.width;
+                const height = waveformCanvas.height / 2;
+                const xIncrement = width / (arrValue + 1);
+                const currentX = counterValue * xIncrement;
+
+                ctx.beginPath();
+                if (counterValue < ccrValue) {
+                    ctx.moveTo(currentX, height);
+                    ctx.lineTo(currentX + xIncrement, height);
+                } else {
+                    ctx.moveTo(currentX, 0);
+                    ctx.lineTo(currentX + xIncrement, 0);
+                }
+                ctx.stroke();
+
+                counterValue++;
+                if (counterValue > arrValue) {
+                    counterValue = 0;
+                    clearCanvas(waveformCanvas);
+                }
+            };
+
+            animationInterval = setInterval(updateAnimation, 20);
 
             setTimeout(() => highlightSteps(steps), 1000);
-            setTimeout(() => clearInterval(animationInterval), 10000);
+            setTimeout(() => clearInterval(animationInterval), 20000);
         }
     });
 
-    const updateTimerDisplay = (prescaler, arrValue, ccrValue) => {
+    const updateTimerDisplay = () => {
+        const prescaler = parseInt(prescalerSlider.value, 10);
+        const arrValue = parseInt(arrSlider.value, 10);
+        const ccrValue = parseInt(ccrSlider.value, 10);
         const timerFrequency = 100000 / (1 + prescaler) / (1 + arrValue);
         const dutyCycle = (ccrValue / (arrValue + 1)) * 100;
+
         document.getElementById('timer-prescaler-val').textContent = prescaler;
         document.getElementById('timer-arr-val').textContent = arrValue;
         document.getElementById('timer-arr-val-duty').textContent = arrValue;
         document.getElementById('timer-ccr-val').textContent = ccrValue;
         document.getElementById('timer-calculated-freq').textContent = timerFrequency.toFixed(2);
         document.getElementById('timer-calculated-duty').textContent = dutyCycle.toFixed(0);
-        document.getElementById('timer-calculated-duty-percent').textContent = dutyCycle.toFixed(0);
     };
 
-    prescalerSlider.addEventListener('input', () => updateTimerDisplay(parseInt(prescalerSlider.value, 10), parseInt(arrSlider.value, 10), parseInt(ccrSlider.value, 10)));
-    arrSlider.addEventListener('input', () => updateTimerDisplay(parseInt(prescalerSlider.value, 10), parseInt(arrSlider.value, 10), parseInt(ccrSlider.value, 10)));
-    ccrSlider.addEventListener('input', () => updateTimerDisplay(parseInt(prescalerSlider.value, 10), parseInt(arrSlider.value, 10), parseInt(ccrSlider.value, 10)));
+    prescalerSlider.addEventListener('input', updateTimerDisplay);
+    arrSlider.addEventListener('input', updateTimerDisplay);
+    ccrSlider.addEventListener('input', updateTimerDisplay);
 }
 
 function initSinewaveAnimation() {
@@ -218,15 +262,25 @@ function initSinewaveAnimation() {
             const sinewaveCanvas = document.getElementById('sinewave-canvas');
             let samplesPerCycle = 20;
             let frequency = 25000;
+            let dacRate = 500000;
             let phase = 0;
+            let animationInterval;
 
             updateValueDisplay('sinewave-samples-display', samplesPerCycle);
             updateValueDisplay('sinewave-freq-display', frequency);
 
-            const animationInterval = setInterval(() => {
+            function animateSine() {
+                clearCanvas(sinewaveCanvas);
                 drawSineWave(sinewaveCanvas, 0.8, frequency / 25000, phase);
-                phase += 0.1; // Increment phase for animation
-            }, 50); // 50ms interval for smooth animation
+                phase += 0.1;
+                if (phase > 2 * Math.PI) {
+                    phase -= 2 * Math.PI;
+                }
+                const calculatedMaxFrequency = dacRate / samplesPerCycle;
+                updateValueDisplay('sinewave-freq-display', calculatedMaxFrequency.toFixed(0));
+            }
+
+            animationInterval = setInterval(animateSine, 30);
 
             setTimeout(() => highlightSteps(steps), 1000);
             setTimeout(() => clearInterval(animationInterval), 10000);
@@ -249,20 +303,55 @@ function initCenterAnimation() {
             let counterValue = 0;
             let arrValue = 500;
             let countingUp = true;
+            let animationInterval;
 
-            const animationInterval = setInterval(() => {
+            function drawCounterWaveform() {
+                const ctx = waveformCanvas.getContext('2d');
+                clearCanvas(waveformCanvas);
+                ctx.strokeStyle = '#00ff88';
+                ctx.lineWidth = 2;
+                const width = waveformCanvas.width;
+                const height = waveformCanvas.height;
+
+                ctx.beginPath();
+                ctx.moveTo(0, height); // Start at bottom left
+
+                if (countingUp) {
+                    // Calculate the x-coordinate for the upward line.
+                    const x = (counterValue / arrValue) * (width / 2);
+                    // Draw the line from the bottom left to the current counter position.
+                    ctx.lineTo(x, height - (counterValue / arrValue) * height);
+                } else {
+                    // If counting down, first draw a line to the top center.
+                    ctx.lineTo(width / 2, 0);
+
+                    // Calculate the x-coordinate for the downward line.
+                    const x = width / 2 + ((arrValue - counterValue) / arrValue) * (width / 2);
+                    // Draw the line from the top center to the current counter position.
+                    ctx.lineTo(x, (arrValue - counterValue) / arrValue * height);
+                }
+
+                ctx.stroke();
+            }
+
+            animationInterval = setInterval(() => {
                 updateVisualCounter('center-counter-display', counterValue);
-                const peakHeightPercent = counterValue / arrValue;
-                drawTriangleWave(waveformCanvas, peakHeightPercent);
+                drawCounterWaveform(waveformCanvas, counterValue, arrValue, countingUp);
 
                 if (countingUp) {
                     counterValue++;
-                    if (counterValue >= arrValue) countingUp = false;
+                    if (counterValue > arrValue) {
+                        countingUp = false;
+                        counterValue = arrValue;
+                    }
                 } else {
                     counterValue--;
-                    if (counterValue <= 0) countingUp = true;
+                    if (counterValue < 0) {
+                        countingUp = true;
+                        counterValue = 0;
+                    }
                 }
-            }, 50); // Slower interval (50ms) for visibility
+            }, 20);
 
             setTimeout(() => highlightSteps(steps), 1000);
             setTimeout(() => clearInterval(animationInterval), 10000);
@@ -288,9 +377,15 @@ function initBJTAnimation() {
             let animationInterval;
 
             function animateDACSignal() {
+                clearCanvas(dacWaveformCanvas);
                 const frequency = isFastDAC ? 5 : 0.5;
                 drawSineWave(dacWaveformCanvas, 0.8, frequency, time);
-                currentDisplay.textContent = isFastDAC ? 'Fluctuating' : 'Stable';
+
+                const ctx = dacWaveformCanvas.getContext('2d');
+                const currentLevel = isFastDAC ? 50 : 20;
+                ctx.fillStyle = isFastDAC ? '#ff6347' : '#00ff88';
+                ctx.fillRect(0, dacWaveformCanvas.height - currentLevel, 20, currentLevel);
+
                 time += 0.02;
             }
 
@@ -324,43 +419,33 @@ function initPWMAnimation() {
         resetBtnId: 'pwm-reset-btn',
         animateFunction: (container, steps, reset) => {
             reset();
-            const pwmWaveformCanvas = document.getElementById('pwm-signal-waveform');
-            const dutyCycleDisplay = document.getElementById('pwm-duty-cycle-display');
-            let counter = 0;
-
-            const arrValue = parseInt(arrSlider.value, 10);
-            const ccrValue = parseInt(ccrSlider.value, 10);
-            const dutyCyclePercent = (ccrValue / (arrValue + 1)) * 100;
-
-            updatePWMDisplay(arrValue, ccrValue);
-
-            const animationInterval = setInterval(() => {
-                counter = (counter + 1) % (arrValue + 1);
-                const currentDuty = (counter < ccrValue) ? 100 : 0;
-                drawSquareWave(pwmWaveformCanvas, currentDuty);
-            }, 50);
-
+            updatePWMDisplay();
             setTimeout(() => highlightSteps(steps), 1000);
-            setTimeout(() => clearInterval(animationInterval), 10000);
         }
     });
 
-    const updatePWMDisplay = (arrValue, ccrValue) => {
+    const updatePWMDisplay = () => {
+        const arrValue = parseInt(arrSlider.value, 10);
+        const ccrValue = parseInt(ccrSlider.value, 10);
         const dutyCyclePercent = (ccrValue / (arrValue + 1)) * 100;
+
         document.getElementById('pwm-arr-val').textContent = arrValue;
         document.getElementById('pwm-ccr-val-duty').textContent = ccrValue;
         document.getElementById('pwm-calculated-period').textContent = arrValue + 1;
         document.getElementById('pwm-calculated-period-duty').textContent = arrValue + 1;
         document.getElementById('pwm-calculated-duty-percent').textContent = dutyCyclePercent.toFixed(0);
+
+        const dutyCycleDisplay = document.getElementById('pwm-duty-cycle-display');
         dutyCycleDisplay.textContent = dutyCyclePercent.toFixed(0) + '%';
-        drawSquareWave(document.getElementById('pwm-signal-waveform'), dutyCyclePercent);
+
+        const pwmWaveformCanvas = document.getElementById('pwm-signal-waveform');
+        clearCanvas(pwmWaveformCanvas);
+        drawSquareWave(pwmWaveformCanvas, dutyCyclePercent);
     };
 
-    arrSlider.addEventListener('input', () => updatePWMDisplay(parseInt(arrSlider.value, 10), parseInt(ccrSlider.value, 10)));
-    ccrSlider.addEventListener('input', () => updatePWMDisplay(parseInt(arrSlider.value, 10), parseInt(ccrSlider.value, 10)));
+    arrSlider.addEventListener('input', updatePWMDisplay);
+    ccrSlider.addEventListener('input', updatePWMDisplay);
 }
-
-// Unchanged Animation Functions
 
 function initSysTickLimitationsAnimation() { initGenericBitsAnimation('systick-limitations'); }
 function initInterruptIntervalAnimation() { initGenericBitsAnimation('interrupt-interval'); }
@@ -593,7 +678,6 @@ function initWavetableAnimation() {
         }
     });
 }
-
 // Initialize animations
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('systick-limitations-options')) { initSysTickLimitationsAnimation(); }
