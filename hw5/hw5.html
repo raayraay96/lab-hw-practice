@@ -409,6 +409,55 @@
         </div>
     </div>
 
+<div class="section" id="mosfet-switch-section">
+    <h2>Problem 11: I2C Transfer Rate</h2>
+    <div class="description">
+        Consider the following I2C transfer timeline. If the Baud rate of this interaction is 9600, what is the data in Bytes/s, rounded to the nearest hundredth?
+    </div>
+    <div class="interactive-controls" id="mosfet-switch-options">
+        <!-- Animation will be drawn here -->
+    </div>
+    <div class="calculation-steps" id="mosfet-switch-steps">
+        <p>A complete transaction takes 29 signal changes or bits as shown above.</p>
+        <p>The baud rate is signal changes every second. Therefore, total number of transactions in 1 second = 9600 / 29 = 331.03</p>
+        <p>We have 2 bytes of data transmitted every 29 signal changes. Therefore in 9600 signal changes we have, 331.03 * 2 bytes of data transmitted, i.e. 662.07.</p>
+        <p>Answer: 662.07 Bytes/s</p>
+    </div>
+    <div class="controls">
+        <button id="mosfet-switch-animate-btn">Animate</button>
+        <button id="mosfet-switch-steps-btn">Show Steps</button>
+        <button id="mosfet-switch-reset-btn">Reset</button>
+    </div>
+</div>
+
+<div class="section" id="sampling-rate-section">
+    <h2>Problem 5: Sampling Rate</h2>
+    <div class="description">
+        Determine the Nyquist frequency for a sampling rate of 10 kHz.
+    </div>
+    <div class="interactive-controls">
+        <div class="slider-container">
+            <label>Sampling Rate: <span id="sampling-rate-display">10</span> samples</label>
+            <input type="range" id="sampling-rate-slider" min="2" max="20" value="10">
+        </div>
+        <div class="value-display">
+            <span>Nyquist Frequency: <span id="nyquist-freq-display">5.0</span> Hz</span>
+        </div>
+    </div>
+    <div class="signal-container">
+        <canvas id="sampling-rate-canvas" width="400" height="150"></canvas>
+    </div>
+    <div class="calculation-steps" id="sampling-rate-steps">
+        <p>Nyquist Frequency = Sampling Rate / 2</p>
+        <p>Nyquist Frequency = 10 kHz / 2 = 5 kHz</p>
+    </div>
+    <div class="controls">
+        <button id="sampling-rate-animate-btn">Animate</button>
+        <button id="sampling-rate-steps-btn">Show Steps</button>
+        <button id="sampling-rate-reset-btn">Reset</button>
+    </div>
+</div>
+
 </div>
 <div id="back-to-top" onclick="scrollToTop()">↑</div>
 

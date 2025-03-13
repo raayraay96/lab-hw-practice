@@ -1,6 +1,5 @@
 // Utility Functions
 function toggleSteps(steps, btn) {
-    if (!steps || !btn) return;
     btn.textContent = steps.classList.contains('visible') ? 'Show Steps' : 'Hide Steps';
     steps.classList.toggle('visible');
 }
@@ -15,14 +14,14 @@ function showExplanation(text) {
     const overlay = document.getElementById('explanation-overlay');
     const message = document.getElementById('explanation-message');
     if (!overlay || !message) return;
-
+    
     message.textContent = text;
     overlay.classList.add('visible');
-
+    
     if (overlay.timeoutId) {
         clearTimeout(overlay.timeoutId);
     }
-
+    
     overlay.timeoutId = setTimeout(() => {
         overlay.classList.remove('visible');
         overlay.timeoutId = null;
@@ -87,7 +86,7 @@ function initTimerConfigAnimation() {
 
         document.getElementById('timer-calculated-freq').textContent = frequency.toFixed(2);
         document.getElementById('timer-calculated-duty').textContent = dutyCycle.toFixed(1);
-
+        
         // Update the values in the steps section
         document.getElementById('timer-prescaler-val').textContent = prescaler;
         document.getElementById('timer-arr-val').textContent = arr;
@@ -116,7 +115,7 @@ function initTimerConfigAnimation() {
             const t = (x / canvas.width) * 4 * period + time;
             const cycle = (t % period) / period;
             const y = cycle < dutyCycle ? 20 : 60;
-
+            
             if (x === 0) {
                 ctx.moveTo(x, y);
             } else {
@@ -205,7 +204,7 @@ function initPWMAnimation() {
             const t = (x / canvas.width) * 2 * period + time;
             const cycle = Math.floor(t) % period;
             let y;
-
+            
             if (ccr === 0) {
                 // Inverse PWM mode
                 y = cycle === 0 ? 60 : 20;
@@ -216,7 +215,7 @@ function initPWMAnimation() {
                 // Normal operation
                 y = cycle < ccr ? 20 : 60;
             }
-
+            
             if (x === 0) {
                 ctx.moveTo(x, y);
             } else {
@@ -281,17 +280,17 @@ function initBJTAnimation() {
     let animationId;
     let time = 0;
     let fastMode = false;
-
+    
     function drawWaveform() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.beginPath();
         ctx.strokeStyle = '#00ff88';
         ctx.lineWidth = 2;
-
+        
         for (let x = 0; x < canvas.width; x++) {
             const t = (x / canvas.width) * 2 * Math.PI + time;
             let y;
-
+            
             if (fastMode) {
                 // Fast transitions (square wave)
                 y = Math.sin(t) > 0 ? 20 : 60;
@@ -299,7 +298,7 @@ function initBJTAnimation() {
                 // Slow transitions (sine wave)
                 y = 40 + Math.sin(t) * 20;
             }
-
+            
             if (x === 0) {
                 ctx.moveTo(x, y);
             } else {
@@ -308,24 +307,24 @@ function initBJTAnimation() {
         }
         ctx.stroke();
     }
-
+    
     function animate() {
         time += 0.05;
         drawWaveform();
-
+        
         // Update current display based on mode
-        document.getElementById('current-signal-display').textContent =
+        document.getElementById('current-signal-display').textContent = 
             fastMode ? 'High (Less Efficient)' : 'Gradual (More Efficient)';
-
+            
         animationId = requestAnimationFrame(animate);
     }
-
+    
     document.getElementById('toggle-dac-method').addEventListener('click', function() {
         fastMode = !fastMode;
         this.textContent = fastMode ? 'Switch to Slow DAC (Efficient)' : 'Switch to Fast DAC (Less Efficient)';
         drawWaveform();
     });
-
+    
     document.getElementById('bjt-animate-btn').addEventListener('click', function() {
         if (animationId) {
             cancelAnimationFrame(animationId);
@@ -336,18 +335,18 @@ function initBJTAnimation() {
             this.textContent = 'Stop';
         }
     });
-
+    
     document.getElementById('bjt-steps-btn').addEventListener('click', function() {
         const steps = document.getElementById('bjt-steps');
         toggleSteps(steps, this);
     });
-
+    
     document.getElementById('bjt-reset-btn').addEventListener('click', function() {
         fastMode = false;
         time = 0;
         document.getElementById('toggle-dac-method').textContent = 'Switch to Fast DAC (Less Efficient)';
         document.getElementById('current-signal-display').textContent = 'Gradual (More Efficient)';
-
+        
         if (animationId) {
             cancelAnimationFrame(animationId);
             animationId = null;
@@ -355,7 +354,7 @@ function initBJTAnimation() {
         }
         drawWaveform();
     });
-
+    
     // Initial draw
     drawWaveform();
 }
@@ -378,7 +377,7 @@ function initInterruptIntervalAnimation() {
                     <span class="bit low">d) 2 ms</span>
                 </div>
             `;
-
+            
             setTimeout(() => {
                 steps.classList.add('visible');
                 document.getElementById('interrupt-interval-steps-btn').textContent = 'Hide Steps';
@@ -426,7 +425,7 @@ function initKeypadScanningAnimation() {
                     <div>Key: <span class="highlight">8</span></div>
                 </div>
             `;
-
+            
             setTimeout(() => {
                 steps.classList.add('visible');
                 document.getElementById('keypad-scanning-steps-btn').textContent = 'Hide Steps';
@@ -516,7 +515,7 @@ function initSinewaveAnimation() {
         const width = canvas.width;
         const height = canvas.height;
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, width, height);
         ctx.beginPath();
         ctx.strokeStyle = '#00ff88';
         ctx.lineWidth = 2;
@@ -597,7 +596,7 @@ function initSinewaveAnimation() {
         updateValueDisplay('sinewave-samples-display', 10);
         const calculatedMaxFrequency = dacRate / samplesPerCycle;
         updateValueDisplay('sinewave-freq-display', calculatedMaxFrequency.toFixed(0));
-
+        
         if (animationId) {
             cancelAnimationFrame(animationId);
             animationId = null;
@@ -633,30 +632,102 @@ function initOpAmpGainAnimation() {
     });
 }
 
-// Problem 11: MOSFET Switch
+// Problem 11: I2C Transfer Rate
 function initMOSFETSwitchAnimation() {
-    setupAnimation({
-        containerId: 'mosfet-switch-options',
-        stepsId: 'mosfet-switch-steps',
-        animateBtnId: 'mosfet-switch-animate-btn',
-        stepsBtnId: 'mosfet-switch-steps-btn',
-        resetBtnId: 'mosfet-switch-reset-btn',
-        animateFunction: (container, steps, reset) => {
-            reset();
-            container.innerHTML = `
-                <div>
-                    <span class="bit low">a) Resistor</span>
-                    <span class="bit low">b) Capacitor</span>
-                    <span class="bit high connection visible">c) MOSFET</span>
-                    <span class="bit low">d) Inductor</span>
-                </div>
-            `;
-
-            setTimeout(() => {
-                steps.classList.add('visible');
-                document.getElementById('mosfet-switch-steps-btn').textContent = 'Hide Steps';
-            }, 1000);
-        }
+    const container = document.getElementById('mosfet-switch-options');
+    const steps = document.getElementById('mosfet-switch-steps');
+    
+    function drawI2CTimeline() {
+        container.innerHTML = '';
+        
+        // Create canvas for I2C timeline
+        const canvas = document.createElement('canvas');
+        canvas.width = 500;
+        canvas.height = 300;
+        container.appendChild(canvas);
+        
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw I2C timeline
+        ctx.font = '14px Arial';
+        ctx.fillStyle = '#fff';
+        
+        // Draw master and slave labels
+        ctx.fillText('I2C Master', 100, 30);
+        ctx.fillText('I2C Slave', 350, 30);
+        
+        // Draw vertical lines for master and slave
+        ctx.beginPath();
+        ctx.strokeStyle = '#fff';
+        ctx.moveTo(120, 40);
+        ctx.lineTo(120, 280);
+        ctx.moveTo(380, 40);
+        ctx.lineTo(380, 280);
+        ctx.stroke();
+        
+        // Draw signal lines
+        const signals = [
+            { from: 120, to: 380, y: 60, label: 'Start bit' },
+            { from: 120, to: 380, y: 90, label: '8 bit (7 address + R/W)' },
+            { from: 380, to: 120, y: 120, label: '1 bit ACK' },
+            { from: 120, to: 380, y: 150, label: '8 bit of data' },
+            { from: 380, to: 120, y: 180, label: '1 bit ACK' },
+            { from: 120, to: 380, y: 210, label: '8 bit of data' },
+            { from: 380, to: 120, y: 240, label: '1 bit ACK' },
+            { from: 120, to: 380, y: 270, label: 'Stop bit' }
+        ];
+        
+        signals.forEach(signal => {
+            ctx.beginPath();
+            ctx.moveTo(signal.from, signal.y);
+            ctx.lineTo(signal.to, signal.y);
+            ctx.stroke();
+            
+            // Add arrowhead
+            const arrowSize = 5;
+            const direction = signal.from < signal.to ? 1 : -1;
+            ctx.beginPath();
+            ctx.moveTo(signal.to, signal.y);
+            ctx.lineTo(signal.to - direction * arrowSize, signal.y - arrowSize);
+            ctx.lineTo(signal.to - direction * arrowSize, signal.y + arrowSize);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Add label
+            ctx.fillText(signal.label, Math.min(signal.from, signal.to) + Math.abs(signal.from - signal.to) / 2 - 40, signal.y - 5);
+        });
+        
+        // Add calculation result
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'calculation-result';
+        resultDiv.innerHTML = `
+            <h3>I2C Data Transfer Rate Calculation</h3>
+            <p>Total signal changes: 29 bits</p>
+            <p>Baud rate: 9600 bits/second</p>
+            <p>Transactions per second: 9600 ÷ 29 = 331.03</p>
+            <p>Data bytes per transaction: 2 bytes</p>
+            <p>Data transfer rate: 331.03 × 2 = 662.07 Bytes/s</p>
+        `;
+        container.appendChild(resultDiv);
+    }
+    
+    document.getElementById('mosfet-switch-animate-btn').addEventListener('click', function() {
+        drawI2CTimeline();
+        setTimeout(() => {
+            steps.classList.add('visible');
+            document.getElementById('mosfet-switch-steps-btn').textContent = 'Hide Steps';
+        }, 1000);
+    });
+    
+    document.getElementById('mosfet-switch-steps-btn').addEventListener('click', function() {
+        toggleSteps(steps, this);
+    });
+    
+    document.getElementById('mosfet-switch-reset-btn').addEventListener('click', function() {
+        container.innerHTML = '';
+        steps.classList.remove('visible');
+        document.getElementById('mosfet-switch-steps-btn').textContent = 'Show Steps';
     });
 }
 
@@ -768,12 +839,135 @@ function initI2CAddressingAnimation() {
     });
 }
 
+// Problem 3: SysTick Limitations
+function initSysTickAnimation() {
+    setupAnimation({
+        containerId: 'systick-limitations-options',
+        stepsId: 'systick-limitations-steps',
+        animateBtnId: 'systick-limitations-animate-btn',
+        stepsBtnId: 'systick-limitations-steps-btn',
+        resetBtnId: 'systick-limitations-reset-btn',
+        animateFunction: (container, steps, reset) => {
+            reset();
+            container.innerHTML = `
+                <div>
+                    <span class="bit low">a) Delay Function</span>
+                    <span class="bit low">b) Clear Variable</span>
+                    <span class="bit high connection visible">c) Flash Latency</span>
+                    <span class="bit low">d) SysTick Handler</span>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                steps.classList.add('visible');
+                document.getElementById('systick-limitations-steps-btn').textContent = 'Hide Steps';
+            }, 1000);
+        }
+    });
+}
+
+// Problem 5: Sampling Rate
+function initSamplingRateAnimation() {
+    const canvas = document.getElementById('sampling-rate-canvas');
+    const ctx = canvas.getContext('2d');
+    let animationId;
+    let phase = 0;
+    let samplingRate = 10; // Default sampling rate
+    
+    function drawSignal() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw original signal (sine wave)
+        ctx.beginPath();
+        ctx.strokeStyle = '#00ff88';
+        ctx.lineWidth = 2;
+        
+        for (let x = 0; x < canvas.width; x++) {
+            const t = (x / canvas.width) * 2 * Math.PI + phase;
+            const y = canvas.height/2 + Math.sin(t) * canvas.height/3;
+            
+            if (x === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+        
+        // Draw sampling points
+        ctx.fillStyle = '#ff5588';
+        for (let i = 0; i < samplingRate; i++) {
+            const x = (i / samplingRate) * canvas.width;
+            const t = (x / canvas.width) * 2 * Math.PI + phase;
+            const y = canvas.height/2 + Math.sin(t) * canvas.height/3;
+            
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+        
+        // Update Nyquist frequency display
+        const nyquistFreq = samplingRate / 2;
+        document.getElementById('nyquist-freq-display').textContent = nyquistFreq.toFixed(1);
+    }
+    
+    function animate() {
+        phase += 0.05;
+        if (phase > 2 * Math.PI) {
+            phase -= 2 * Math.PI;
+        }
+        drawSignal();
+        animationId = requestAnimationFrame(animate);
+    }
+    
+    // Event listeners
+    document.getElementById('sampling-rate-slider').addEventListener('input', function() {
+        samplingRate = parseInt(this.value);
+        document.getElementById('sampling-rate-display').textContent = samplingRate;
+        drawSignal();
+    });
+    
+    document.getElementById('sampling-rate-animate-btn').addEventListener('click', function() {
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+            this.textContent = 'Animate';
+        } else {
+            animate();
+            this.textContent = 'Stop';
+        }
+    });
+    
+    document.getElementById('sampling-rate-steps-btn').addEventListener('click', function() {
+        const steps = document.getElementById('sampling-rate-steps');
+        toggleSteps(steps, this);
+    });
+    
+    document.getElementById('sampling-rate-reset-btn').addEventListener('click', function() {
+        samplingRate = 10;
+        phase = 0;
+        document.getElementById('sampling-rate-slider').value = 10;
+        document.getElementById('sampling-rate-display').textContent = '10';
+        document.getElementById('nyquist-freq-display').textContent = '5.0';
+        
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+            document.getElementById('sampling-rate-animate-btn').textContent = 'Animate';
+        }
+        drawSignal();
+    });
+    
+    // Initial draw
+    drawSignal();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     initTimerConfigAnimation(); // Problem 1
     initPWMAnimation(); // Problem 2
     initSysTickAnimation(); // Problem 3
     initBJTAnimation(); // Problem 4
-    // initSamplingRateAnimation(); // Problem 5 - assuming this is defined elsewhere
+    initSamplingRateAnimation(); // Problem 5
     initInterruptIntervalAnimation(); // Problem 6
     initKeypadScanningAnimation(); // Problem 7
     initDebouncingAnimation(); // Problem 8
