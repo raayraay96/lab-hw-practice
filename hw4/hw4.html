@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ECE362 HW4 Study Animations</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css"> <!-- Link to your CSS file -->
 </head>
 <body>
     <div class="navbar">
@@ -17,13 +17,12 @@
         <a href="../hw6/hw6.html">HW6</a>
     </div>
     <h1>ECE362 HW4 Study Animations</h1>
+
     <div class="content">
-        <!-- Problem 1 -->
+        <!-- Problem 1: DMA -->
         <div class="section" id="dma-statements-section">
             <h2>Problem 1: DMA Controller Statements</h2>
-            <div class="description">
-                Select all statements true for Direct Memory Access Controller. The animation highlights the correct statements.
-            </div>
+            <div class="description">Select all statements true for Direct Memory Access Controller.</div>
             <div class="signal-container">
                 <div class="signal-row">
                     <span class="signal-label">Options</span>
@@ -44,12 +43,10 @@
             </div>
         </div>
 
-        <!-- Problem 2 -->
+        <!-- Problem 2: Q4.4 -->
         <div class="section" id="q44-binary-section">
             <h2>Problem 2: Q4.4 Fixed Point Binary Fraction</h2>
-            <div class="description">
-                What is the unsigned Q4.4 fixed point binary fraction representation of 15.1897? The animation shows the binary equivalent (11110011).
-            </div>
+            <div class="description">What is the unsigned Q4.4 fixed point binary fraction representation of 15.1897?</div>
             <div class="signal-container">
                 <div class="signal-row">
                     <span class="signal-label">Binary</span>
@@ -68,19 +65,17 @@
             </div>
         </div>
 
-        <!-- Problem 3 -->
+        <!-- Problem 3: DAC Right-Aligned -->
         <div class="section" id="dac-section">
             <h2>Problem 3: DAC Output (Right Aligned)</h2>
-            <div class="description">
-                A 12-bit DAC with Vref=3V reads 0x08EA (right-aligned). The animation converts the rightmost 12 bits (2282) to a voltage of 1.671V.
-            </div>
+            <div class="description">A 12-bit DAC with Vref=3V reads 0x08EA (right-aligned).</div>
             <div class="signal-container">
                 <div class="signal-row">
                     <span class="signal-label">Bits</span>
                     <div class="signal-bits" id="dac-bits"></div>
                 </div>
             </div>
-            <div class="calculation-steps" id="dac-steps">
+             <div class="calculation-steps" id="dac-steps">
                 <p>0x08EA (right 12 bits) = 2282</p>
                 <p>Vout = 3 * 2282 / (2^12 - 1)</p>
                 <p>Vout = 1.671 V</p>
@@ -92,12 +87,10 @@
             </div>
         </div>
 
-        <!-- Problem 4 -->
+        <!-- Problem 4: DAC Left-Aligned -->
         <div class="section" id="dac-left-aligned-section">
             <h2>Problem 4: DAC Output (Left Aligned)</h2>
-            <div class="description">
-                A 12-bit DAC with Vref=3V reads 0x08EA (left-aligned). The animation converts the leftmost 12 bits (142) to a voltage of 0.104V.
-            </div>
+            <div class="description">A 12-bit DAC with Vref=3V reads 0x08EA (left-aligned).</div>
             <div class="signal-container">
                 <div class="signal-row">
                     <span class="signal-label">Bits</span>
@@ -116,19 +109,17 @@
             </div>
         </div>
 
-        <!-- Problem 5 -->
+        <!-- Problem 5: DAC Error -->
         <div class="section" id="dac-error-section">
             <h2>Problem 5: 1-bit DAC Maximum Error</h2>
-            <div class="description">
-                In a 1-bit DAC, if R value can vary +/-10%, what is the maximum error on Vout? The animation highlights 0.05 Vref.
-            </div>
-            <div class="signal-container">
+            <div class="description">In a 1-bit DAC, if R value can vary +/-10%, what is the maximum error on Vout?</div>
+             <div class="signal-container">
                 <div class="signal-row">
                     <span class="signal-label">Options</span>
                     <div class="signal-bits" id="dac-error-options"></div>
                 </div>
             </div>
-            <div class="calculation-steps" id="dac-error-steps">
+           <div class="calculation-steps" id="dac-error-steps">
                 <p>R1 = 1.1, R2 = 0.9</p>
                 <p>Vout = Vref * 0.9 / (1.1 + 0.9) = 0.45 Vref</p>
                 <p>Error = |0.45 Vref - 0.5 Vref| = 0.05 Vref</p>
@@ -140,19 +131,17 @@
             </div>
         </div>
 
-        <!-- Problem 6 -->
+        <!-- Problem 6: ADC Sampling -->
         <div class="section" id="adc-sampling-rate-section">
             <h2>Problem 6: ADC Sampling Rate Statements</h2>
-            <div class="description">
-                Which statement is true regarding the ADC sampling rate? The animation highlights the Nyquist theorem.
-            </div>
+            <div class="description">Which statement is true regarding the ADC sampling rate?</div>
             <div class="signal-container">
                 <div class="signal-row">
                     <span class="signal-label">Options</span>
                     <div class="signal-bits" id="adc-sampling-rate-options"></div>
                 </div>
             </div>
-            <div class="calculation-steps" id="adc-sampling-rate-steps">
+             <div class="calculation-steps" id="adc-sampling-rate-steps">
                 <p>a: Clock frequency - Incorrect</p>
                 <p>b: Nyquist theorem - Correct</p>
                 <p>c: Minimum time - Incorrect</p>
@@ -165,13 +154,11 @@
             </div>
         </div>
 
-        <!-- Problem 7 -->
+        <!-- Problem 7: ADC Cycles -->
         <div class="section" id="adc-cycles-section">
             <h2>Problem 7: ADC Total Cycles</h2>
-            <div class="description">
-                A 12-bit ADC has a sampling time of 10 cycles. The animation shows the total cycles for one conversion as 22 (10 sampling + 12 conversion).
-            </div>
-            <div class="signal-container">
+            <div class="description">A 12-bit ADC has a sampling time of 10 cycles.</div>
+             <div class="signal-container">
                 <div class="signal-row">
                     <span class="signal-label">Cycles</span>
                     <div class="signal-bits" id="adc-cycles"></div>
@@ -189,12 +176,10 @@
             </div>
         </div>
 
-        <!-- Problem 8 -->
+        <!-- Problem 8: ADC Quantization Error -->
         <div class="section" id="adc-quantization-error-section">
             <h2>Problem 8: ADC Maximum Quantization Error</h2>
-            <div class="description">
-                If Vref = 6V and ADC resolution is 12 bits, what is the max quantization error? The animation highlights 0.73 mV.
-            </div>
+            <div class="description">If Vref = 6V and ADC resolution is 12 bits, what is the max quantization error?</div>
             <div class="signal-container">
                 <div class="signal-row">
                     <span class="signal-label">Options</span>
@@ -213,13 +198,11 @@
             </div>
         </div>
 
-        <!-- Problem 9 -->
+        <!-- Problem 9: ADC Resolution -->
         <div class="section" id="adc-resolution-bits-section">
             <h2>Problem 9: ADC Bits of Resolution</h2>
-            <div class="description">
-                How many bits of resolution are required for an ADC to distinguish 1µV over a range from 0V to 6V? The animation shows 23 bits.
-            </div>
-            <div class="signal-container">
+            <div class="description">How many bits are required for an ADC to distinguish 1µV over 0V to 6V?</div>
+             <div class="signal-container">
                 <div class="signal-row">
                     <span class="signal-label">Values</span>
                     <div class="signal-bits" id="adc-resolution-bits"></div>
@@ -237,13 +220,11 @@
             </div>
         </div>
 
-        <!-- Problem 10 -->
+        <!-- Problem 10: ADC Guess -->
         <div class="section" id="adc-guess-section">
             <h2>Problem 10: ADC Guess After 6 Cycles</h2>
-            <div class="description">
-                A 12-bit ADC takes 14 cycles (2 sampling + 12 conversion) with Vref=10V for 8.225V input. After 6 cycles, the guess is 8.125V. The animation shows a 4-bit resolution.
-            </div>
-            <div class="signal-container">
+            <div class="description">A 12-bit ADC takes 14 cycles (2 sampling + 12 conversion) with Vref=10V, input 8.225V.</div>
+             <div class="signal-container">
                 <div class="signal-row">
                     <span class="signal-label">Bits</span>
                     <div class="signal-bits" id="adc-guess"></div>
@@ -261,7 +242,8 @@
             </div>
         </div>
     </div>
+
     <div id="back-to-top" onclick="scrollToTop()">↑</div>
-    <script src="script.js"></script>
+    <script src="script.js"></script> <!-- Link to your JavaScript file -->
 </body>
 </html>

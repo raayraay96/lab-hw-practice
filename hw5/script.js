@@ -165,6 +165,7 @@ function updateValueDisplay(elementId, value) {
 // ---- Animation Functions ----
 
 function initTimerConfigAnimation() {
+    console.log("initTimerConfigAnimation called");
     const prescalerSlider = document.getElementById('timer-prescaler');
     const arrSlider = document.getElementById('timer-arr');
     const ccrSlider = document.getElementById('timer-ccr');
@@ -176,6 +177,7 @@ function initTimerConfigAnimation() {
         stepsBtnId: 'timer-config-steps-btn',
         resetBtnId: 'timer-config-reset-btn',
         animateFunction: (container, steps, reset) => {
+            console.log("Timer config animateFunction started");
             reset();
             const counterDisplay = document.getElementById('timer-counter-display');
             const waveformCanvas = document.getElementById('timer-output-waveform');
@@ -183,6 +185,7 @@ function initTimerConfigAnimation() {
             let animationInterval;
 
             const updateAnimation = () => {
+                console.log("updateAnimation called - prescaler:", prescalerSlider.value, "arr:", arrSlider.value, "ccr:", ccrSlider.value);
                 const prescaler = parseInt(prescalerSlider.value, 10);
                 const arrValue = parseInt(arrSlider.value, 10);
                 const ccrValue = parseInt(ccrSlider.value, 10);
@@ -225,12 +228,19 @@ function initTimerConfigAnimation() {
 
             animationInterval = setInterval(updateAnimation, 20);
 
-            setTimeout(() => highlightSteps(steps), 1000);
-            setTimeout(() => clearInterval(animationInterval), 20000);
+            setTimeout(() => {
+                console.log("Highlighting steps");
+                highlightSteps(steps);
+            }, 1000);
+            setTimeout(() => {
+                console.log("Clearing animation interval");
+                clearInterval(animationInterval);
+            }, 20000);
         }
     });
 
     const updateTimerDisplay = () => {
+        console.log("updateTimerDisplay called");
         const prescaler = parseInt(prescalerSlider.value, 10);
         const arrValue = parseInt(arrSlider.value, 10);
         const ccrValue = parseInt(ccrSlider.value, 10);
@@ -248,6 +258,7 @@ function initTimerConfigAnimation() {
     prescalerSlider.addEventListener('input', updateTimerDisplay);
     arrSlider.addEventListener('input', updateTimerDisplay);
     ccrSlider.addEventListener('input', updateTimerDisplay);
+    console.log("initTimerConfigAnimation setup complete");
 }
 
 function initSinewaveAnimation() {
