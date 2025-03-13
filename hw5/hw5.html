@@ -25,9 +25,18 @@
             This problem asks you to find which timer settings produce a <strong>1 Hz</strong> square wave with a <strong>50% duty cycle</strong> (half on, half off) using a prescaler of 999 and a 100 kHz clock.
         </div>
         <div class="interactive-controls" id="timer-controls">
-            <label>Prescaler: <input type="range" id="timer-prescaler" min="0" max="2000" value="999"></label>
-            <label>ARR: <input type="range" id="timer-arr" min="10" max="200" value="99"></label>
-            <label>CCR: <input type="range" id="timer-ccr" min="0" max="200" value="50"></label>
+            <div class="slider-container">
+                <label>Prescaler: <span class="slider-value" id="prescaler-value">999</span></label>
+                <input type="range" id="timer-prescaler" min="0" max="2000" value="999">
+            </div>
+            <div class="slider-container">
+                <label>ARR: <span class="slider-value" id="arr-value">99</span></label>
+                <input type="range" id="timer-arr" min="10" max="200" value="99">
+            </div>
+            <div class="slider-container">
+                <label>CCR: <span class="slider-value" id="ccr-value">50</span></label>
+                <input type="range" id="timer-ccr" min="0" max="200" value="50">
+            </div>
         </div>
         <div class="signal-container timer-signal-container">
             <div class="signal-row">
@@ -78,9 +87,38 @@
         <div class="description">
             PWM duty cycle calculation with 100kHz clock, prescaler=999, ARR=24.
         </div>
-        <div class="interactive-controls" id="pwm-controls">
-            <label>ARR: <input type="range" id="pwm-arr" min="1" max="100" value="24"></label>
-            <label>CCR: <input type="range" id="pwm-ccr" min="0" max="100" value="1"></label>
+        <!-- Replace the Problem 2 section with this -->
+        <div class="section" id="pwm-duty-section">
+            <h2>Problem 2: Maximum PWM Duty Cycle</h2>
+            <div class="description">
+                Given a 100kHz clock, prescaler=999, and ARR=24, find the maximum duty cycle &lt; 100%. The animation demonstrates how CCR values affect the duty cycle.
+            </div>
+            <div class="interactive-controls" id="pwm-controls">
+                <div class="slider-container">
+                    <label>CCR Value: <span class="slider-value" id="ccr-value-pwm">24</span></label>
+                    <input type="range" id="pwm-ccr" min="0" max="24" value="24">
+                </div>
+            </div>
+            <div class="signal-container">
+                <div class="signal-row">
+                    <span class="signal-label">PWM Output</span>
+                    <canvas class="waveform-canvas" id="pwm-waveform" width="400" height="80"></canvas>
+                </div>
+                <div class="signal-row">
+                    <span class="signal-label">Duty Cycle</span>
+                    <div class="value-display" id="duty-cycle-display">96%</div>
+                </div>
+            </div>
+            <div class="calculation-steps" id="pwm-duty-steps">
+                <p>ARR = 24, Total Period = ARR + 1 = 25 cycles</p>
+                <p>Maximum On-time = 24 cycles (CCR = 24 or CCR = 0)</p>
+                <p>Duty Cycle = 24/25 = 96%</p>
+            </div>
+            <div class="controls">
+                <button id="pwm-animate-btn">Animate</button>
+                <button id="pwm-steps-btn">Show Steps</button>
+                <button id="pwm-reset-btn">Reset</button>
+            </div>
         </div>
         <div class="signal-container pwm-signal-container">
             <div class="signal-row">

@@ -1,782 +1,787 @@
 // Utility Functions
 function toggleSteps(steps, btn) {
     if (!steps || !btn) return;
+    btn.textContent = steps.classList.contains('visible') ? 'Show Steps' : 'Hide Steps';
     steps.classList.toggle('visible');
-    btn.textContent = steps.classList.contains('visible') ? 'Hide Steps' : 'Show Steps';
 }
 
 function highlightSteps(steps) {
     if (!steps) return;
-    steps.classList.add('visible');
-    const paragraphs = steps.querySelectorAll('p');
-    paragraphs.forEach((p, i) => {
-        setTimeout(() => {
-            if (i > 0) paragraphs[i - 1].classList.remove('step-highlight');
-            p.classList.add('step-highlight');
-        }, i * 800);
-    });
-    setTimeout(() => {
-        if (paragraphs.length) paragraphs[paragraphs.length - 1].classList.remove('step-highlight');
-    }, paragraphs.length * 800);
+    steps.classList.add('highlight');
+    setTimeout(() => steps.classList.remove('highlight'), 1000);
 }
 
-function resetBits(bitContainer, initialText) {
-    [...bitContainer.children].forEach(child => {
-        if (child.tagName === 'DIV') {
-            [...child.children].forEach(bit => {
-                bit.classList.remove('high', 'connection', 'visible');
-                bit.classList.add('low');
-                if (initialText !== '') bit.textContent = initialText;
-            });
-        }
-    });
-}
+function showExplanation(text) {
+    const overlay = document.getElementById('explanation-overlay');
+    const message = document.getElementById('explanation-message');
+    if (!overlay || !message) return;
 
-window.onscroll = function() {
-    const btn = document.getElementById('back-to-top');
-    if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-        btn.style.display = 'block';
-    } else {
-        btn.style.display = 'none';
+    message.textContent = text;
+    overlay.classList.add('visible');
+
+    if (overlay.timeoutId) {
+        clearTimeout(overlay.timeoutId);
     }
-};
 
-function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    overlay.timeoutId = setTimeout(() => {
+        overlay.classList.remove('visible');
+        overlay.timeoutId = null;
+    }, 3000);
 }
 
-function setupAnimation(config) {
-    const { containerId, stepsId, animateBtnId, stepsBtnId, resetBtnId, initialValue = '', animateFunction } = config;
+// Animation setup helper function
+function setupAnimation({ containerId, stepsId, animateBtnId, stepsBtnId, resetBtnId, animateFunction }) {
     const container = document.getElementById(containerId);
     const steps = document.getElementById(stepsId);
     const animateBtn = document.getElementById(animateBtnId);
     const stepsBtn = document.getElementById(stepsBtnId);
     const resetBtn = document.getElementById(resetBtnId);
+
     if (!container || !steps || !animateBtn || !stepsBtn || !resetBtn) {
-        console.warn(`Elements not found for ${containerId} animation`);
+        console.error(`Missing elements for animation setup: ${containerId}`);
         return;
     }
+
     function reset() {
-        if (container.querySelector('div')) {
-            resetBits(container, initialValue);
-        } else {
-            container.innerHTML = initialValue;
+        if (container.innerHTML) {
+            container.innerHTML = '';
         }
         steps.classList.remove('visible');
         stepsBtn.textContent = 'Show Steps';
     }
+
     animateBtn.addEventListener('click', () => animateFunction(container, steps, reset));
     stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
     resetBtn.addEventListener('click', reset);
     reset();
 }
 
-// ---- Utility Functions for Drawing Waveforms and Counters ----
-
-function clearCanvas(canvas) {
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
-
-function drawSquareWave(canvas, dutyCyclePercent) {
-    const ctx = canvas.getContext('2d');
-    clearCanvas(canvas);
-    ctx.strokeStyle = '#00ff88';
-    ctx.lineWidth = 2;
-    const width = canvas.width;
-    const height = canvas.height / 2;
-    const onWidth = width * (dutyCyclePercent / 100);
-
-    ctx.beginPath();
-    ctx.moveTo(0, height);
-    ctx.lineTo(onWidth, height);
-    ctx.lineTo(onWidth, 0);
-    ctx.lineTo(width, 0);
-    ctx.lineTo(width, height);
-    ctx.stroke();
-}
-
-function drawSineWave(canvas, amplitude = 0.8, frequency = 1, phase = 0) {
-    const ctx = canvas.getContext('2d');
-    clearCanvas(canvas);
-    ctx.strokeStyle = '#00ff88';
-    ctx.lineWidth = 1.5;
-    const width = canvas.width;
-    const height = canvas.height / 2;
-    const scaleY = height * amplitude;
-    ctx.beginPath();
-    for (let x = 0; x < width; x++) {
-        const normalizedX = x / width;
-        const y = height - scaleY * Math.sin(2 * Math.PI * frequency * normalizedX + phase);
-        if (x === 0) {
-            ctx.moveTo(x, y);
-        } else {
-            ctx.lineTo(x, y);
-        }
-    }
-    ctx.stroke();
-}
-
-
-// This function now DYNAMICALLY draws the triangle waveform.
-function drawCounterWaveform(waveformCanvas, counterValue, arrValue, countingUp) {
-	const ctx = waveformCanvas.getContext('2d');
-	clearCanvas(waveformCanvas);
-	ctx.strokeStyle = '#00ff88';
-	ctx.lineWidth = 2;
-	const width = waveformCanvas.width;
-	const height = waveformCanvas.height;
-
-	ctx.beginPath();
-	ctx.moveTo(0, height); // Start at bottom left
-
-	if (countingUp) {
-		// Calculate the x-coordinate for the upward line.
-		const x = (counterValue / arrValue) * (width / 2);
-		// Draw the line from the bottom left to the current counter position.
-		ctx.lineTo(x, height - (counterValue / arrValue) * height);
-	} else {
-		// If counting down, first draw a line to the top center.
-		ctx.lineTo(width / 2, 0);
-
-		// Calculate the x-coordinate for the downward line.
-		const x = width / 2 + ((arrValue - counterValue) / arrValue) * (width / 2);
-		// Draw the line from the top center to the current counter position.
-		ctx.lineTo(x, (arrValue - counterValue) / arrValue * height);
-	}
-
-	ctx.stroke();
-}
-
-function updateVisualCounter(elementId, value) {
-    const element = document.getElementById(elementId);
-    if (element) {
-        element.textContent = value;
-    }
-}
-
-function updateValueDisplay(elementId, value) {
-    const element = document.getElementById(elementId);
-    if (element) {
-        element.textContent = value;
-    }
-}
-
-// ---- Animation Functions ----
-
+// Problem 1: Timer Configuration
 function initTimerConfigAnimation() {
-    console.log("initTimerConfigAnimation called");
+    const canvas = document.getElementById('timer-output-waveform');
+    const ctx = canvas.getContext('2d');
+    let animationId;
+    let time = 0;
+
     const prescalerSlider = document.getElementById('timer-prescaler');
     const arrSlider = document.getElementById('timer-arr');
     const ccrSlider = document.getElementById('timer-ccr');
+    const prescalerValue = document.getElementById('prescaler-value');
+    const arrValue = document.getElementById('arr-value');
+    const ccrValue = document.getElementById('ccr-value');
 
-    setupAnimation({
-        containerId: 'timer-config-options',
-        stepsId: 'timer-config-steps',
-        animateBtnId: 'timer-config-animate-btn',
-        stepsBtnId: 'timer-config-steps-btn',
-        resetBtnId: 'timer-config-reset-btn',
-        animateFunction: (container, steps, reset) => {
-            console.log("Timer config animateFunction started");
-            reset();
-            const counterDisplay = document.getElementById('timer-counter-display');
-            const waveformCanvas = document.getElementById('timer-output-waveform');
-            let counterValue = 0;
-            let animationInterval;
+    function updateValues() {
+        prescalerValue.textContent = prescalerSlider.value;
+        arrValue.textContent = arrSlider.value;
+        ccrValue.textContent = ccrSlider.value;
+        updateTimerCalculations();
+    }
 
-            const updateAnimation = () => {
-                console.log("updateAnimation called - prescaler:", prescalerSlider.value, "arr:", arrSlider.value, "ccr:", ccrSlider.value);
-                const prescaler = parseInt(prescalerSlider.value, 10);
-                const arrValue = parseInt(arrSlider.value, 10);
-                const ccrValue = parseInt(ccrSlider.value, 10);
-                const timerFrequency = 100000 / (1 + prescaler) / (1 + arrValue);
-                const dutyCycle = (ccrValue / (arrValue + 1)) * 100;
+    function updateTimerCalculations() {
+        const prescaler = parseInt(prescalerSlider.value);
+        const arr = parseInt(arrSlider.value);
+        const ccr = parseInt(ccrSlider.value);
 
-                document.getElementById('timer-prescaler-val').textContent = prescaler;
-                document.getElementById('timer-arr-val').textContent = arrValue;
-                document.getElementById('timer-arr-val-duty').textContent = arrValue;
-                document.getElementById('timer-ccr-val').textContent = ccrValue;
-                document.getElementById('timer-calculated-freq').textContent = timerFrequency.toFixed(2);
-                document.getElementById('timer-calculated-duty').textContent = dutyCycle.toFixed(0);
+        const frequency = 100000 / ((prescaler + 1) * (arr + 1));
+        const dutyCycle = (ccr / (arr + 1)) * 100;
 
-                updateVisualCounter('timer-counter-display', counterValue);
+        document.getElementById('timer-calculated-freq').textContent = frequency.toFixed(2);
+        document.getElementById('timer-calculated-duty').textContent = dutyCycle.toFixed(1);
 
-                const ctx = waveformCanvas.getContext('2d');
-                ctx.strokeStyle = '#00ff88';
-                ctx.lineWidth = 2;
-                const width = waveformCanvas.width;
-                const height = waveformCanvas.height / 2;
-                const xIncrement = width / (arrValue + 1);
-                const currentX = counterValue * xIncrement;
-
-                ctx.beginPath();
-                if (counterValue < ccrValue) {
-                    ctx.moveTo(currentX, height);
-                    ctx.lineTo(currentX + xIncrement, height);
-                } else {
-                    ctx.moveTo(currentX, 0);
-                    ctx.lineTo(currentX + xIncrement, 0);
-                }
-                ctx.stroke();
-
-                counterValue++;
-                if (counterValue > arrValue) {
-                    counterValue = 0;
-                    clearCanvas(waveformCanvas);
-                }
-            };
-
-            animationInterval = setInterval(updateAnimation, 20);
-
-            setTimeout(() => {
-                console.log("Highlighting steps");
-                highlightSteps(steps);
-            }, 1000);
-            setTimeout(() => {
-                console.log("Clearing animation interval");
-                clearInterval(animationInterval);
-            }, 20000);
-        }
-    });
-
-    const updateTimerDisplay = () => {
-        console.log("updateTimerDisplay called");
-        const prescaler = parseInt(prescalerSlider.value, 10);
-        const arrValue = parseInt(arrSlider.value, 10);
-        const ccrValue = parseInt(ccrSlider.value, 10);
-        const timerFrequency = 100000 / (1 + prescaler) / (1 + arrValue);
-        const dutyCycle = (ccrValue / (arrValue + 1)) * 100;
-
+        // Update the values in the steps section
         document.getElementById('timer-prescaler-val').textContent = prescaler;
-        document.getElementById('timer-arr-val').textContent = arrValue;
-        document.getElementById('timer-arr-val-duty').textContent = arrValue;
-        document.getElementById('timer-ccr-val').textContent = ccrValue;
-        document.getElementById('timer-calculated-freq').textContent = timerFrequency.toFixed(2);
-        document.getElementById('timer-calculated-duty').textContent = dutyCycle.toFixed(0);
-    };
+        document.getElementById('timer-arr-val').textContent = arr;
+        document.getElementById('timer-ccr-val').textContent = ccr;
+        document.getElementById('timer-arr-val-duty').textContent = arr;
 
-    prescalerSlider.addEventListener('input', updateTimerDisplay);
-    arrSlider.addEventListener('input', updateTimerDisplay);
-    ccrSlider.addEventListener('input', updateTimerDisplay);
-    console.log("initTimerConfigAnimation setup complete");
-}
+        // Update waveform if animation is running
+        if (animationId) {
+            drawWaveform();
+        }
+    }
 
-function initSinewaveAnimation() {
-    setupAnimation({
-        containerId: 'sinewave-samples',
-        stepsId: 'sinewave-steps',
-        animateBtnId: 'sinewave-animate-btn',
-        stepsBtnId: 'sinewave-steps-btn',
-        resetBtnId: 'sinewave-reset-btn',
-        animateFunction: (container, steps, reset) => {
-            reset();
-            const sinewaveCanvas = document.getElementById('sinewave-canvas');
-            let samplesPerCycle = 20;
-            let frequency = 25000;
-            let dacRate = 500000;
-            let phase = 0;
-            let animationInterval;
+    function drawWaveform() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.strokeStyle = '#00ff88';
+        ctx.lineWidth = 2;
 
-            updateValueDisplay('sinewave-samples-display', samplesPerCycle);
-            updateValueDisplay('sinewave-freq-display', frequency);
+        const prescaler = parseInt(prescalerSlider.value);
+        const arr = parseInt(arrSlider.value);
+        const ccr = parseInt(ccrSlider.value);
+        const period = (prescaler + 1) * (arr + 1) / 100000; // in seconds
+        const dutyCycle = ccr / (arr + 1);
 
-            function animateSine() {
-                clearCanvas(sinewaveCanvas);
-                drawSineWave(sinewaveCanvas, 0.8, frequency / 25000, phase);
-                phase += 0.1;
-                if (phase > 2 * Math.PI) {
-                    phase -= 2 * Math.PI;
-                }
-                const calculatedMaxFrequency = dacRate / samplesPerCycle;
-                updateValueDisplay('sinewave-freq-display', calculatedMaxFrequency.toFixed(0));
+        for (let x = 0; x < canvas.width; x++) {
+            const t = (x / canvas.width) * 4 * period + time;
+            const cycle = (t % period) / period;
+            const y = cycle < dutyCycle ? 20 : 60;
+
+            if (x === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
             }
+        }
+        ctx.stroke();
+    }
 
-            animationInterval = setInterval(animateSine, 30);
+    function animate() {
+        time += 0.01;
+        drawWaveform();
+        animationId = requestAnimationFrame(animate);
+    }
 
-            setTimeout(() => highlightSteps(steps), 1000);
-            setTimeout(() => clearInterval(animationInterval), 10000);
+    // Event listeners
+    prescalerSlider.addEventListener('input', updateValues);
+    arrSlider.addEventListener('input', updateValues);
+    ccrSlider.addEventListener('input', updateValues);
+
+    document.getElementById('timer-config-animate-btn').addEventListener('click', function() {
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+            this.textContent = 'Animate';
+        } else {
+            animate();
+            this.textContent = 'Stop';
         }
     });
-}
 
-function initCenterAnimation() {
-    setupAnimation({
-        containerId: 'center-counter',
-        stepsId: 'center-steps',
-        animateBtnId: 'center-animate-btn',
-        stepsBtnId: 'center-steps-btn',
-        resetBtnId: 'center-reset-btn',
-        initialValue: '0',
-        animateFunction: (container, steps, reset) => {
-            reset();
-            const counterDisplay = document.getElementById('center-counter-display');
-            const waveformCanvas = document.getElementById('center-waveform');
-            let counterValue = 0;
-            let arrValue = 500;
-            let countingUp = true;
-            let animationInterval;
-
-            function drawCounterWaveform() {
-                const ctx = waveformCanvas.getContext('2d');
-                clearCanvas(waveformCanvas);
-                ctx.strokeStyle = '#00ff88';
-                ctx.lineWidth = 2;
-                const width = waveformCanvas.width;
-                const height = waveformCanvas.height;
-
-                ctx.beginPath();
-                ctx.moveTo(0, height); // Start at bottom left
-
-                if (countingUp) {
-                    // Calculate the x-coordinate for the upward line.
-                    const x = (counterValue / arrValue) * (width / 2);
-                    // Draw the line from the bottom left to the current counter position.
-                    ctx.lineTo(x, height - (counterValue / arrValue) * height);
-                } else {
-                    // If counting down, first draw a line to the top center.
-                    ctx.lineTo(width / 2, 0);
-
-                    // Calculate the x-coordinate for the downward line.
-                    const x = width / 2 + ((arrValue - counterValue) / arrValue) * (width / 2);
-                    // Draw the line from the top center to the current counter position.
-                    ctx.lineTo(x, (arrValue - counterValue) / arrValue * height);
-                }
-
-                ctx.stroke();
-            }
-
-            animationInterval = setInterval(() => {
-                updateVisualCounter('center-counter-display', counterValue);
-                drawCounterWaveform(waveformCanvas, counterValue, arrValue, countingUp);
-
-                if (countingUp) {
-                    counterValue++;
-                    if (counterValue > arrValue) {
-                        countingUp = false;
-                        counterValue = arrValue;
-                    }
-                } else {
-                    counterValue--;
-                    if (counterValue < 0) {
-                        countingUp = true;
-                        counterValue = 0;
-                    }
-                }
-            }, 20);
-
-            setTimeout(() => highlightSteps(steps), 1000);
-            setTimeout(() => clearInterval(animationInterval), 10000);
-        }
+    document.getElementById('timer-config-steps-btn').addEventListener('click', function() {
+        const steps = document.getElementById('timer-config-steps');
+        toggleSteps(steps, this);
     });
-}
 
-function initBJTAnimation() {
-    setupAnimation({
-        containerId: 'dac-signal',
-        stepsId: 'bjt-steps',
-        animateBtnId: 'bjt-animate-btn',
-        stepsBtnId: 'bjt-steps-btn',
-        resetBtnId: 'bjt-reset-btn',
-        initialValue: '0',
-        animateFunction: (container, steps, reset) => {
-            reset();
-            const dacWaveformCanvas = document.getElementById('dac-signal-waveform');
-            const currentDisplay = document.getElementById('current-signal-display');
-            const toggleButton = document.getElementById('toggle-dac-method');
-            let time = 0;
-            let isFastDAC = false;
-            let animationInterval;
-
-            function animateDACSignal() {
-                clearCanvas(dacWaveformCanvas);
-                const frequency = isFastDAC ? 5 : 0.5;
-                drawSineWave(dacWaveformCanvas, 0.8, frequency, time);
-
-                const ctx = dacWaveformCanvas.getContext('2d');
-                const currentLevel = isFastDAC ? 50 : 20;
-                ctx.fillStyle = isFastDAC ? '#ff6347' : '#00ff88';
-                ctx.fillRect(0, dacWaveformCanvas.height - currentLevel, 20, currentLevel);
-
-                time += 0.02;
-            }
-
-            function startAnimation() {
-                if (animationInterval) clearInterval(animationInterval);
-                animationInterval = setInterval(animateDACSignal, 20);
-            }
-
-            startAnimation();
-            toggleButton.onclick = () => {
-                isFastDAC = !isFastDAC;
-                toggleButton.textContent = isFastDAC ? 'Toggle Driving Method (Slow)' : 'Toggle Driving Method (Fast)';
-                startAnimation();
-            };
-
-            setTimeout(() => highlightSteps(steps), 1000);
-            setTimeout(() => clearInterval(animationInterval), 10000);
+    document.getElementById('timer-config-reset-btn').addEventListener('click', function() {
+        prescalerSlider.value = 999;
+        arrSlider.value = 99;
+        ccrSlider.value = 50;
+        time = 0;
+        updateValues();
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+            document.getElementById('timer-config-animate-btn').textContent = 'Animate';
         }
+        drawWaveform();
     });
+
+    // Initial update
+    updateValues();
+    drawWaveform();
 }
 
+// Problem 3: PWM Duty Cycle
 function initPWMAnimation() {
-    const arrSlider = document.getElementById('pwm-arr');
+    const canvas = document.getElementById('pwm-waveform');
+    const ctx = canvas.getContext('2d');
     const ccrSlider = document.getElementById('pwm-ccr');
+    const ccrValue = document.getElementById('ccr-value-pwm');
+    const dutyDisplay = document.getElementById('duty-cycle-display');
+    let animationId;
+    let time = 0;
 
-    setupAnimation({
-        containerId: 'pwm-signal',
-        stepsId: 'pwm-steps',
-        animateBtnId: 'pwm-animate-btn',
-        stepsBtnId: 'pwm-steps-btn',
-        resetBtnId: 'pwm-reset-btn',
-        animateFunction: (container, steps, reset) => {
-            reset();
-            updatePWMDisplay();
-            setTimeout(() => highlightSteps(steps), 1000);
+    function calculateDutyCycle(ccr) {
+        // For CCR = 0 or CCR = ARR, duty cycle is 96%
+        if (ccr === 0 || ccr === 24) {
+            return 96;
+        }
+        // Otherwise, calculate based on CCR value
+        return (Math.min(ccr, 24) / 25) * 100;
+    }
+
+    function drawWaveform() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.strokeStyle = '#00ff88';
+        ctx.lineWidth = 2;
+
+        const ccr = parseInt(ccrSlider.value);
+        const period = 25; // ARR + 1
+        const dutyCycle = calculateDutyCycle(ccr);
+
+        for (let x = 0; x < canvas.width; x++) {
+            const t = (x / canvas.width) * 2 * period + time;
+            const cycle = Math.floor(t) % period;
+            let y;
+
+            if (ccr === 0) {
+                // Inverse PWM mode
+                y = cycle === 0 ? 60 : 20;
+            } else if (ccr === 24) {
+                // Normal PWM mode
+                y = cycle === 24 ? 60 : 20;
+            } else {
+                // Normal operation
+                y = cycle < ccr ? 20 : 60;
+            }
+
+            if (x === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+    }
+
+    function animate() {
+        time += 0.1;
+        drawWaveform();
+        animationId = requestAnimationFrame(animate);
+    }
+
+    // Event listeners
+    ccrSlider.addEventListener('input', function() {
+        const ccr = parseInt(this.value);
+        ccrValue.textContent = ccr;
+        const dutyCycle = calculateDutyCycle(ccr);
+        dutyDisplay.textContent = `${dutyCycle.toFixed(0)}%`;
+        drawWaveform();
+    });
+
+    document.getElementById('pwm-animate-btn').addEventListener('click', function() {
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+            this.textContent = 'Animate';
+        } else {
+            animate();
+            this.textContent = 'Stop';
         }
     });
 
-    const updatePWMDisplay = () => {
-        const arrValue = parseInt(arrSlider.value, 10);
-        const ccrValue = parseInt(ccrSlider.value, 10);
-        const dutyCyclePercent = (ccrValue / (arrValue + 1)) * 100;
+    document.getElementById('pwm-steps-btn').addEventListener('click', function() {
+        const steps = document.getElementById('pwm-duty-steps');
+        toggleSteps(steps, this);
+    });
 
-        document.getElementById('pwm-arr-val').textContent = arrValue;
-        document.getElementById('pwm-ccr-val-duty').textContent = ccrValue;
-        document.getElementById('pwm-calculated-period').textContent = arrValue + 1;
-        document.getElementById('pwm-calculated-period-duty').textContent = arrValue + 1;
-        document.getElementById('pwm-calculated-duty-percent').textContent = dutyCyclePercent.toFixed(0);
+    document.getElementById('pwm-reset-btn').addEventListener('click', function() {
+        ccrSlider.value = 24;
+        ccrValue.textContent = '24';
+        dutyDisplay.textContent = '96%';
+        time = 0;
+        drawWaveform();
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+            document.getElementById('pwm-animate-btn').textContent = 'Animate';
+        }
+    });
 
-        const dutyCycleDisplay = document.getElementById('pwm-duty-cycle-display');
-        dutyCycleDisplay.textContent = dutyCyclePercent.toFixed(0) + '%';
-
-        const pwmWaveformCanvas = document.getElementById('pwm-signal-waveform');
-        clearCanvas(pwmWaveformCanvas);
-        drawSquareWave(pwmWaveformCanvas, dutyCyclePercent);
-    };
-
-    arrSlider.addEventListener('input', updatePWMDisplay);
-    ccrSlider.addEventListener('input', updatePWMDisplay);
+    // Initial draw
+    drawWaveform();
 }
 
-function initSysTickLimitationsAnimation() { initGenericBitsAnimation('systick-limitations'); }
-function initInterruptIntervalAnimation() { initGenericBitsAnimation('interrupt-interval'); }
+// Problem 4: BJT Power Efficiency
+function initBJTAnimation() {
+    const canvas = document.getElementById('dac-signal-waveform');
+    const ctx = canvas.getContext('2d');
+    let animationId;
+    let time = 0;
+    let fastMode = false;
+
+    function drawWaveform() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.strokeStyle = '#00ff88';
+        ctx.lineWidth = 2;
+
+        for (let x = 0; x < canvas.width; x++) {
+            const t = (x / canvas.width) * 2 * Math.PI + time;
+            let y;
+
+            if (fastMode) {
+                // Fast transitions (square wave)
+                y = Math.sin(t) > 0 ? 20 : 60;
+            } else {
+                // Slow transitions (sine wave)
+                y = 40 + Math.sin(t) * 20;
+            }
+
+            if (x === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+    }
+
+    function animate() {
+        time += 0.05;
+        drawWaveform();
+
+        // Update current display based on mode
+        document.getElementById('current-signal-display').textContent =
+            fastMode ? 'High (Less Efficient)' : 'Gradual (More Efficient)';
+
+        animationId = requestAnimationFrame(animate);
+    }
+
+    document.getElementById('toggle-dac-method').addEventListener('click', function() {
+        fastMode = !fastMode;
+        this.textContent = fastMode ? 'Switch to Slow DAC (Efficient)' : 'Switch to Fast DAC (Less Efficient)';
+        drawWaveform();
+    });
+
+    document.getElementById('bjt-animate-btn').addEventListener('click', function() {
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+            this.textContent = 'Animate';
+        } else {
+            animate();
+            this.textContent = 'Stop';
+        }
+    });
+
+    document.getElementById('bjt-steps-btn').addEventListener('click', function() {
+        const steps = document.getElementById('bjt-steps');
+        toggleSteps(steps, this);
+    });
+
+    document.getElementById('bjt-reset-btn').addEventListener('click', function() {
+        fastMode = false;
+        time = 0;
+        document.getElementById('toggle-dac-method').textContent = 'Switch to Fast DAC (Less Efficient)';
+        document.getElementById('current-signal-display').textContent = 'Gradual (More Efficient)';
+
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+            document.getElementById('bjt-animate-btn').textContent = 'Animate';
+        }
+        drawWaveform();
+    });
+
+    // Initial draw
+    drawWaveform();
+}
+
+// Problem 6: Interrupt Interval
+function initInterruptIntervalAnimation() {
+    setupAnimation({
+        containerId: 'interrupt-interval-options',
+        stepsId: 'interrupt-interval-steps',
+        animateBtnId: 'interrupt-interval-animate-btn',
+        stepsBtnId: 'interrupt-interval-steps-btn',
+        resetBtnId: 'interrupt-interval-reset-btn',
+        animateFunction: (container, steps, reset) => {
+            reset();
+            container.innerHTML = `
+                <div>
+                    <span class="bit low">a) 0.5 ms</span>
+                    <span class="bit low">b) 0.8 ms</span>
+                    <span class="bit high connection visible">c) 1 ms</span>
+                    <span class="bit low">d) 2 ms</span>
+                </div>
+            `;
+
+            setTimeout(() => {
+                steps.classList.add('visible');
+                document.getElementById('interrupt-interval-steps-btn').textContent = 'Hide Steps';
+            }, 1000);
+        }
+    });
+}
+
+// Problem 7: Keypad Scanning
 function initKeypadScanningAnimation() {
     setupAnimation({
-        containerId: 'keypad-scanning-keypad',
+        containerId: 'keypad-scanning-options',
         stepsId: 'keypad-scanning-steps',
         animateBtnId: 'keypad-scanning-animate-btn',
         stepsBtnId: 'keypad-scanning-steps-btn',
         resetBtnId: 'keypad-scanning-reset-btn',
         animateFunction: (container, steps, reset) => {
             reset();
-            if (!container.querySelector('.keypad-key')) {
-                const keys = ['1','2','3','A','4','5','6','B','7','8','9','C','*','0','#','D'];
-                let keypadHTML = '<div>';
-                keys.forEach((key, i) => {
-                    keypadHTML += `<span class="bit low keypad-key" data-key="${key}">${key}</span>`;
-                    if ((i+1) % 4 === 0 && i < keys.length - 1) keypadHTML += '</div><div>';
-                });
-                keypadHTML += '</div>';
-                container.innerHTML = keypadHTML;
+            container.innerHTML = `
+                <div class="keypad-grid">
+                    <div class="keypad-row">
+                        <div class="keypad-key">1</div>
+                        <div class="keypad-key">2</div>
+                        <div class="keypad-key">3</div>
+                    </div>
+                    <div class="keypad-row">
+                        <div class="keypad-key">4</div>
+                        <div class="keypad-key">5</div>
+                        <div class="keypad-key">6</div>
+                    </div>
+                    <div class="keypad-row">
+                        <div class="keypad-key">7</div>
+                        <div class="keypad-key active">8</div>
+                        <div class="keypad-key">9</div>
+                    </div>
+                    <div class="keypad-row">
+                        <div class="keypad-key">*</div>
+                        <div class="keypad-key">0</div>
+                        <div class="keypad-key">#</div>
+                    </div>
+                </div>
+                <div class="keypad-result">
+                    <div>Row: <span class="highlight">2</span></div>
+                    <div>Column: <span class="highlight">1</span></div>
+                    <div>Key: <span class="highlight">8</span></div>
+                </div>
+            `;
+
+            setTimeout(() => {
+                steps.classList.add('visible');
+                document.getElementById('keypad-scanning-steps-btn').textContent = 'Hide Steps';
+            }, 1000);
+        }
+    });
+}
+
+// Problem 8: Debouncing
+function initDebouncingAnimation() {
+    setupAnimation({
+        containerId: 'debouncing-options',
+        stepsId: 'debouncing-steps',
+        animateBtnId: 'debouncing-animate-btn',
+        stepsBtnId: 'debouncing-steps-btn',
+        resetBtnId: 'debouncing-reset-btn',
+        animateFunction: (container, steps, reset) => {
+            reset();
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 400;
+            canvas.height = 100;
+            container.appendChild(canvas);
+
+            const ctx = canvas.getContext('2d');
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 2;
+
+            // Draw bouncing signal
+            ctx.beginPath();
+            ctx.moveTo(0, 80);
+
+            // Draw the bouncing pattern
+            let x = 0;
+            while (x < 400) {
+                ctx.lineTo(x += 10, 20);
+                ctx.lineTo(x += 5, 80);
+                ctx.lineTo(x += 8, 20);
+                ctx.lineTo(x += 15, 80);
+                ctx.lineTo(x += 7, 20);
+                ctx.lineTo(x += 20, 20);
             }
-            const keypadKeys = [...container.querySelectorAll('.keypad-key')];
+
+            ctx.stroke();
+
+            // Draw debounced signal
+            ctx.beginPath();
+            ctx.strokeStyle = '#ff5588';
+            ctx.setLineDash([5, 5]);
+            ctx.moveTo(0, 80);
+            ctx.lineTo(50, 80);
+            ctx.lineTo(50, 20);
+            ctx.lineTo(350, 20);
+            ctx.lineTo(350, 80);
+            ctx.stroke();
+
+            // Add legend
+            const legend = document.createElement('div');
+            legend.className = 'legend';
+            legend.innerHTML = `
+                <div><span style="color:#00ff88;">■</span> Raw Signal</div>
+                <div><span style="color:#ff5588;">■</span> Debounced Signal</div>
+                <div>Debounce Time: 20ms</div>
+            `;
+            container.appendChild(legend);
+
             setTimeout(() => {
-                if (keypadKeys[0]) {
-                    keypadKeys[0].classList.remove('low');
-                    keypadKeys[0].classList.add('high', 'connection');
-                    setTimeout(() => keypadKeys[0].classList.add('visible'), 100);
-                }
-            }, 500);
-            setTimeout(() => highlightSteps(steps), 1000);
-        }
-    });
-}
-function initHistoryByteAnimation() { initHistoryByteAnimationBase(); }
-function initDisplayFrequencyAnimation() { initDisplayFrequencyAnimationBase(); }
-function initMultiplexingPinsAnimation() { initMultiplexingPinsAnimationBase(); }
-function initTwoArraysAnimation() { initTwoArraysAnimationBase(); }
-function initCounterTimerAnimation() { initCounterTimerAnimationBase(); }
-
-function initGenericBitsAnimation(baseId) {
-    setupAnimation({
-        containerId: `${baseId}-options`,
-        stepsId: `${baseId}-steps`,
-        animateBtnId: `${baseId}-animate-btn`,
-        stepsBtnId: `${baseId}-steps-btn`,
-        resetBtnId: `${baseId}-reset-btn`,
-        animateFunction: (container, steps, reset) => {
-            reset();
-            const optionBitsGroup = container.children[0].children;
-            setTimeout(() => {
-                if (optionBitsGroup[2]) {
-                    optionBitsGroup[2].classList.remove('low');
-                    optionBitsGroup[2].classList.add('high', 'connection');
-                    setTimeout(() => optionBitsGroup[2].classList.add('visible'), 100);
-                }
-            }, 500);
-            setTimeout(() => highlightSteps(steps), 1000);
+                steps.classList.add('visible');
+                document.getElementById('debouncing-steps-btn').textContent = 'Hide Steps';
+            }, 1000);
         }
     });
 }
 
-function initHistoryByteAnimationBase() {
-    setupAnimation({
-        containerId: 'history-byte-bits',
-        stepsId: 'history-byte-steps',
-        animateBtnId: 'history-byte-animate-btn',
-        stepsBtnId: 'history-byte-steps-btn',
-        resetBtnId: 'history-byte-reset-btn',
-        initialValue: '0',
-        animateFunction: (container, steps, reset) => {
-            reset();
-            const historyBitGroup = container.children[0].children;
-            const targetValues = ['1','0','1','0','1','0','1','0'];
-            setTimeout(() => {
-                targetValues.forEach((val, i) => {
-                    if (historyBitGroup[i]) {
-                        historyBitGroup[i].classList.remove('low');
-                        historyBitGroup[i].classList.add('high');
-                        historyBitGroup[i].textContent = val;
-                    }
-                });
-            }, 500);
-            setTimeout(() => highlightSteps(steps), 1000);
-        }
-    });
-}
-
-function initDisplayFrequencyAnimationBase() {
-    setupAnimation({
-        containerId: 'display-frequency-hz',
-        stepsId: 'display-frequency-steps',
-        animateBtnId: 'display-frequency-animate-btn',
-        stepsBtnId: 'display-frequency-steps-btn',
-        resetBtnId: 'display-frequency-reset-btn',
-        initialValue: '0',
-        animateFunction: (container, steps, reset) => {
-            reset();
-            const frequencyBits = container.querySelector('div');
-            const frequencyBitGroup = frequencyBits.children;
-            const resultStr = "625";
-            setTimeout(() => {
-                Array.from(resultStr).forEach((char, i) => {
-                    if (frequencyBitGroup[i]) {
-                        frequencyBitGroup[i].classList.remove('low');
-                        frequencyBitGroup[i].classList.add('high', 'connection');
-                        frequencyBitGroup[i].textContent = char;
-                        setTimeout(() => frequencyBitGroup[i].classList.add('visible'), 100);
-                    }
-                });
-            }, 500);
-            setTimeout(() => highlightSteps(steps), 1500);
-        }
-    });
-}
-
-function initMultiplexingPinsAnimationBase() {
-    setupAnimation({
-        containerId: 'multiplexing-pins-count',
-        stepsId: 'multiplexing-pins-steps',
-        animateBtnId: 'multiplexing-pins-animate-btn',
-        stepsBtnId: 'multiplexing-pins-steps-btn',
-        resetBtnId: 'multiplexing-pins-reset-btn',
-        initialValue: '0',
-        animateFunction: (container, steps, reset) => {
-            reset();
-            const pinsBits = container.querySelector('div');
-            const pinsBitGroup = pinsBits.children;
-            const resultStr = "14";
-            setTimeout(() => {
-                Array.from(resultStr).forEach((char, i) => {
-                    if (pinsBitGroup[i]) {
-                        pinsBitGroup[i].classList.remove('low');
-                        pinsBitGroup[i].classList.add('high', 'connection');
-                        pinsBitGroup[i].textContent = char;
-                        setTimeout(() => pinsBitGroup[i].classList.add('visible'), 100);
-                    }
-                });
-            }, 500);
-            setTimeout(() => highlightSteps(steps), 1000);
-        }
-    });
-}
-
-function initTwoArraysAnimationBase() {
-    setupAnimation({
-        containerId: 'two-arrays-pins-count',
-        stepsId: 'two-arrays-steps',
-        animateBtnId: 'two-arrays-animate-btn',
-        stepsBtnId: 'two-arrays-steps-btn',
-        resetBtnId: 'two-arrays-reset-btn',
-        initialValue: '0',
-        animateFunction: (container, steps, reset) => {
-            reset();
-            const pinsBits = container.querySelector('div');
-            const pinsBitGroup = pinsBits.children;
-            const resultStr = "14";
-            setTimeout(() => {
-                Array.from(resultStr).forEach((char, i) => {
-                    if (pinsBitGroup[i]) {
-                        pinsBitGroup[i].classList.remove('low');
-                        pinsBitGroup[i].classList.add('high', 'connection');
-                        pinsBitGroup[i].textContent = char;
-                        setTimeout(() => pinsBitGroup[i].classList.add('visible'), 100);
-                    }
-                });
-            }, 500);
-            setTimeout(() => highlightSteps(steps), 1000);
-        }
-    });
-}
-
-function initCounterTimerAnimationBase() {
-    setupAnimation({
-        containerId: 'counter-timer-interval-ms',
-        stepsId: 'counter-timer-steps',
-        animateBtnId: 'counter-timer-animate-btn',
-        stepsBtnId: 'counter-timer-steps-btn',
-        resetBtnId: 'counter-timer-reset-btn',
-        initialValue: '0',
-        animateFunction: (container, steps, reset) => {
-            reset();
-            const intervalBits = container.querySelector('div');
-            const intervalBitGroup = intervalBits.children;
-            const resultStr = "5.12";
-            setTimeout(() => {
-                Array.from(resultStr).forEach((char, i) => {
-                    if (intervalBitGroup[i]) {
-                        intervalBitGroup[i].classList.remove('low');
-                        intervalBitGroup[i].classList.add('high', 'connection');
-                        intervalBitGroup[i].textContent = char;
-                        setTimeout(() => intervalBitGroup[i].classList.add('visible'), 100);
-                    }
-                });
-            }, 500);
-            setTimeout(() => highlightSteps(steps), 1000);
-        }
-    });
-}
-
-function initWavetableAnimation() {
-    setupAnimation({
-        containerId: 'wavetable-step',
-        stepsId: 'wavetable-steps',
-        animateBtnId: 'wavetable-animate-btn',
-        stepsBtnId: 'wavetable-steps-btn',
-        resetBtnId: 'wavetable-reset-btn',
-        initialValue: '0',
-        animateFunction: (container, steps, reset) => {
-            reset();
-            let offsetIterations = 0;
-            const stepDisplay = document.getElementById('wavetable-step-display');
-            const offsetDisplay = document.getElementById('wavetable-offset-display');
-            const stepValueHex = '0x4f057';
-            const wrapAroundIterations = 203;
-
-            updateValueDisplay('wavetable-step-display', stepValueHex);
-            updateValueDisplay('wavetable-offset-display', offsetIterations);
-
-            let animationInterval = setInterval(() => {
-                offsetIterations++;
-                updateValueDisplay('wavetable-offset-display', offsetIterations);
-                if (offsetIterations >= wrapAroundIterations) {
-                    clearInterval(animationInterval);
-                    updateValueDisplay('wavetable-offset-display', 'Wrapped Around!');
-                }
-            }, 50);
-
-            setTimeout(() => highlightSteps(steps), 1000);
-        }
-    });
-}
-// Initialize animations
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('systick-limitations-options')) { initSysTickLimitationsAnimation(); }
-    if (document.getElementById('timer-config-options')) { initTimerConfigAnimation(); }
-    if (document.getElementById('interrupt-interval-options')) { initInterruptIntervalAnimation(); }
-    if (document.getElementById('keypad-scanning-keypad')) { initKeypadScanningAnimation(); }
-    if (document.getElementById('history-byte-bits')) { initHistoryByteAnimation(); }
-    if (document.getElementById('display-frequency-hz')) { initDisplayFrequencyAnimation(); }
-    if (document.getElementById('multiplexing-pins-count')) { initMultiplexingPinsAnimation(); }
-    if (document.getElementById('two-arrays-pins-count')) { initTwoArraysAnimation(); }
-    if (document.getElementById('counter-timer-interval-ms')) { initCounterTimerAnimation(); }
-    if (document.getElementById('sinewave-samples')) { initSinewaveAnimation(); }
-    if (document.getElementById('center-counter')) { initCenterAnimation(); }
-    if (document.getElementById('wavetable-step')) { initWavetableAnimation(); }
-    if (document.getElementById('dac-signal')) { initBJTAnimation(); }
-    if (document.getElementById('pwm-signal')) { initPWMAnimation(); }
-});
-
-// Utility Functions
-function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function drawWaveform(canvasId, period, dutyCycle, color = '#007BFF') {
-    const canvas = document.getElementById(canvasId);
+// Problem 9: Sinewave Generation
+function initSinewaveAnimation() {
+    const canvas = document.getElementById('sinewave-canvas');
     const ctx = canvas.getContext('2d');
-    const width = canvas.width;
-    const height = canvas.height;
+    let animationId;
+    let phase = 0;
+    let frequency = 1;
+    let samplesPerCycle = 10;
+    let dacRate = 100000;
 
-    ctx.clearRect(0, 0, width, height);
-    ctx.beginPath();
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
+    function drawSineWave(canvas, amplitude, frequency, phase) {
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
 
-    for (let x = 0; x <= width; x++) {
-        const t = (x / width) * period;
-        const y = t < dutyCycle ? height / 4 : (3 * height) / 4;
-        ctx.lineTo(x, y);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.strokeStyle = '#00ff88';
+        ctx.lineWidth = 2;
+
+        // Draw continuous sine wave
+        ctx.beginPath();
+        ctx.strokeStyle = '#00ff88';
+        for (let x = 0; x < width; x++) {
+            const y = height/2 + Math.sin(2 * Math.PI * frequency * x / width + phase) * amplitude * height/2;
+            if (x === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+
+        // Draw sample points
+        ctx.fillStyle = '#ff5588';
+        const sampleCount = Math.floor(width / (samplesPerCycle * frequency));
+        for (let i = 0; i < sampleCount; i++) {
+            const x = i * samplesPerCycle * frequency;
+            if (x < width) {
+                const y = height/2 + Math.sin(2 * Math.PI * frequency * x / width + phase) * amplitude * height/2;
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+        }
     }
 
-    ctx.stroke();
-}
-
-// Problem 1: Timer Configurations
-const timerCanvas = document.getElementById('timer-output-waveform');
-const timerPrescalerInput = document.getElementById('timer-prescaler');
-const timerArrInput = document.getElementById('timer-arr');
-const timerCcrInput = document.getElementById('timer-ccr');
-const timerPrescalerVal = document.getElementById('timer-prescaler-val');
-const timerArrVal = document.getElementById('timer-arr-val');
-const timerCalculatedFreq = document.getElementById('timer-calculated-freq');
-const timerCcrVal = document.getElementById('timer-ccr-val');
-const timerCalculatedDuty = document.getElementById('timer-calculated-duty');
-
-function updateTimerCalculations() {
-    const prescaler = parseInt(timerPrescalerInput.value, 10);
-    const arr = parseInt(timerArrInput.value, 10);
-    const ccr = parseInt(timerCcrInput.value, 10);
-
-    timerPrescalerVal.textContent = prescaler;
-    timerArrVal.textContent = arr;
-    timerCalculatedFreq.textContent = (100000 / (prescaler + 1) / (arr + 1)).toFixed(2);
-    timerCcrVal.textContent = ccr;
-    timerCalculatedDuty.textContent = ((ccr / (arr + 1)) * 100).toFixed(2);
-
-    drawWaveform('timer-output-waveform', arr + 1, ccr);
-}
-
-document.getElementById('timer-config-animate-btn').addEventListener('click', () => {
-    let ccr = parseInt(timerCcrInput.value, 10);
-    const arr = parseInt(timerArrInput.value, 10);
-
-    const interval = setInterval(() => {
-        if (ccr >= arr) {
-            clearInterval(interval);
-        } else {
-            ccr += 1;
-            timerCcrInput.value = ccr;
-            updateTimerCalculations();
+    function updateValueDisplay(id, value) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = value;
         }
-    }, 100);
+    }
+
+    function animateSine() {
+        drawSineWave(canvas, 0.8, frequency / 25000, phase);
+        phase += 0.1;
+        if (phase > 2 * Math.PI) {
+            phase -= 2 * Math.PI;
+        }
+        const calculatedMaxFrequency = dacRate / samplesPerCycle;
+        updateValueDisplay('sinewave-freq-display', calculatedMaxFrequency.toFixed(0));
+        animationId = requestAnimationFrame(animateSine);
+    }
+
+    document.getElementById('sinewave-samples-slider').addEventListener('input', function() {
+        samplesPerCycle = parseInt(this.value);
+        updateValueDisplay('sinewave-samples-display', samplesPerCycle);
+        const calculatedMaxFrequency = dacRate / samplesPerCycle;
+        updateValueDisplay('sinewave-freq-display', calculatedMaxFrequency.toFixed(0));
+        drawSineWave(canvas, 0.8, frequency / 25000, phase);
+    });
+
+    document.getElementById('sinewave-animate-btn').addEventListener('click', function() {
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+            this.textContent = 'Animate';
+        } else {
+            animateSine();
+            this.textContent = 'Stop';
+        }
+    });
+
+    document.getElementById('sinewave-steps-btn').addEventListener('click', function() {
+        const steps = document.getElementById('sinewave-steps');
+        toggleSteps(steps, this);
+    });
+
+    document.getElementById('sinewave-reset-btn').addEventListener('click', function() {
+        samplesPerCycle = 10;
+        phase = 0;
+        document.getElementById('sinewave-samples-slider').value = 10;
+        updateValueDisplay('sinewave-samples-display', 10);
+        const calculatedMaxFrequency = dacRate / samplesPerCycle;
+        updateValueDisplay('sinewave-freq-display', calculatedMaxFrequency.toFixed(0));
+
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+            document.getElementById('sinewave-animate-btn').textContent = 'Animate';
+        }
+    });
+}
+
+// Problem 10: OpAmp Gain
+function initOpAmpGainAnimation() {
+    setupAnimation({
+        containerId: 'opamp-gain-options',
+        stepsId: 'opamp-gain-steps',
+        animateBtnId: 'opamp-gain-animate-btn',
+        stepsBtnId: 'opamp-gain-steps-btn',
+        resetBtnId: 'opamp-gain-reset-btn',
+        animateFunction: (container, steps, reset) => {
+            reset();
+            container.innerHTML = `
+                <div>
+                    <span class="bit low">a) Gain = 5</span>
+                    <span class="bit low">b) Gain = 10</span>
+                    <span class="bit high connection visible">c) Gain = 11</span>
+                    <span class="bit low">d) Gain = 20</span>
+                </div>
+            `;
+
+            setTimeout(() => {
+                steps.classList.add('visible');
+                document.getElementById('opamp-gain-steps-btn').textContent = 'Hide Steps';
+            }, 1000);
+        }
+    });
+}
+
+// Problem 11: MOSFET Switch
+function initMOSFETSwitchAnimation() {
+    setupAnimation({
+        containerId: 'mosfet-switch-options',
+        stepsId: 'mosfet-switch-steps',
+        animateBtnId: 'mosfet-switch-animate-btn',
+        stepsBtnId: 'mosfet-switch-steps-btn',
+        resetBtnId: 'mosfet-switch-reset-btn',
+        animateFunction: (container, steps, reset) => {
+            reset();
+            container.innerHTML = `
+                <div>
+                    <span class="bit low">a) Resistor</span>
+                    <span class="bit low">b) Capacitor</span>
+                    <span class="bit high connection visible">c) MOSFET</span>
+                    <span class="bit low">d) Inductor</span>
+                </div>
+            `;
+
+            setTimeout(() => {
+                steps.classList.add('visible');
+                document.getElementById('mosfet-switch-steps-btn').textContent = 'Hide Steps';
+            }, 1000);
+        }
+    });
+}
+
+// Problem 12: ADC Resolution
+function initADCResolutionAnimation() {
+    setupAnimation({
+        containerId: 'adc-resolution-options',
+        stepsId: 'adc-resolution-steps',
+        animateBtnId: 'adc-resolution-animate-btn',
+        stepsBtnId: 'adc-resolution-steps-btn',
+        resetBtnId: 'adc-resolution-reset-btn',
+        animateFunction: (container, steps, reset) => {
+            reset();
+            container.innerHTML = `
+                <div>
+                    <span class="bit low">a) 8-bit</span>
+                    <span class="bit low">b) 10-bit</span>
+                    <span class="bit high connection visible">c) 12-bit</span>
+                    <span class="bit low">d) 16-bit</span>
+                </div>
+            `;
+
+            setTimeout(() => {
+                steps.classList.add('visible');
+                document.getElementById('adc-resolution-steps-btn').textContent = 'Hide Steps';
+            }, 1000);
+        }
+    });
+}
+
+// Problem 13: Clock Frequency
+function initClockFrequencyAnimation() {
+    setupAnimation({
+        containerId: 'clock-frequency-options',
+        stepsId: 'clock-frequency-steps',
+        animateBtnId: 'clock-frequency-animate-btn',
+        stepsBtnId: 'clock-frequency-steps-btn',
+        resetBtnId: 'reset-btn-clock-frequency',
+        animateFunction: (container, steps, reset) => {
+            reset();
+            container.innerHTML = `
+                <div>
+                    <span class="bit low">a) 1 MHz</span>
+                    <span class="bit low">b) 4 MHz</span>
+                    <span class="bit high connection visible">c) 8 MHz</span>
+                    <span class="bit low">d) 16 MHz</span>
+                </div>
+            `;
+
+            setTimeout(() => {
+                steps.classList.add('visible');
+                document.getElementById('clock-frequency-steps-btn').textContent = 'Hide Steps';
+            }, 1000);
+        }
+    });
+}
+
+// Problem 14: UART Baud Rate
+function initUARTBaudRateAnimation() {
+    setupAnimation({
+        containerId: 'uart-baud-rate-options',
+        stepsId: 'uart-baud-rate-steps',
+        animateBtnId: 'uart-baud-rate-animate-btn',
+        stepsBtnId: 'uart-baud-rate-steps-btn',
+        resetBtnId: 'uart-baud-rate-reset-btn',
+        animateFunction: (container, steps, reset) => {
+            reset();
+            container.innerHTML = `
+                <div>
+                    <span class="bit low">a) 9600 bps</span>
+                    <span class="bit low">b) 19200 bps</span>
+                    <span class="bit high connection visible">c) 38400 bps</span>
+                    <span class="bit low">d) 115200 bps</span>
+                </div>
+            `;
+
+            setTimeout(() => {
+                steps.classList.add('visible');
+                document.getElementById('uart-baud-rate-steps-btn').textContent = 'Hide Steps';
+            }, 1000);
+        }
+    });
+}
+
+// Problem 15: I2C Addressing
+function initI2CAddressingAnimation() {
+    setupAnimation({
+        containerId: 'i2c-addressing-options',
+        stepsId: 'i2c-addressing-steps',
+        animateBtnId: 'i2c-addressing-animate-btn',
+        stepsBtnId: 'i2c-addressing-steps-btn',
+        resetBtnId: 'i2c-addressing-reset-btn',
+        animateFunction: (container, steps, reset) => {
+            reset();
+            container.innerHTML = `
+                <div>
+                    <span class="bit low">a) 7-bit</span>
+                    <span class="bit low">b) 8-bit</span>
+                    <span class="bit high connection visible">c) 10-bit</span>
+                    <span class="bit low">d) 16-bit</span>
+                </div>
+            `;
+
+            setTimeout(() => {
+                steps.classList.add('visible');
+                document.getElementById('i2c-addressing-steps-btn').textContent = 'Hide Steps';
+            }, 1000);
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    initTimerConfigAnimation(); // Problem 1
+    initPWMAnimation(); // Problem 2
+    initSysTickAnimation(); // Problem 3
+    initBJTAnimation(); // Problem 4
+    // initSamplingRateAnimation(); // Problem 5 - assuming this is defined elsewhere
+    initInterruptIntervalAnimation(); // Problem 6
+    initKeypadScanningAnimation(); // Problem 7
+    initDebouncingAnimation(); // Problem 8
+    initSinewaveAnimation(); // Problem 9
+    initOpAmpGainAnimation(); // Problem 10
+    initMOSFETSwitchAnimation(); // Problem 11
+    initADCResolutionAnimation(); // Problem 12
+    initClockFrequencyAnimation(); // Problem 13
+    initUARTBaudRateAnimation(); // Problem 14
+    initI2CAddressingAnimation(); // Problem 15
 });
-
-timerPrescalerInput.addEventListener('input', updateTimerCalculations);
-timerArrInput.addEventListener('input', updateTimerCalculations);
-timerCcrInput.addEventListener('input', updateTimerCalculations);
-
-// Initialize timer calculations on load
-updateTimerCalculations();
-
-// Additional Problems Logic Can Be Added Here

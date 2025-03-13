@@ -181,3 +181,45 @@ button:hover {
     from { opacity: 0; }
     to { opacity: 1; }
 }
+
+.slider-container {
+    margin: 15px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.slider-container label {
+    margin-bottom: 5px;
+    color: #e6e6e6;
+    font-size: 1.1em;
+}
+
+.slider-value {
+    color: #00ff88;
+    font-weight: bold;
+    margin-left: 8px;
+}
+
+.interactive-controls input[type="range"] {
+    width: 300px;
+    height: 8px;
+    -webkit-appearance: none;
+    background: #2a2a2a;
+    border-radius: 4px;
+    outline: none;
+}
+
+.interactive-controls input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #00ff88;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.interactive-controls input[type="range"]::-webkit-slider-thumb:hover {
+    background: #00cc66;
+}
