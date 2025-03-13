@@ -19,370 +19,362 @@
     <h1>ECE362 HW5 Study Animations</h1>
     <div class="content">
 
-        <div class="section" id="timer-section">
-            <h2>Problem 1: Timer Configurations</h2>
-            <div class="description">
-                This problem asks you to find which timer settings produce a <strong>1 Hz</strong> square wave with a <strong>50% duty cycle</strong> (half on, half off) using a prescaler of 999 and a 100 kHz clock.
+<div class="section" id="timer-section">
+        <h2>Problem 1: Timer Configurations</h2>
+        <div class="description">
+            This problem asks you to find which timer settings produce a <strong>1 Hz</strong> square wave with a <strong>50% duty cycle</strong> (half on, half off) using a prescaler of 999 and a 100 kHz clock.
+        </div>
+        <div class="interactive-controls" id="timer-controls">
+            <label>Prescaler: <input type="range" id="timer-prescaler" min="0" max="2000" value="999"></label>
+            <label>ARR: <input type="range" id="timer-arr" min="10" max="200" value="99"></label>
+            <label>CCR: <input type="range" id="timer-ccr" min="0" max="200" value="50"></label>
+        </div>
+        <div class="signal-container timer-signal-container">
+            <div class="signal-row">
+                <span class="signal-label">Counter</span>
+                <div class="visual-counter" id="timer-counter-display"></div>
             </div>
-            <div class="interactive-controls" id="timer-controls">
-                <label>Prescaler: <input type="range" id="timer-prescaler" min="0" max="2000" value="999"></label>
-                <label>ARR: <input type="range" id="timer-arr" min="10" max="200" value="99"></label>
-                <label>CCR: <input type="range" id="timer-ccr" min="0" max="200" value="50"></label>
-            </div>
-            <div class="signal-container timer-signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">Counter</span>
-                    <div class="visual-counter" id="timer-counter-display"></div>
-                </div>
-                <div class="signal-row">
-                    <span class="signal-label">Output Waveform</span>
-                    <canvas class="waveform-canvas" id="timer-output-waveform" width="400" height="80"></canvas>
-                </div>
-            </div>
-            <div class="calculation-steps" id="timer-config-steps">
-                <p id="timer-freq-step">Timer Frequency = 100 kHz / (1+<span id="timer-prescaler-val">999</span>) / (1+<span id="timer-arr-val">99</span>) = <span id="timer-calculated-freq">1</span> Hz</p>
-                <p id="timer-duty-step">Duty Cycle = <span id="timer-ccr-val">50</span> / (<span id="timer-arr-val-duty">99</span>+1) = <span id="timer-calculated-duty">50</span>%</p>
-            </div>
-            <div class="controls">
-                <button id="timer-config-animate-btn">Animate</button>
-                <button id="timer-config-steps-btn">Show Steps</button>
-                <button id="timer-config-reset-btn">Reset</button>
+            <div class="signal-row">
+                <span class="signal-label">Output Waveform</span>
+                <canvas class="waveform-canvas" id="timer-output-waveform" width="400" height="80"></canvas>
             </div>
         </div>
-
-        <div class="section" id="sinewave-section">
-            <h2>Problem 5: Max Sinewave Frequency</h2>
-            <div class="description">
-                You’re using a DAC to sample a sinewave table at 500 kHz, needing at least 20 samples per wave.
-            </div>
-            <div class="signal-container sinewave-signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">Sinewave & Samples</span>
-                    <canvas class="waveform-canvas" id="sinewave-canvas" width="400" height="80"></canvas>
-                </div>
-                <div class="signal-row">
-                    <span class="signal-label">Samples/Cycle</span>
-                    <div class="value-display" id="sinewave-samples-display">20</div>
-                </div>
-                <div class="signal-row">
-                    <span class="signal-label">Frequency (Hz)</span>
-                    <div class="value-display" id="sinewave-freq-display">25000</div>
-                </div>
-            </div>
-            <div class="calculation-steps" id="sinewave-steps">
-                <p>DAC Rate = 500,000 samples/second</p>
-                <p>Samples per Cycle = 20</p>
-                <p>Max Frequency = 500,000 / 20 = 25,000 Hz</p>
-            </div>
-            <div class="controls">
-                <button id="sinewave-animate-btn">Animate</button>
-                <button id="sinewave-steps-btn">Show Steps</button>
-                <button id="sinewave-reset-btn">Reset</button>
-            </div>
+        <div class="calculation-steps" id="timer-config-steps">
+            <p id="timer-freq-step">Timer Frequency = 100 kHz / (1+<span id="timer-prescaler-val">999</span>) / (1+<span id="timer-arr-val">99</span>) = <span id="timer-calculated-freq">1</span> Hz</p>
+            <p id="timer-duty-step">Duty Cycle = <span id="timer-ccr-val">50</span> / (<span id="timer-arr-val-duty">99</span>+1) = <span id="timer-calculated-duty">50</span>%</p>
         </div>
-
-        <div class="section" id="center-section">
-            <h2>Problem 9: Center-Aligned Timer</h2>
-            <div class="description">
-                Center-aligned timer with interrupts every 10 ms at 100 kHz clock. Find ARR.
-            </div>
-            <div class="signal-container center-signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">Counter</span>
-                    <div class="visual-counter" id="center-counter-display"></div>
-                </div>
-                <div class="signal-row">
-                    <span class="signal-label">Waveform</span>
-                    <canvas class="waveform-canvas" id="center-waveform" width="400" height="80"></canvas>
-                </div>
-            </div>
-            <div class="calculation-steps" id="center-steps">
-                <p>Cycles = 100 kHz * 10 ms = 1000</p>
-                <p>ARR = Cycles / 2 = 1000 / 2 = 500</p>
-            </div>
-            <div class="controls">
-                <button id="center-animate-btn">Animate</button>
-                <button id="center-steps-btn">Show Steps</button>
-                <button id="center-reset-btn">Reset</button>
-            </div>
+        <div class="controls">
+            <button id="timer-config-animate-btn">Animate</button>
+            <button id="timer-config-steps-btn">Show Steps</button>
+            <button id="timer-config-reset-btn">Reset</button>
         </div>
-
-        <div class="section" id="wavetable-section">
-            <h2>Problem 8.1-8.3: Wavetable Step Calculations</h2>
-            <div class="description">
-                Wavetable fractional steps, step calculation, and offset wrap-around.
-            </div>
-            <div class="signal-container wavetable-signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">Step (Hex)</span>
-                    <div class="value-display" id="wavetable-step-display">0x4f057</div>
-                </div>
-                <div class="signal-row">
-                    <span class="signal-label">Offset Iterations</span>
-                    <div class="value-display" id="wavetable-offset-display">0</div>
-                </div>
-                <!--  Add more visual elements here if needed, e.g., wavetable visualization -->
-            </div>
-            <div class="calculation-steps" id="wavetable-steps">
-                <p>Step = (493883 * 2^14) / 1000 = 0x4f057</p>
-                <p>Offset increments by step each iteration</p>
-                <p>Wraps after 203 iterations (0x2945f4)</p>
-            </div>
-            <div class="controls">
-                <button id="wavetable-animate-btn">Animate</button>
-                <button id="wavetable-steps-btn">Show Steps</button>
-                <button id="wavetable-reset-btn">Reset</button>
-            </div>
-        </div>
-
-        <div class="section" id="bjt-section">
-            <h2>Problem 4: BJT Power Efficiency</h2>
-            <div class="description">
-                BJT transistor operation with DAC signal. Power efficiency and slow DAC signals.
-            </div>
-            <div class="interactive-controls" id="bjt-controls">
-                <button id="toggle-dac-method">Toggle Driving Method (Fast/Slow)</button>
-            </div>
-            <div class="signal-container bjt-signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">DAC Signal</span>
-                    <canvas class="waveform-canvas" id="dac-signal-waveform" width="400" height="80"></canvas>
-                </div>
-                <div class="signal-row">
-                    <span class="signal-label">Current</span>
-                    <div class="value-display" id="current-signal-display">Low</div> <!-- Placeholder -->
-                </div>
-            </div>
-            <div class="calculation-steps" id="bjt-steps">
-                <p>BJT acts as a current-controlled current source</p>
-                <p>Slow DAC changes = Less switching losses</p>
-                <p>Power efficiency improved with gradual transitions</p>
-            </div>
-            <div class="controls">
-                <button id="bjt-animate-btn">Animate</button>
-                <button id="bjt-steps-btn">Show Steps</button>
-                <button id="bjt-reset-btn">Reset</button>
-            </div>
-        </div>
-
-        <div class="section" id="pwm-section">
-            <h2>Problem 3: PWM Duty Cycle</h2>
-            <div class="description">
-                PWM duty cycle calculation with 100kHz clock, prescaler=999, ARR=24.
-            </div>
-            <div class="interactive-controls" id="pwm-controls">
-                <label>ARR: <input type="range" id="pwm-arr" min="1" max="100" value="24"></label>
-                <label>CCR: <input type="range" id="pwm-ccr" min="0" max="100" value="1"></label>
-            </div>
-            <div class="signal-container pwm-signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">PWM Waveform</span>
-                    <canvas class="waveform-canvas" id="pwm-signal-waveform" width="400" height="80"></canvas>
-                </div>
-                <div class="signal-row">
-                    <span class="signal-label">Duty Cycle</span>
-                    <div class="value-display" id="pwm-duty-cycle-display">4%</div>
-                </div>
-            </div>
-            <div class="calculation-steps" id="pwm-steps">
-                <p id="pwm-period-step">Total Period = ARR + 1 = <span id="pwm-arr-val">24</span> + 1 = <span id="pwm-calculated-period">25</span> cycles</p>
-                <p id="pwm-on-step">On Time = <span id="pwm-ccr-val-duty">1</span> cycle</p>
-                <p id="pwm-duty-step">Duty Cycle = 1 / <span id="pwm-calculated-period-duty">25</span> = <span id="pwm-calculated-duty-percent">4</span>%</p>
-            </div>
-            <div class="controls">
-                <button id="pwm-animate-btn">Animate</button>
-                <button id="pwm-steps-btn">Show Steps</button>
-                <button id="pwm-reset-btn">Reset</button>
-            </div>
-        </div>
-
-        <div class="section" id="systick-limitations-section">
-            <h2>Problem 2: SysTick Limitations</h2>
-            <div class="description">
-                SysTick limitations for precise timing. Options evaluation.
-            </div>
-            <div class="signal-container systick-limitations-signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">Options</span>
-                    <div class="signal-bits" id="systick-limitations-options"><div><span class="bit low">a</span><span class="bit low">b</span><span class="bit low">c</span><span class="bit low">d</span></div></div>
-                </div>
-                <!-- Add visual representation for SysTick limitations here if desired -->
-            </div>
-            <div class="calculation-steps" id="systick-limitations-steps">
-                <p>SysTick is good for basic timekeeping but has limitations.</p>
-                <p>Option 'c' aligns with typical SysTick use cases.</p>
-                <p>Options 'a', 'b', and 'd' might be too demanding or not suitable for SysTick.</p>
-            </div>
-            <div class="controls">
-                <button id="systick-limitations-animate-btn">Animate</button>
-                <button id="systick-limitations-steps-btn">Show Steps</button>
-                <button id="systick-limitations-reset-btn">Reset</button>
-            </div>
-        </div>
-
-        <div class="section" id="interrupt-interval-section">
-            <h2>Problem 6: Interrupt Interval</h2>
-            <div class="description">
-                Interrupt interval calculation. Prescaler=7, ARR=999, 8 MHz clock.
-            </div>
-            <div class="signal-container interrupt-interval-signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">Interval Options</span>
-                    <div class="signal-bits" id="interrupt-interval-options"><div><span class="bit low">a</span><span class="bit low">b</span><span class="bit low">c</span><span class="bit low">d</span></div></div>
-                </div>
-                <!-- Add visual representation for interrupt interval here if desired -->
-            </div>
-            <div class="calculation-steps" id="interrupt-interval-steps">
-                <p>Interval = (Prescaler + 1) * (ARR + 1) / Clock Frequency</p>
-                <p>Interval = (7 + 1) * (999 + 1) / 8,000,000 = 0.001 s = 1 ms</p>
-            </div>
-            <div class="controls">
-                <button id="interrupt-interval-animate-btn">Animate</button>
-                <button id="interrupt-interval-steps-btn">Show Steps</button>
-                <button id="interrupt-interval-reset-btn">Reset</button>
-            </div>
-        </div>
-
-        <div class="section" id="keypad-scanning-section">
-            <h2>Problem 7: Keypad Scanning</h2>
-            <div class="description">
-                Keypad scanning process demonstration.
-            </div>
-            <div class="signal-container keypad-scanning-signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">Keypad</span>
-                    <div class="signal-bits" id="keypad-scanning-keypad"></div>
-                </div>
-                 <!-- Add visual representation for keypad scanning process if desired -->
-            </div>
-            <div class="calculation-steps" id="keypad-scanning-steps">
-                <p>Keypad scanning involves sequentially activating rows and reading columns.</p>
-                <p>This allows detection of which key is pressed using fewer pins.</p>
-            </div>
-            <div class="controls">
-                <button id="keypad-scanning-animate-btn">Animate</button>
-                <button id="keypad-scanning-steps-btn">Show Steps</button>
-                <button id="keypad-scanning-reset-btn">Reset</button>
-            </div>
-        </div>
-
-        <div class="section" id="history-byte-section">
-            <h2>Problem 10: History Byte</h2>
-            <div class="description">
-                History byte stores a sequence of bit values.
-            </div>
-            <div class="signal-container history-byte-signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">History</span>
-                    <div class="signal-bits" id="history-byte-bits"><div><span class="bit low">0</span><span class="bit low">0</span><span class="bit low">0</span><span class="bit low">0</span><span class="bit low">0</span><span class="bit low">0</span><span class="bit low">0</span><span class="bit low">0</span></div></div>
-                </div>
-                 <!-- Add visual representation for history byte shifting/updating if desired -->
-            </div>
-            <div class="calculation-steps" id="history-byte-steps">
-                <p>A history byte stores recent digital signal values.</p>
-                <p>Useful for detecting patterns or changes over time.</p>
-            </div>
-            <div class="controls">
-                <button id="history-byte-animate-btn">Animate</button>
-                <button id="history-byte-steps-btn">Show Steps</button>
-                <button id="history-byte-reset-btn">Reset</button>
-            </div>
-        </div>
-
-        <div class="section" id="display-frequency-section">
-            <h2>Problem 11: Display Frequency</h2>
-            <div class="description">
-                Displaying a frequency value in Hz.
-            </div>
-            <div class="signal-container display-frequency-signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">Frequency (Hz)</span>
-                    <div class="signal-bits" id="display-frequency-hz"><div><span class="bit low">0</span><span class="bit low">0</span><span class="bit low">0</span></div></div>
-                </div>
-                 <!-- Add visual representation for digit display update if desired -->
-            </div>
-            <div class="calculation-steps" id="display-frequency-steps">
-                <p>Displaying frequency often involves converting numerical values to digit representations.</p>
-            </div>
-            <div class="controls">
-                <button id="display-frequency-animate-btn">Animate</button>
-                <button id="display-frequency-steps-btn">Show Steps</button>
-                <button id="display-frequency-reset-btn">Reset</button>
-            </div>
-        </div>
-
-        <div class="section" id="multiplexing-pins-section">
-            <h2>Problem 12: Multiplexing Pins</h2>
-            <div class="description">
-                Pin multiplexing to control more LEDs/segments.
-            </div>
-            <div class="signal-container multiplexing-pins-signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">Pins Count</span>
-                    <div class="signal-bits" id="multiplexing-pins-count"><div><span class="bit low">0</span><span class="bit low">0</span></div></div>
-                </div>
-                 <!-- Add visual representation for multiplexing process if desired -->
-            </div>
-            <div class="calculation-steps" id="multiplexing-pins-steps">
-                <p>Multiplexing allows using fewer pins to control multiple outputs.</p>
-                <p>This is done by quickly switching between outputs.</p>
-            </div>
-            <div class="controls">
-                <button id="multiplexing-pins-animate-btn">Animate</button>
-                <button id="multiplexing-pins-steps-btn">Show Steps</button>
-                <button id="multiplexing-pins-reset-btn">Reset</button>
-            </div>
-        </div>
-
-        <div class="section" id="two-arrays-section">
-            <h2>Problem 13: Two Arrays for Segments</h2>
-            <div class="description">
-                Using two arrays to control display segments.
-            </div>
-            <div class="signal-container two-arrays-signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">Pins Count</span>
-                    <div class="signal-bits" id="two-arrays-pins-count"><div><span class="bit low">0</span><span class="bit low">0</span></div></div>
-                </div>
-                 <!-- Add visual representation for array segment control if desired -->
-            </div>
-            <div class="calculation-steps" id="two-arrays-steps">
-                <p>Two arrays can simplify controlling 7-segment displays.</p>
-                <p>One array for segment patterns, another for digit selection.</p>
-            </div>
-            <div class="controls">
-                <button id="two-arrays-animate-btn">Animate</button>
-                <button id="two-arrays-steps-btn">Show Steps</button>
-                <button id="two-arrays-reset-btn">Reset</button>
-            </div>
-        </div>
-
-        <div class="section" id="counter-timer-section">
-            <h2>Problem 14: Counter Timer Interval</h2>
-            <div class="description">
-                Counter-timer interval calculation.
-            </div>
-            <div class="signal-container counter-timer-signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">Interval (ms)</span>
-                    <div class="signal-bits" id="counter-timer-interval-ms"><div><span class="bit low">0</span><span class="bit low">.</span><span class="bit low">0</span><span class="bit low">0</span></div></div>
-                </div>
-                 <!-- Add visual representation for counter-timer interval measurement if desired -->
-            </div>
-            <div class="calculation-steps" id="counter-timer-steps">
-                <p>Counter-timers can measure intervals between events.</p>
-                <p>Interval calculation depends on clock frequency and timer settings.</p>
-            </div>
-            <div class="controls">
-                <button id="counter-timer-animate-btn">Animate</button>
-                <button id="counter-timer-steps-btn">Show Steps</button>
-                <button id="counter-timer-reset-btn">Reset</button>
-            </div>
-        </div>
-
     </div>
-    <div id="back-to-top" onclick="scrollToTop()">↑</div>
+
+    <div class="section" id="systick-limitations-section">
+        <h2>Problem 2: SysTick Limitations</h2>
+        <div class="description">
+            SysTick limitations for precise timing. Options evaluation.
+        </div>
+        <div class="signal-container systick-limitations-signal-container">
+            <div class="signal-row">
+                <span class="signal-label">Options</span>
+                <div class="signal-bits" id="systick-limitations-options"><div><span class="bit low">a</span><span class="bit low">b</span><span class="bit low">c</span><span class="bit low">d</span></div></div>
+            </div>
+        </div>
+        <div class="calculation-steps" id="systick-limitations-steps">
+            <p>SysTick is good for basic timekeeping but has limitations.</p>
+            <p>Option 'c' aligns with typical SysTick use cases.</p>
+            <p>Options 'a', 'b', and 'd' might be too demanding or not suitable for SysTick.</p>
+        </div>
+        <div class="controls">
+            <button id="systick-limitations-animate-btn">Animate</button>
+            <button id="systick-limitations-steps-btn">Show Steps</button>
+            <button id="systick-limitations-reset-btn">Reset</button>
+        </div>
+    </div>
+
+    <div class="section" id="pwm-section">
+        <h2>Problem 3: PWM Duty Cycle</h2>
+        <div class="description">
+            PWM duty cycle calculation with 100kHz clock, prescaler=999, ARR=24.
+        </div>
+        <div class="interactive-controls" id="pwm-controls">
+            <label>ARR: <input type="range" id="pwm-arr" min="1" max="100" value="24"></label>
+            <label>CCR: <input type="range" id="pwm-ccr" min="0" max="100" value="1"></label>
+        </div>
+        <div class="signal-container pwm-signal-container">
+            <div class="signal-row">
+                <span class="signal-label">PWM Waveform</span>
+                <canvas class="waveform-canvas" id="pwm-signal-waveform" width="400" height="80"></canvas>
+            </div>
+            <div class="signal-row">
+                <span class="signal-label">Duty Cycle</span>
+                <div class="value-display" id="pwm-duty-cycle-display">4%</div>
+            </div>
+        </div>
+        <div class="calculation-steps" id="pwm-steps">
+            <p id="pwm-period-step">Total Period = ARR + 1 = <span id="pwm-arr-val">24</span> + 1 = <span id="pwm-calculated-period">25</span> cycles</p>
+            <p id="pwm-on-step">On Time = <span id="pwm-ccr-val-duty">1</span> cycle</p>
+            <p id="pwm-duty-step">Duty Cycle = 1 / <span id="pwm-calculated-period-duty">25</span> = <span id="pwm-calculated-duty-percent">4</span>%</p>
+        </div>
+        <div class="controls">
+            <button id="pwm-animate-btn">Animate</button>
+            <button id="pwm-steps-btn">Show Steps</button>
+            <button id="pwm-reset-btn">Reset</button>
+        </div>
+    </div>
+
+    <div class="section" id="bjt-section">
+        <h2>Problem 4: BJT Power Efficiency</h2>
+        <div class="description">
+            BJT transistor operation with DAC signal. Power efficiency and slow DAC signals.
+        </div>
+        <div class="interactive-controls" id="bjt-controls">
+            <button id="toggle-dac-method">Toggle Driving Method (Fast/Slow)</button>
+        </div>
+        <div class="signal-container bjt-signal-container">
+            <div class="signal-row">
+                <span class="signal-label">DAC Signal</span>
+                <canvas class="waveform-canvas" id="dac-signal-waveform" width="400" height="80"></canvas>
+            </div>
+            <div class="signal-row">
+                <span class="signal-label">Current</span>
+                <div class="value-display" id="current-signal-display">Low</div>
+            </div>
+        </div>
+        <div class="calculation-steps" id="bjt-steps">
+            <p>BJT acts as a current-controlled current source</p>
+            <p>Slow DAC changes = Less switching losses</p>
+            <p>Power efficiency improved with gradual transitions</p>
+        </div>
+        <div class="controls">
+            <button id="bjt-animate-btn">Animate</button>
+            <button id="bjt-steps-btn">Show Steps</button>
+            <button id="bjt-reset-btn">Reset</button>
+        </div>
+    </div>
+
+    <div class="section" id="sinewave-section">
+        <h2>Problem 5: Max Sinewave Frequency</h2>
+        <div class="description">
+            You’re using a DAC to sample a sinewave table at 500 kHz, needing at least 20 samples per wave.
+        </div>
+        <div class="signal-container sinewave-signal-container">
+            <div class="signal-row">
+                <span class="signal-label">Sinewave & Samples</span>
+                <canvas class="waveform-canvas" id="sinewave-canvas" width="400" height="80"></canvas>
+            </div>
+            <div class="signal-row">
+                <span class="signal-label">Samples/Cycle</span>
+                <div class="value-display" id="sinewave-samples-display">20</div>
+            </div>
+            <div class="signal-row">
+                <span class="signal-label">Frequency (Hz)</span>
+                <div class="value-display" id="sinewave-freq-display">25000</div>
+            </div>
+        </div>
+        <div class="calculation-steps" id="sinewave-steps">
+            <p>DAC Rate = 500,000 samples/second</p>
+            <p>Samples per Cycle = 20</p>
+            <p>Max Frequency = 500,000 / 20 = 25,000 Hz</p>
+        </div>
+        <div class="controls">
+            <button id="sinewave-animate-btn">Animate</button>
+            <button id="sinewave-steps-btn">Show Steps</button>
+            <button id="sinewave-reset-btn">Reset</button>
+        </div>
+    </div>
+
+    <div class="section" id="interrupt-interval-section">
+        <h2>Problem 6: Interrupt Interval</h2>
+        <div class="description">
+            Interrupt interval calculation. Prescaler=7, ARR=999, 8 MHz clock.
+        </div>
+        <div class="signal-container interrupt-interval-signal-container">
+            <div class="signal-row">
+                <span class="signal-label">Interval Options</span>
+                <div class="signal-bits" id="interrupt-interval-options"><div><span class="bit low">a</span><span class="bit low">b</span><span class="bit low">c</span><span class="bit low">d</span></div></div>
+            </div>
+        </div>
+        <div class="calculation-steps" id="interrupt-interval-steps">
+            <p>Interval = (Prescaler + 1) * (ARR + 1) / Clock Frequency</p>
+            <p>Interval = (7 + 1) * (999 + 1) / 8,000,000 = 0.001 s = 1 ms</p>
+        </div>
+        <div class="controls">
+            <button id="interrupt-interval-animate-btn">Animate</button>
+            <button id="interrupt-interval-steps-btn">Show Steps</button>
+            <button id="interrupt-interval-reset-btn">Reset</button>
+        </div>
+    </div>
+
+    <div class="section" id="keypad-scanning-section">
+        <h2>Problem 7: Keypad Scanning</h2>
+        <div class="description">
+            Keypad scanning process demonstration.
+        </div>
+        <div class="signal-container keypad-scanning-signal-container">
+            <div class="signal-row">
+                <span class="signal-label">Keypad</span>
+                <div class="signal-bits" id="keypad-scanning-keypad"></div>
+            </div>
+        </div>
+        <div class="calculation-steps" id="keypad-scanning-steps">
+            <p>Keypad scanning involves sequentially activating rows and reading columns.</p>
+            <p>This allows detection of which key is pressed using fewer pins.</p>
+        </div>
+        <div class="controls">
+            <button id="keypad-scanning-animate-btn">Animate</button>
+            <button id="keypad-scanning-steps-btn">Show Steps</button>
+            <button id="keypad-scanning-reset-btn">Reset</button>
+        </div>
+    </div>
+
+    <div class="section" id="wavetable-section">
+        <h2>Problem 8.1-8.3: Wavetable Step Calculations</h2>
+        <div class="description">
+            Wavetable fractional steps, step calculation, and offset wrap-around.
+        </div>
+        <div class="signal-container wavetable-signal-container">
+            <div class="signal-row">
+                <span class="signal-label">Step (Hex)</span>
+                <div class="value-display" id="wavetable-step-display">0x4f057</div>
+            </div>
+            <div class="signal-row">
+                <span class="signal-label">Offset Iterations</span>
+                <div class="value-display" id="wavetable-offset-display">0</div>
+            </div>
+        </div>
+        <div class="calculation-steps" id="wavetable-steps">
+            <p>Step = (493883 * 2^14) / 1000 = 0x4f057</p>
+            <p>Offset increments by step each iteration</p>
+            <p>Wraps after 203 iterations (0x2945f4)</p>
+        </div>
+        <div class="controls">
+            <button id="wavetable-animate-btn">Animate</button>
+            <button id="wavetable-steps-btn">Show Steps</button>
+            <button id="wavetable-reset-btn">Reset</button>
+        </div>
+    </div>
+
+    <div class="section" id="center-section">
+        <h2>Problem 9: Center-Aligned Timer</h2>
+        <div class="description">
+            Center-aligned timer with interrupts every 10 ms at 100 kHz clock. Find ARR.
+        </div>
+        <div class="signal-container center-signal-container">
+            <div class="signal-row">
+                <span class="signal-label">Counter</span>
+                <div class="visual-counter" id="center-counter-display"></div>
+            </div>
+            <div class="signal-row">
+                <span class="signal-label">Waveform</span>
+                <canvas class="waveform-canvas" id="center-waveform" width="400" height="80"></canvas>
+            </div>
+        </div>
+        <div class="calculation-steps" id="center-steps">
+            <p>Cycles = 100 kHz * 10 ms = 1000</p>
+            <p>ARR = Cycles / 2 = 1000 / 2 = 500</p>
+        </div>
+        <div class="controls">
+            <button id="center-animate-btn">Animate</button>
+            <button id="center-steps-btn">Show Steps</button>
+            <button id="center-reset-btn">Reset</button>
+        </div>
+    </div>
+
+    <div class="section" id="history-byte-section">
+        <h2>Problem 10: History Byte</h2>
+        <div class="description">
+            History byte stores a sequence of bit values.
+        </div>
+        <div class="signal-container history-byte-signal-container">
+            <div class="signal-row">
+                <span class="signal-label">History</span>
+                <div class="signal-bits" id="history-byte-bits"><div><span class="bit low">0</span><span class="bit low">0</span><span class="bit low">0</span><span class="bit low">0</span><span class="bit low">0</span><span class="bit low">0</span><span class="bit low">0</span><span class="bit low">0</span></div></div>
+            </div>
+        </div>
+        <div class="calculation-steps" id="history-byte-steps">
+            <p>A history byte stores recent digital signal values.</p>
+            <p>Useful for detecting patterns or changes over time.</p>
+        </div>
+        <div class="controls">
+            <button id="history-byte-animate-btn">Animate</button>
+            <button id="history-byte-steps-btn">Show Steps</button>
+            <button id="history-byte-reset-btn">Reset</button>
+        </div>
+    </div>
+
+    <div class="section" id="display-frequency-section">
+        <h2>Problem 11: Display Frequency</h2>
+        <div class="description">
+            Displaying a frequency value in Hz.
+        </div>
+        <div class="signal-container display-frequency-signal-container">
+            <div class="signal-row">
+                <span class="signal-label">Frequency (Hz)</span>
+                <div class="signal-bits" id="display-frequency-hz"><div><span class="bit low">0</span><span class="bit low">0</span><span class="bit low">0</span></div></div>
+            </div>
+        </div>
+        <div class="calculation-steps" id="display-frequency-steps">
+            <p>Displaying frequency often involves converting numerical values to digit representations.</p>
+        </div>
+        <div class="controls">
+            <button id="display-frequency-animate-btn">Animate</button>
+            <button id="display-frequency-steps-btn">Show Steps</button>
+            <button id="display-frequency-reset-btn">Reset</button>
+        </div>
+    </div>
+
+    <div class="section" id="multiplexing-pins-section">
+        <h2>Problem 12: Multiplexing Pins</h2>
+        <div class="description">
+            Pin multiplexing to control more LEDs/segments.
+        </div>
+        <div class="signal-container multiplexing-pins-signal-container">
+            <div class="signal-row">
+                <span class="signal-label">Pins Count</span>
+                <div class="signal-bits" id="multiplexing-pins-count"><div><span class="bit low">0</span><span class="bit low">0</span></div></div>
+            </div>
+        </div>
+        <div class="calculation-steps" id="multiplexing-pins-steps">
+            <p>Multiplexing allows using fewer pins to control multiple outputs.</p>
+            <p>This is done by quickly switching between outputs.</p>
+        </div>
+        <div class="controls">
+            <button id="multiplexing-pins-animate-btn">Animate</button>
+            <button id="multiplexing-pins-steps-btn">Show Steps</button>
+            <button id="multiplexing-pins-reset-btn">Reset</button>
+        </div>
+    </div>
+
+    <div class="section" id="two-arrays-section">
+        <h2>Problem 13: Two Arrays for Segments</h2>
+        <div class="description">
+            Using two arrays to control display segments.
+        </div>
+        <div class="signal-container two-arrays-signal-container">
+            <div class="signal-row">
+                <span class="signal-label">Pins Count</span>
+                <div class="signal-bits" id="two-arrays-pins-count"><div><span class="bit low">0</span><span class="bit low">0</span></div></div>
+            </div>
+        </div>
+        <div class="calculation-steps" id="two-arrays-steps">
+            <p>Two arrays can simplify controlling 7-segment displays.</p>
+            <p>One array for segment patterns, another for digit selection.</p>
+        </div>
+        <div class="controls">
+            <button id="two-arrays-animate-btn">Animate</button>
+            <button id="two-arrays-steps-btn">Show Steps</button>
+            <button id="two-arrays-reset-btn">Reset</button>
+        </div>
+    </div>
+
+    <div class="section" id="counter-timer-section">
+        <h2>Problem 14: Counter Timer Interval</h2>
+        <div class="description">
+            Counter-timer interval calculation.
+        </div>
+        <div class="signal-container counter-timer-signal-container">
+            <div class="signal-row">
+                <span class="signal-label">Interval (ms)</span>
+                <div class="signal-bits" id="counter-timer-interval-ms"><div><span class="bit low">0</span><span class="bit low">.</span><span class="bit low">0</span><span class="bit low">0</span></div></div>
+            </div>
+        </div>
+        <div class="calculation-steps" id="counter-timer-steps">
+            <p>Counter-timers can measure intervals between events.</p>
+            <p>Interval calculation depends on clock frequency and timer settings.</p>
+        </div>
+        <div class="controls">
+            <button id="counter-timer-animate-btn">Animate</button>
+            <button id="counter-timer-steps-btn">Show Steps</button>
+            <button id="counter-timer-reset-btn">Reset</button>
+        </div>
+    </div>
+
+</div>
+<div id="back-to-top" onclick="scrollToTop()">↑</div>
 
     <script src="script.js"></script>
+
 </body>
 </html>

@@ -11,21 +11,19 @@ function highlightSteps(steps) {
     const paragraphs = steps.querySelectorAll('p');
     paragraphs.forEach((p, i) => {
         setTimeout(() => {
-            // Remove highlight from previous paragraph if exists
             if (i > 0) paragraphs[i - 1].classList.remove('step-highlight');
             p.classList.add('step-highlight');
         }, i * 800);
     });
-    // Optionally remove highlight from the final paragraph after completion
     setTimeout(() => {
         if (paragraphs.length) paragraphs[paragraphs.length - 1].classList.remove('step-highlight');
     }, paragraphs.length * 800);
 }
 
 function resetBits(bitContainer, initialText) {
-    [...bitContainer.children].forEach(child => { // Iterate over direct children of bitContainer (should be DIVs)
+    [...bitContainer.children].forEach(child => {
         if (child.tagName === 'DIV') {
-            [...child.children].forEach(bit => { // Iterate over bits within each DIV
+            [...child.children].forEach(bit => {
                 bit.classList.remove('high', 'connection', 'visible');
                 bit.classList.add('low');
                 if (initialText !== '') bit.textContent = initialText;
@@ -133,11 +131,10 @@ function drawTriangleWave(canvas, peakHeightPercent = 0.8) {
     ctx.lineTo(width / 2, peakY);
     ctx.lineTo(width, height);
     ctx.stroke();
-    ctx.lineTo(0, height); // Close the path to fill if needed later
-    ctx.closePath(); // Explicitly close path
+    ctx.lineTo(0, height);
+    ctx.closePath();
     ctx.stroke();
 }
-
 
 function updateVisualCounter(elementId, value) {
     const element = document.getElementById(elementId);
@@ -153,8 +150,7 @@ function updateValueDisplay(elementId, value) {
     }
 }
 
-
-// Refactored Animation Functions (Updated for Visuals and Interactivity)
+// Refactored Animation Functions (Updated for Problems 1, 3, 4, 5, 9)
 
 function initTimerConfigAnimation() {
     const prescalerSlider = document.getElementById('timer-prescaler');
@@ -162,7 +158,7 @@ function initTimerConfigAnimation() {
     const ccrSlider = document.getElementById('timer-ccr');
 
     setupAnimation({
-        containerId: 'timer-config-options', // Still might use bits for options in future if needed
+        containerId: 'timer-config-options',
         stepsId: 'timer-config-steps',
         animateBtnId: 'timer-config-animate-btn',
         stepsBtnId: 'timer-config-steps-btn',
@@ -172,48 +168,30 @@ function initTimerConfigAnimation() {
             const counterDisplay = document.getElementById('timer-counter-display');
             const waveformCanvas = document.getElementById('timer-output-waveform');
             let counterValue = 0;
-            let animationInterval;
 
             const prescaler = parseInt(prescalerSlider.value, 10);
             const arrValue = parseInt(arrSlider.value, 10);
             const ccrValue = parseInt(ccrSlider.value, 10);
-            const timerFrequency = 100000 / (1 + prescaler) / (1 + arrValue); // in Hz
+            const timerFrequency = 100000 / (1 + prescaler) / (1 + arrValue);
             const dutyCycle = (ccrValue / (arrValue + 1)) * 100;
 
-            // Update Calculation Steps Dynamically
-            document.getElementById('timer-prescaler-val').textContent = prescaler;
-            document.getElementById('timer-arr-val').textContent = arrValue;
-            document.getElementById('timer-arr-val-duty').textContent = arrValue;
-            document.getElementById('timer-ccr-val').textContent = ccrValue;
-            document.getElementById('timer-calculated-freq').textContent = timerFrequency.toFixed(2);
-            document.getElementById('timer-calculated-duty').textContent = dutyCycle.toFixed(0);
-            document.getElementById('timer-calculated-duty-percent').textContent = dutyCycle.toFixed(0);
+            updateTimerDisplay(prescaler, arrValue, ccrValue);
 
-
-            animationInterval = setInterval(() => {
+            const animationInterval = setInterval(() => {
                 updateVisualCounter('timer-counter-display', counterValue);
-                drawSquareWave(waveformCanvas, dutyCycle); // Duty cycle is now fixed based on CCR/ARR
+                const currentDuty = (counterValue < ccrValue) ? 100 : 0;
+                drawSquareWave(waveformCanvas, currentDuty);
+                counterValue = (counterValue + 1) % (arrValue + 1);
+            }, 50); // Slower for visibility
 
-                counterValue++;
-                if (counterValue > arrValue) {
-                    counterValue = 0;
-                }
-            }, 1000 / timerFrequency / (arrValue + 1) ); // Adjust interval for animation speed
-
-            setTimeout(() => highlightSteps(steps), 1000); // Highlight steps after initial animation starts
-            setTimeout(() => clearInterval(animationInterval), 10000); // Stop animation after 10 seconds (adjust as needed)
+            setTimeout(() => highlightSteps(steps), 1000);
+            setTimeout(() => clearInterval(animationInterval), 10000);
         }
     });
 
-    // Add event listeners to sliders to update calculations and animation
-    const updateTimerDisplay = () => {
-        const prescaler = parseInt(prescalerSlider.value, 10);
-        const arrValue = parseInt(arrSlider.value, 10);
-        const ccrValue = parseInt(ccrSlider.value, 10);
+    const updateTimerDisplay = (prescaler, arrValue, ccrValue) => {
         const timerFrequency = 100000 / (1 + prescaler) / (1 + arrValue);
         const dutyCycle = (ccrValue / (arrValue + 1)) * 100;
-
-        // Update Calculation Steps Dynamically (same as in animateFunction)
         document.getElementById('timer-prescaler-val').textContent = prescaler;
         document.getElementById('timer-arr-val').textContent = arrValue;
         document.getElementById('timer-arr-val-duty').textContent = arrValue;
@@ -221,20 +199,16 @@ function initTimerConfigAnimation() {
         document.getElementById('timer-calculated-freq').textContent = timerFrequency.toFixed(2);
         document.getElementById('timer-calculated-duty').textContent = dutyCycle.toFixed(0);
         document.getElementById('timer-calculated-duty-percent').textContent = dutyCycle.toFixed(0);
-
-        const waveformCanvas = document.getElementById('timer-output-waveform');
-        drawSquareWave(waveformCanvas, dutyCycle); // Redraw waveform with updated duty cycle
     };
 
-    prescalerSlider.addEventListener('input', updateTimerDisplay);
-    arrSlider.addEventListener('input', updateTimerDisplay);
-    ccrSlider.addEventListener('input', updateTimerDisplay);
+    prescalerSlider.addEventListener('input', () => updateTimerDisplay(parseInt(prescalerSlider.value, 10), parseInt(arrSlider.value, 10), parseInt(ccrSlider.value, 10)));
+    arrSlider.addEventListener('input', () => updateTimerDisplay(parseInt(prescalerSlider.value, 10), parseInt(arrSlider.value, 10), parseInt(ccrSlider.value, 10)));
+    ccrSlider.addEventListener('input', () => updateTimerDisplay(parseInt(prescalerSlider.value, 10), parseInt(arrSlider.value, 10), parseInt(ccrSlider.value, 10)));
 }
-
 
 function initSinewaveAnimation() {
     setupAnimation({
-        containerId: 'sinewave-samples', // Still bits container for now, could be repurposed
+        containerId: 'sinewave-samples',
         stepsId: 'sinewave-steps',
         animateBtnId: 'sinewave-animate-btn',
         stepsBtnId: 'sinewave-steps-btn',
@@ -244,14 +218,18 @@ function initSinewaveAnimation() {
             const sinewaveCanvas = document.getElementById('sinewave-canvas');
             let samplesPerCycle = 20;
             let frequency = 25000;
-            let dacRate = 500000;
+            let phase = 0;
 
             updateValueDisplay('sinewave-samples-display', samplesPerCycle);
             updateValueDisplay('sinewave-freq-display', frequency);
 
-            drawSineWave(sinewaveCanvas, 0.8, frequency/25000); // Example frequency scaling
+            const animationInterval = setInterval(() => {
+                drawSineWave(sinewaveCanvas, 0.8, frequency / 25000, phase);
+                phase += 0.1; // Increment phase for animation
+            }, 50); // 50ms interval for smooth animation
 
             setTimeout(() => highlightSteps(steps), 1000);
+            setTimeout(() => clearInterval(animationInterval), 10000);
         }
     });
 }
@@ -271,62 +249,23 @@ function initCenterAnimation() {
             let counterValue = 0;
             let arrValue = 500;
             let countingUp = true;
-            let animationInterval;
 
-            animationInterval = setInterval(() => {
+            const animationInterval = setInterval(() => {
                 updateVisualCounter('center-counter-display', counterValue);
-                drawTriangleWave(waveformCanvas); // Basic triangle wave
+                const peakHeightPercent = counterValue / arrValue;
+                drawTriangleWave(waveformCanvas, peakHeightPercent);
 
                 if (countingUp) {
                     counterValue++;
-                    if (counterValue > arrValue) {
-                        countingUp = false;
-                        counterValue = arrValue; // To avoid going over ARR value
-                    }
+                    if (counterValue >= arrValue) countingUp = false;
                 } else {
                     counterValue--;
-                    if (counterValue < 0) {
-                        countingUp = true;
-                        counterValue = 0;
-                    }
+                    if (counterValue <= 0) countingUp = true;
                 }
-            }, 1000 / 100); // Adjust interval for animation speed (10ms interrupt interval is 100Hz rate)
+            }, 50); // Slower interval (50ms) for visibility
 
             setTimeout(() => highlightSteps(steps), 1000);
-            setTimeout(() => clearInterval(animationInterval), 10000); // Stop after 10 seconds
-        }
-    });
-}
-
-function initWavetableAnimation() {
-    setupAnimation({
-        containerId: 'wavetable-step',
-        stepsId: 'wavetable-steps',
-        animateBtnId: 'wavetable-animate-btn',
-        stepsBtnId: 'wavetable-steps-btn',
-        resetBtnId: 'wavetable-reset-btn',
-        initialValue: '0',
-        animateFunction: (container, steps, reset) => {
-            reset();
-            let offsetIterations = 0;
-            const stepDisplay = document.getElementById('wavetable-step-display');
-            const offsetDisplay = document.getElementById('wavetable-offset-display');
-            const stepValueHex = '0x4f057'; // Example step value
-            const wrapAroundIterations = 203;
-
-            updateValueDisplay('wavetable-step-display', stepValueHex);
-            updateValueDisplay('wavetable-offset-display', offsetIterations);
-
-            let animationInterval = setInterval(() => {
-                offsetIterations++;
-                updateValueDisplay('wavetable-offset-display', offsetIterations);
-                if (offsetIterations >= wrapAroundIterations) {
-                    clearInterval(animationInterval);
-                    updateValueDisplay('wavetable-offset-display', 'Wrapped Around!'); // Indicate wrap-around
-                }
-            }, 50); // Adjust interval for animation speed
-
-            setTimeout(() => highlightSteps(steps), 1000);
+            setTimeout(() => clearInterval(animationInterval), 10000);
         }
     });
 }
@@ -343,35 +282,35 @@ function initBJTAnimation() {
             reset();
             const dacWaveformCanvas = document.getElementById('dac-signal-waveform');
             const currentDisplay = document.getElementById('current-signal-display');
+            const toggleButton = document.getElementById('toggle-dac-method');
             let time = 0;
+            let isFastDAC = false;
             let animationInterval;
-            let isFastDAC = false; // Initially slow DAC
 
             function animateDACSignal() {
-                const frequency = isFastDAC ? 5 : 0.5; // Fast vs Slow DAC signal frequency
-                drawSineWave(dacWaveformCanvas, 0.8, frequency, time); // Example DAC signal as sine wave
-                currentDisplay.textContent = isFastDAC ? 'Fluctuating' : 'Stable'; // Example current indication
-                time += 0.02; // Increment time for sine wave animation
+                const frequency = isFastDAC ? 5 : 0.5;
+                drawSineWave(dacWaveformCanvas, 0.8, frequency, time);
+                currentDisplay.textContent = isFastDAC ? 'Fluctuating' : 'Stable';
+                time += 0.02;
             }
 
-            animationInterval = setInterval(animateDACSignal, 20); // Animation interval
+            function startAnimation() {
+                if (animationInterval) clearInterval(animationInterval);
+                animationInterval = setInterval(animateDACSignal, 20);
+            }
 
-            const toggleButton = document.getElementById('toggle-dac-method');
+            startAnimation();
             toggleButton.onclick = () => {
                 isFastDAC = !isFastDAC;
-                clearInterval(animationInterval); // Restart animation with new DAC speed
-                time = 0; // Reset time
-                animationInterval = setInterval(animateDACSignal, 20);
-                toggleButton.textContent = isFastDAC ? 'Toggle Driving Method (Slow)' : 'Toggle Driving Method (Fast)'; // Update button text
+                toggleButton.textContent = isFastDAC ? 'Toggle Driving Method (Slow)' : 'Toggle Driving Method (Fast)';
+                startAnimation();
             };
 
-
             setTimeout(() => highlightSteps(steps), 1000);
-            setTimeout(() => clearInterval(animationInterval), 10000); // Stop after 10 seconds (adjust as needed)
+            setTimeout(() => clearInterval(animationInterval), 10000);
         }
     });
 }
-
 
 function initPWMAnimation() {
     const arrSlider = document.getElementById('pwm-arr');
@@ -387,61 +326,80 @@ function initPWMAnimation() {
             reset();
             const pwmWaveformCanvas = document.getElementById('pwm-signal-waveform');
             const dutyCycleDisplay = document.getElementById('pwm-duty-cycle-display');
+            let counter = 0;
 
             const arrValue = parseInt(arrSlider.value, 10);
             const ccrValue = parseInt(ccrSlider.value, 10);
             const dutyCyclePercent = (ccrValue / (arrValue + 1)) * 100;
 
-            // Update Calculation Steps Dynamically
-            document.getElementById('pwm-arr-val').textContent = arrValue;
-            document.getElementById('pwm-ccr-val-duty').textContent = ccrValue;
-            document.getElementById('pwm-calculated-period').textContent = arrValue + 1;
-            document.getElementById('pwm-calculated-period-duty').textContent = arrValue + 1;
-            document.getElementById('pwm-calculated-duty-percent').textContent = dutyCyclePercent.toFixed(0);
-            dutyCycleDisplay.textContent = dutyCyclePercent.toFixed(0) + '%';
+            updatePWMDisplay(arrValue, ccrValue);
 
-
-            drawSquareWave(pwmWaveformCanvas, dutyCyclePercent);
-
+            const animationInterval = setInterval(() => {
+                counter = (counter + 1) % (arrValue + 1);
+                const currentDuty = (counter < ccrValue) ? 100 : 0;
+                drawSquareWave(pwmWaveformCanvas, currentDuty);
+            }, 50);
 
             setTimeout(() => highlightSteps(steps), 1000);
+            setTimeout(() => clearInterval(animationInterval), 10000);
         }
     });
 
-     // Add event listeners to sliders to update calculations and waveform
-     const updatePWMDisplay = () => {
-        const arrValue = parseInt(arrSlider.value, 10);
-        const ccrValue = parseInt(ccrSlider.value, 10);
+    const updatePWMDisplay = (arrValue, ccrValue) => {
         const dutyCyclePercent = (ccrValue / (arrValue + 1)) * 100;
-
-        // Update Calculation Steps Dynamically (same as in animateFunction)
         document.getElementById('pwm-arr-val').textContent = arrValue;
         document.getElementById('pwm-ccr-val-duty').textContent = ccrValue;
         document.getElementById('pwm-calculated-period').textContent = arrValue + 1;
         document.getElementById('pwm-calculated-period-duty').textContent = arrValue + 1;
         document.getElementById('pwm-calculated-duty-percent').textContent = dutyCyclePercent.toFixed(0);
         dutyCycleDisplay.textContent = dutyCyclePercent.toFixed(0) + '%';
-
-        const pwmWaveformCanvas = document.getElementById('pwm-signal-waveform');
-        drawSquareWave(pwmWaveformCanvas, dutyCyclePercent); // Redraw waveform
+        drawSquareWave(document.getElementById('pwm-signal-waveform'), dutyCyclePercent);
     };
 
-    arrSlider.addEventListener('input', updatePWMDisplay);
-    ccrSlider.addEventListener('input', updatePWMDisplay);
+    arrSlider.addEventListener('input', () => updatePWMDisplay(parseInt(arrSlider.value, 10), parseInt(ccrSlider.value, 10)));
+    ccrSlider.addEventListener('input', () => updatePWMDisplay(parseInt(arrSlider.value, 10), parseInt(ccrSlider.value, 10)));
 }
 
+// Unchanged Animation Functions
 
-function initSysTickLimitationsAnimation() { /* ... (Simplified - bits only for now, can add visuals later) ... */ initGenericBitsAnimation('systick-limitations'); }
-function initInterruptIntervalAnimation() { /* ... (Simplified - bits only for now, can add visuals later) ... */ initGenericBitsAnimation('interrupt-interval'); }
-function initKeypadScanningAnimation() { /* ... (Keypad animation remains largely the same as before) ... */  initKeypadScanningAnimationBase(); }
-function initHistoryByteAnimation() { /* ... (Bits animation remains largely the same) ... */ initHistoryByteAnimationBase(); }
-function initDisplayFrequencyAnimation() { /* ... (Bits animation remains largely the same) ... */ initDisplayFrequencyAnimationBase(); }
-function initMultiplexingPinsAnimation() { /* ... (Bits animation remains largely the same) ... */ initMultiplexingPinsAnimationBase(); }
-function initTwoArraysAnimation() { /* ... (Bits animation remains largely the same) ... */ initTwoArraysAnimationBase(); }
-function initCounterTimerAnimation() { /* ... (Bits animation remains largely the same) ... */ initCounterTimerAnimationBase(); }
-
-
-// --- Simplified Animation Functions for Problems with Bit Representations (can be visually enhanced later) ---
+function initSysTickLimitationsAnimation() { initGenericBitsAnimation('systick-limitations'); }
+function initInterruptIntervalAnimation() { initGenericBitsAnimation('interrupt-interval'); }
+function initKeypadScanningAnimation() {
+    setupAnimation({
+        containerId: 'keypad-scanning-keypad',
+        stepsId: 'keypad-scanning-steps',
+        animateBtnId: 'keypad-scanning-animate-btn',
+        stepsBtnId: 'keypad-scanning-steps-btn',
+        resetBtnId: 'keypad-scanning-reset-btn',
+        animateFunction: (container, steps, reset) => {
+            reset();
+            if (!container.querySelector('.keypad-key')) {
+                const keys = ['1','2','3','A','4','5','6','B','7','8','9','C','*','0','#','D'];
+                let keypadHTML = '<div>';
+                keys.forEach((key, i) => {
+                    keypadHTML += `<span class="bit low keypad-key" data-key="${key}">${key}</span>`;
+                    if ((i+1) % 4 === 0 && i < keys.length - 1) keypadHTML += '</div><div>';
+                });
+                keypadHTML += '</div>';
+                container.innerHTML = keypadHTML;
+            }
+            const keypadKeys = [...container.querySelectorAll('.keypad-key')];
+            setTimeout(() => {
+                if (keypadKeys[0]) {
+                    keypadKeys[0].classList.remove('low');
+                    keypadKeys[0].classList.add('high', 'connection');
+                    setTimeout(() => keypadKeys[0].classList.add('visible'), 100);
+                }
+            }, 500);
+            setTimeout(() => highlightSteps(steps), 1000);
+        }
+    });
+}
+function initHistoryByteAnimation() { initHistoryByteAnimationBase(); }
+function initDisplayFrequencyAnimation() { initDisplayFrequencyAnimationBase(); }
+function initMultiplexingPinsAnimation() { initMultiplexingPinsAnimationBase(); }
+function initTwoArraysAnimation() { initTwoArraysAnimationBase(); }
+function initCounterTimerAnimation() { initCounterTimerAnimationBase(); }
 
 function initGenericBitsAnimation(baseId) {
     setupAnimation({
@@ -465,18 +423,7 @@ function initGenericBitsAnimation(baseId) {
     });
 }
 
-function initKeypadScanningAnimationBase() { // Renamed to avoid conflict if you enhance later
-    setupAnimation({
-        containerId: 'keypad-scanning-keypad',
-        stepsId: 'keypad-scanning-steps',
-        animateBtnId: 'keypad-scanning-animate-btn',
-        stepsBtnId: 'keypad-scanning-steps-btn',
-        resetBtnId: 'keypad-scanning-reset-btn',
-        animateFunction: initKeypadScanningAnimation().animateFunction // Re-use the keypad animation logic
-    });
-}
-
-function initHistoryByteAnimationBase() { // Renamed
+function initHistoryByteAnimationBase() {
     setupAnimation({
         containerId: 'history-byte-bits',
         stepsId: 'history-byte-steps',
@@ -484,11 +431,25 @@ function initHistoryByteAnimationBase() { // Renamed
         stepsBtnId: 'history-byte-steps-btn',
         resetBtnId: 'history-byte-reset-btn',
         initialValue: '0',
-        animateFunction: initHistoryByteAnimation().animateFunction // Re-use history byte animation logic
+        animateFunction: (container, steps, reset) => {
+            reset();
+            const historyBitGroup = container.children[0].children;
+            const targetValues = ['1','0','1','0','1','0','1','0'];
+            setTimeout(() => {
+                targetValues.forEach((val, i) => {
+                    if (historyBitGroup[i]) {
+                        historyBitGroup[i].classList.remove('low');
+                        historyBitGroup[i].classList.add('high');
+                        historyBitGroup[i].textContent = val;
+                    }
+                });
+            }, 500);
+            setTimeout(() => highlightSteps(steps), 1000);
+        }
     });
 }
 
-function initDisplayFrequencyAnimationBase() { // Renamed
+function initDisplayFrequencyAnimationBase() {
     setupAnimation({
         containerId: 'display-frequency-hz',
         stepsId: 'display-frequency-steps',
@@ -496,11 +457,27 @@ function initDisplayFrequencyAnimationBase() { // Renamed
         stepsBtnId: 'display-frequency-steps-btn',
         resetBtnId: 'display-frequency-reset-btn',
         initialValue: '0',
-        animateFunction: initDisplayFrequencyAnimation().animateFunction // Re-use display frequency animation logic
+        animateFunction: (container, steps, reset) => {
+            reset();
+            const frequencyBits = container.querySelector('div');
+            const frequencyBitGroup = frequencyBits.children;
+            const resultStr = "625";
+            setTimeout(() => {
+                Array.from(resultStr).forEach((char, i) => {
+                    if (frequencyBitGroup[i]) {
+                        frequencyBitGroup[i].classList.remove('low');
+                        frequencyBitGroup[i].classList.add('high', 'connection');
+                        frequencyBitGroup[i].textContent = char;
+                        setTimeout(() => frequencyBitGroup[i].classList.add('visible'), 100);
+                    }
+                });
+            }, 500);
+            setTimeout(() => highlightSteps(steps), 1500);
+        }
     });
 }
 
-function initMultiplexingPinsAnimationBase() { // Renamed
+function initMultiplexingPinsAnimationBase() {
     setupAnimation({
         containerId: 'multiplexing-pins-count',
         stepsId: 'multiplexing-pins-steps',
@@ -508,11 +485,27 @@ function initMultiplexingPinsAnimationBase() { // Renamed
         stepsBtnId: 'multiplexing-pins-steps-btn',
         resetBtnId: 'multiplexing-pins-reset-btn',
         initialValue: '0',
-        animateFunction: initMultiplexingPinsAnimation().animateFunction // Re-use multiplexing pins animation logic
+        animateFunction: (container, steps, reset) => {
+            reset();
+            const pinsBits = container.querySelector('div');
+            const pinsBitGroup = pinsBits.children;
+            const resultStr = "14";
+            setTimeout(() => {
+                Array.from(resultStr).forEach((char, i) => {
+                    if (pinsBitGroup[i]) {
+                        pinsBitGroup[i].classList.remove('low');
+                        pinsBitGroup[i].classList.add('high', 'connection');
+                        pinsBitGroup[i].textContent = char;
+                        setTimeout(() => pinsBitGroup[i].classList.add('visible'), 100);
+                    }
+                });
+            }, 500);
+            setTimeout(() => highlightSteps(steps), 1000);
+        }
     });
 }
 
-function initTwoArraysAnimationBase() { // Renamed
+function initTwoArraysAnimationBase() {
     setupAnimation({
         containerId: 'two-arrays-pins-count',
         stepsId: 'two-arrays-steps',
@@ -520,11 +513,27 @@ function initTwoArraysAnimationBase() { // Renamed
         stepsBtnId: 'two-arrays-steps-btn',
         resetBtnId: 'two-arrays-reset-btn',
         initialValue: '0',
-        animateFunction: initTwoArraysAnimation().animateFunction // Re-use two arrays animation logic
+        animateFunction: (container, steps, reset) => {
+            reset();
+            const pinsBits = container.querySelector('div');
+            const pinsBitGroup = pinsBits.children;
+            const resultStr = "14";
+            setTimeout(() => {
+                Array.from(resultStr).forEach((char, i) => {
+                    if (pinsBitGroup[i]) {
+                        pinsBitGroup[i].classList.remove('low');
+                        pinsBitGroup[i].classList.add('high', 'connection');
+                        pinsBitGroup[i].textContent = char;
+                        setTimeout(() => pinsBitGroup[i].classList.add('visible'), 100);
+                    }
+                });
+            }, 500);
+            setTimeout(() => highlightSteps(steps), 1000);
+        }
     });
 }
 
-function initCounterTimerAnimationBase() { // Renamed
+function initCounterTimerAnimationBase() {
     setupAnimation({
         containerId: 'counter-timer-interval-ms',
         stepsId: 'counter-timer-steps',
@@ -532,22 +541,70 @@ function initCounterTimerAnimationBase() { // Renamed
         stepsBtnId: 'counter-timer-steps-btn',
         resetBtnId: 'counter-timer-reset-btn',
         initialValue: '0',
-        animateFunction: initCounterTimerAnimation().animateFunction // Re-use counter timer animation logic
+        animateFunction: (container, steps, reset) => {
+            reset();
+            const intervalBits = container.querySelector('div');
+            const intervalBitGroup = intervalBits.children;
+            const resultStr = "5.12";
+            setTimeout(() => {
+                Array.from(resultStr).forEach((char, i) => {
+                    if (intervalBitGroup[i]) {
+                        intervalBitGroup[i].classList.remove('low');
+                        intervalBitGroup[i].classList.add('high', 'connection');
+                        intervalBitGroup[i].textContent = char;
+                        setTimeout(() => intervalBitGroup[i].classList.add('visible'), 100);
+                    }
+                });
+            }, 500);
+            setTimeout(() => highlightSteps(steps), 1000);
+        }
     });
 }
 
+function initWavetableAnimation() {
+    setupAnimation({
+        containerId: 'wavetable-step',
+        stepsId: 'wavetable-steps',
+        animateBtnId: 'wavetable-animate-btn',
+        stepsBtnId: 'wavetable-steps-btn',
+        resetBtnId: 'wavetable-reset-btn',
+        initialValue: '0',
+        animateFunction: (container, steps, reset) => {
+            reset();
+            let offsetIterations = 0;
+            const stepDisplay = document.getElementById('wavetable-step-display');
+            const offsetDisplay = document.getElementById('wavetable-offset-display');
+            const stepValueHex = '0x4f057';
+            const wrapAroundIterations = 203;
+
+            updateValueDisplay('wavetable-step-display', stepValueHex);
+            updateValueDisplay('wavetable-offset-display', offsetIterations);
+
+            let animationInterval = setInterval(() => {
+                offsetIterations++;
+                updateValueDisplay('wavetable-offset-display', offsetIterations);
+                if (offsetIterations >= wrapAroundIterations) {
+                    clearInterval(animationInterval);
+                    updateValueDisplay('wavetable-offset-display', 'Wrapped Around!');
+                }
+            }, 50);
+
+            setTimeout(() => highlightSteps(steps), 1000);
+        }
+    });
+}
 
 // Initialize animations
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('systick-limitations-options')) { initSysTickLimitationsAnimation(); }
     if (document.getElementById('timer-config-options')) { initTimerConfigAnimation(); }
     if (document.getElementById('interrupt-interval-options')) { initInterruptIntervalAnimation(); }
-    if (document.getElementById('keypad-scanning-keypad')) { initKeypadScanningAnimationBase(); } // Use base for now
-    if (document.getElementById('history-byte-bits')) { initHistoryByteAnimationBase(); } // Use base for now
-    if (document.getElementById('display-frequency-hz')) { initDisplayFrequencyAnimationBase(); } // Use base for now
-    if (document.getElementById('multiplexing-pins-count')) { initMultiplexingPinsAnimationBase(); } // Use base for now
-    if (document.getElementById('two-arrays-pins-count')) { initTwoArraysAnimationBase(); } // Use base for now
-    if (document.getElementById('counter-timer-interval-ms')) { initCounterTimerAnimationBase(); } // Use base for now
+    if (document.getElementById('keypad-scanning-keypad')) { initKeypadScanningAnimation(); }
+    if (document.getElementById('history-byte-bits')) { initHistoryByteAnimation(); }
+    if (document.getElementById('display-frequency-hz')) { initDisplayFrequencyAnimation(); }
+    if (document.getElementById('multiplexing-pins-count')) { initMultiplexingPinsAnimation(); }
+    if (document.getElementById('two-arrays-pins-count')) { initTwoArraysAnimation(); }
+    if (document.getElementById('counter-timer-interval-ms')) { initCounterTimerAnimation(); }
     if (document.getElementById('sinewave-samples')) { initSinewaveAnimation(); }
     if (document.getElementById('center-counter')) { initCenterAnimation(); }
     if (document.getElementById('wavetable-step')) { initWavetableAnimation(); }
