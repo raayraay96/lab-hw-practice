@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="../animation-utils.js"></script>
-    <script src="script.js"></script>
 </head>
 <body>
     <div class="navbar">
@@ -16,16 +15,21 @@
         <a href="../hw3/hw3.html">HW3</a>
         <a href="../hw4/hw4.html">HW4</a>
         <a href="../hw5/hw5.html">HW5</a>
-        <a href="hw6.html" class="active">HW6</a>
+        <a href="hw6.html">HW6</a>
     </div>
+    <h1>ECE362 HW6 Study Animations</h1>
     <div class="content">
-        <h1>ECE362 HW6 Study Animations</h1>
+        <!-- Problem 1 -->
         <div class="section" id="spi-word-section">
             <h2>Problem 1: SPI Word Size</h2>
-            <div class="description">
-                Decode an ASCII word from a <span class="tooltip" data-tooltip="Serial Peripheral Interface: A synchronous protocol using clock (SCK) and data (MOSI) lines.">SPI</span> signal below, find the <strong>word size</strong> in bits, read on <strong>rising edges</strong> of SCK. The signal has <strong>15 rising edges</strong>, indicating <strong>15 bits</strong>.
+            <!-- NEW: Add SPI interactive control -->
+            <div class="interactive-controls" id="spi-controls">
+                <label>Word Size: <input type="number" id="spi-word-size" min="8" max="32" value="15"></label>
             </div>
-            <div class="signal-container">
+            <div class="description">
+                Given the <span class="tooltip" data-tooltip="Serial Peripheral Interface: A synchronous protocol using clock (SCK) and data (MOSI) lines.">SPI</span> signal below, find the <strong>word size</strong> in bits, read on <strong>rising edges</strong> of SCK. The signal has <strong>15 rising edges</strong>, indicating <strong>15 bits</strong>.
+            </div>
+            <div class="signal-container" style="min-height: 300px;">
                 <div class="signal-row">
                     <span class="signal-label">NSS</span>
                     <div class="signal-bits" id="spi-word-nss"></div>
@@ -39,20 +43,22 @@
                     <div class="signal-bits" id="spi-word-mosi"></div>
                 </div>
             </div>
+            <div class="calculation-steps" id="spi-word-steps">
+                <p>Count rising edges of SCK: 15</p>
+                <p>Word size = 15 bits</p>
+            </div>
             <div class="controls">
-                <label for="spi-word-size">Word Size (bits): <input type="number" id="spi-word-size" min="8" max="32" value="15"></label>
                 <button id="spi-word-animate-btn">Animate</button>
                 <button id="spi-word-steps-btn">Show Steps</button>
                 <button id="spi-word-reset-btn">Reset</button>
             </div>
-            <div class="calculation-steps" id="spi-word-steps"></div>
         </div>
 
         <!-- Problem 2 -->
         <div class="section" id="spi-value-section">
             <h2>Problem 2: SPI Transmitted Value</h2>
             <div class="description">
-                From the <span class="tooltip" data-tooltip="Serial Peripheral Interface: A synchronous protocol using clock (SCK) and data (MOSI) lines.">SPI</span> signal (<strong>110001000010110</strong>), find the <strong>value transmitted</strong> (LSB first). The animation flips it to <strong>0x3423</strong>.
+                For the same SPI signal (<strong>110001000010110</strong>), find the <strong>value transmitted</strong> (LSB first). The animation flips it to <strong>0x3423</strong>.
             </div>
             <div class="signal-container">
                 <div class="signal-row">
@@ -61,9 +67,9 @@
                 </div>
             </div>
             <div class="calculation-steps" id="spi-value-steps">
-                <p>Signal (MSB first): 110001000010110</p>
-                <p>Signal (LSB first): 011010000010011</p>
-                <p>Value (Hex): 0x3423</p>
+                <p>MOSI: 110001000010110</p>
+                <p>Flip (LSB first): 0011010000010011</p>
+                <p>Value = 0x3423</p>
             </div>
             <div class="controls">
                 <button id="spi-value-animate-btn">Animate</button>
@@ -75,6 +81,10 @@
         <!-- Problem 3 -->
         <div class="section" id="uart-encode-section">
             <h2>Problem 3: UART Encoding</h2>
+            <!-- NEW: Add UART interactive control -->
+            <div class="interactive-controls" id="uart-controls">
+                <label>Input Byte (Hex): <input type="text" id="uart-input-byte" value="53"></label>
+            </div>
             <div class="description">
                 Encode <strong>0x53</strong> for <span class="tooltip" data-tooltip="Universal Asynchronous Receiver/Transmitter: Sends data serially with start/stop bits.">UART</span> with 1 start bit, 8-bit word, no parity, 1 stop bit. The animation shows <strong>0110010101</strong>.
             </div>
@@ -86,13 +96,11 @@
             </div>
             <div class="calculation-steps" id="uart-encode-steps">
                 <p>Start Bit: 0</p>
-                <p>Data (0x53): 01010011</p>
-                <p>Data (flipped): 11001010</p>
+                <p>Data (0x53 flipped): 11001010</p>
                 <p>Stop Bit: 1</p>
-                <p>Total: 0110010101</p>
+                <p>Full Signal: 0110010101</p>
             </div>
             <div class="controls">
-                <label for="uart-input-byte">Byte (Hex): <input type="text" id="uart-input-byte" value="53"></label>
                 <button id="uart-encode-animate-btn">Animate</button>
                 <button id="uart-encode-steps-btn">Show Steps</button>
                 <button id="uart-encode-reset-btn">Reset</button>
@@ -101,7 +109,7 @@
 
         <!-- Problem 4 -->
         <div class="section" id="uart-word-section">
-            <h2>Problem 4: UART Word Decoding</h2>
+            <h2>Problem 4: UART Decoded Word</h2>
             <div class="description">
                 Decode an ASCII word from a UART signal (7-bit word, 1 parity, 1 stop). The animation shows the first frame (<strong>0100100110</strong>) for 'd', with steps for all ("desk").
             </div>
@@ -112,10 +120,11 @@
                 </div>
             </div>
             <div class="calculation-steps" id="uart-word-steps">
-                <p>First: 0100100110 → 1100100 → 1001100 (0x64 = 'd')</p>
+                <p>First: 0100100110 → 0010011 → 1100100 (0x64 = 'd')</p>
                 <p>Second: 0100110110 → 1010011 → 1100101 (0x65 = 'e')</p>
-                <p>Third: 0110011110 → 1110011 → 1100110 (0x66 = 'f')</p>
-                <p>Fourth: 0110101110 → 1101011 → 1101011 (0x6B = 'k')</p>
+                <p>Third: 0110101110 → 1101011 → 1110011 (0x73 = 's')</p>
+                <p>Fourth: 0100111110 → 1111011 → 1101011 (0x6B = 'k')</p>
+                <p>Word: "desk"</p>
             </div>
             <div class="controls">
                 <button id="uart-word-animate-btn">Animate</button>
@@ -128,7 +137,7 @@
         <div class="section" id="parity-section">
             <h2>Problem 5: Odd Parity Meaning</h2>
             <div class="description">
-                Understand odd parity in <span class="tooltip" data-tooltip="Universal Asynchronous Receiver/Transmitter: Sends data serially with start/stop bits.">UART</span>. The animation shows a frame where the total number of 1s (data + parity) is odd, confirming option c.
+                Define <strong>odd parity</strong> in UART. The animation shows a frame where the total number of 1s (data + parity) is odd, confirming option c.
             </div>
             <div class="signal-container">
                 <div class="signal-row">
@@ -138,8 +147,8 @@
             </div>
             <div class="calculation-steps" id="parity-steps">
                 <p>Data: 10101010 (4 ones)</p>
-                <p>Parity Bit (odd): 1 (makes total odd)</p>
-                <p>Total (odd parity): 101010101</p>
+                <p>Parity Bit: 1</p>
+                <p>Total 1s: 5 (odd)</p>
             </div>
             <div class="controls">
                 <button id="parity-animate-btn">Animate</button>
@@ -150,20 +159,19 @@
 
         <!-- Problem 6 -->
         <div class="section" id="baud-words-section">
-            <h2>Problem 6: UART Baud Rate (Words/s)</h2>
+            <h2>Problem 6: Words per Second</h2>
             <div class="description">
-                Calculate words per second for <span class="tooltip" data-tooltip="Universal Asynchronous Receiver/Transmitter: Sends data serially with start/stop bits.">UART</span> with 1 start, 8 data, 1 stop bit. The animation simulates a frame, showing <strong>1354 words/s</strong>.
+                Calculate <strong>useful words per second</strong> at 13540 baud with 1 start, 8 data, 1 stop bit. The animation simulates a frame, showing <strong>1354 words/s</strong>.
             </div>
             <div class="signal-container">
                 <div class="signal-row">
-                    <span class="signal-label">UART</span>
-                    <div class="signal-bits" id="baud-words-signal"></div>
+                    <span class="signal-label">Frame</span>
+                    <div class="signal-bits" id="baud-words-frame"></div>
                 </div>
             </div>
             <div class="calculation-steps" id="baud-words-steps">
-                <p>Bit duration: 74 us</p>
-                <p>Bits per word: 10</p>
-                <p>Word duration: 740 us</p>
+                <p>Total bits: 1 + 8 + 1 = 10</p>
+                <p>Baud rate: 13540</p>
                 <p>Words/s: 13540 / 10 = 1354</p>
             </div>
             <div class="controls">
@@ -177,7 +185,7 @@
         <div class="section" id="baud-rate-section">
             <h2>Problem 7: UART Baud Rate</h2>
             <div class="description">
-                Determine baud rate from signal timing. Here 10 bits take 50 ms. The animation shows signal changes, yielding <strong>200 baud</strong>.
+                Find the <strong>baud rate</strong> for a UART frame where 10 bits take 50 ms. The animation shows signal changes, yielding <strong>200 baud</strong>.
             </div>
             <div class="signal-container">
                 <div class="signal-row">
@@ -186,9 +194,8 @@
                 </div>
             </div>
             <div class="calculation-steps" id="baud-rate-steps">
-                <p>10 bits = 50 ms</p>
-                <p>1 bit = 5 ms</p>
-                <p>Baud rate = 1 / 5ms = 200 baud</p>
+                <p>10 bits in 50 ms</p>
+                <p>Signal changes/s: 10 / 0.05 = 200</p>
             </div>
             <div class="controls">
                 <button id="baud-rate-animate-btn">Animate</button>
@@ -199,7 +206,7 @@
 
         <!-- Problem 8 -->
         <div class="section" id="parity-error-section">
-            <h2>Problem 8: UART Parity Error</h2>
+            <h2>Problem 8: Parity Error</h2>
             <div class="description">
                 Identify a <strong>parity error</strong> in a UART frame. The animation shows a frame with even parity when odd parity is expected.
             </div>
@@ -211,8 +218,10 @@
             </div>
             <div class="calculation-steps" id="parity-error-steps">
                 <p>Data: 10101010 (4 ones)</p>
-                <p>Parity Bit (even): 0 (makes total even)</p>
-                <p>Expected Parity: Odd (error)</p>
+                <p>Parity Bit: 0</p>
+                <p>Total 1s: 4 (even)</p>
+                <p>Expected: Odd parity (total should be odd)</p>
+                <p>Result: Parity Error</p>
             </div>
             <div class="controls">
                 <button id="parity-error-animate-btn">Animate</button>
@@ -223,7 +232,7 @@
 
         <!-- Problem 9 -->
         <div class="section" id="i2c-address-section">
-            <h2>Problem 9: I2C Address Decoding</h2>
+            <h2>Problem 9: I2C Address</h2>
             <div class="description">
                 Find the <strong>I2C address</strong> from a signal. The animation shows the address bits, yielding <strong>0x3A</strong>.
             </div>
@@ -234,10 +243,9 @@
                 </div>
             </div>
             <div class="calculation-steps" id="i2c-address-steps">
-                <p>Signal: 01110100</p>
-                <p>Address (7 bits): 0111010</p>
-                <p>R/W bit: 0 (Write)</p>
-                <p>Address (Hex): 0x3A</p>
+                <p>Address bits: 0111010</p>
+                <p>R/W bit: 0 (write)</p>
+                <p>7-bit address: 0x3A</p>
             </div>
             <div class="controls">
                 <button id="i2c-address-animate-btn">Animate</button>
@@ -249,8 +257,12 @@
         <!-- Problem 10 -->
         <div class="section" id="i2c-ack-section">
             <h2>Problem 10: I2C ACK/NACK</h2>
+            <!-- NEW: Add I2C interactive control -->
+            <div class="interactive-controls" id="i2c-controls">
+                <button id="simulate-i2c-error">Simulate Communication Error</button>
+            </div>
             <div class="description">
-                Understand <span class="tooltip" data-tooltip="Inter-Integrated Circuit: A two-wire protocol for synchronous data transfer.">I2C</span> ACK/NACK signals and their role in communication error control. The animation shows both signals, with ACK being a low bit and NACK being a high bit.
+                Explain <strong>ACK/NACK</strong> in I2C. The animation shows both signals, with ACK being a low bit and NACK being a high bit.
             </div>
             <div class="signal-container">
                 <div class="signal-row">
@@ -277,18 +289,9 @@
         <div class="section" id="i2c-config-section">
             <h2>Problem ?: I2C Configuration</h2>
             <div class="description">
-                Illustrates I2C configuration process.
+                This animation demonstrates I2C open-drain behavior.
             </div>
-            <div class="signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">SDA</span>
-                    <div class="signal-bits" id="i2c-config-sda">
-                        <div class="i2c-config"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="calculation-steps" id="i2c-config-steps">
-            </div>
+            <div id="i2c-config-sda"></div>  <!-- Added element for initI2cConfigAnimation -->
             <div class="controls">
                 <button id="i2c-config-animate-btn">Animate</button>
                 <button id="i2c-config-steps-btn">Show Steps</button>
@@ -296,21 +299,9 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            initSpiWordAnimation();
-            initSpiValueAnimation();
-            initUartEncodeAnimation();
-            initUartWordAnimation();
-            initParityAnimation();
-            initBaudRateAnimation();
-            initI2cConfigAnimation();
-            initI2cAckAnimation();
-            initParityErrorAnimation();
-            initI2cAddressAnimation();
-            initSineWaveAnimation();
-        });
-    </script>
+    <!-- Load utilities first -->
+    <script src="../animation-utils.js"></script>
+    <!-- Then load local script -->
+    <script src="script.js"></script>
 </body>
 </html>

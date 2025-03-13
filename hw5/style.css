@@ -105,71 +105,94 @@ h2 {
     background: #3a3a3a;
     padding: 20px;
     border-radius: 10px;
-    height: 150px;
     position: relative;
     overflow: hidden;
 }
 
+.timer-signal-container,
+.sinewave-signal-container,
+.center-signal-container,
+.wavetable-signal-container,
+.bjt-signal-container,
+.pwm-signal-container,
+.systick-limitations-signal-container,
+.interrupt-interval-signal-container,
+.keypad-scanning-signal-container,
+.history-byte-signal-container,
+.display-frequency-signal-container,
+.multiplexing-pins-signal-container,
+.two-arrays-signal-container,
+.counter-timer-signal-container {
+    height: auto; /* Adjust height as needed for new elements */
+}
+
+
 .signal-row {
     display: flex;
     align-items: center;
-    height: 50px;
+    margin-bottom: 10px; /* Spacing between rows */
     position: relative;
 }
 
 .signal-label {
-    width: 100px;
+    width: 120px; /* Adjusted width */
     font-weight: 600;
     color: #b0b0b0;
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    position: relative; /* Changed from absolute to relative */
+    text-align: right; /* Align label text to the right */
+    padding-right: 10px; /* Add some padding */
+}
+
+.signal-bits,
+.visual-counter,
+.waveform-canvas,
+.value-display {
+    flex: 1;
+    margin-left: 130px; /* Adjusted margin to align with label */
+    position: relative; /* For positioning within the row */
 }
 
 .signal-bits {
     display: flex;
-    flex: 1;
-    margin-left: 110px;
 }
 
 .bit {
-    width: 50px;
-    height: 50px;
+    width: 30px; /* Reduced bit width */
+    height: 30px; /* Reduced bit height */
     text-align: center;
-    line-height: 50px;
-    border: 2px solid #555;
-    border-radius: 8px;
-    margin: 0 4px;
+    line-height: 30px;
+    border: 1px solid #555; /* Thinner border */
+    border-radius: 5px; /* Smaller border radius */
+    margin: 0 2px; /* Reduced margin */
     background: #2a2a2a;
-    font-size: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    position: absolute;
+    font-size: 14px; /* Smaller font size */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Smaller shadow */
+    position: relative;
     transition: transform 0.3s ease, background-color 0.3s, border-color 0.3s;
 }
 
 .bit.low {
-    transform: translateY(25px);
+    transform: translateY(15px); /* Adjusted translateY */
     background: #2a2a2a;
     border-color: #555;
     color: #b0b0b0;
 }
 
 .bit.high {
-    transform: translateY(-25px);
+    transform: translateY(-15px); /* Adjusted translateY */
     background: #00ff88;
     color: #000;
     border-color: #00ff88;
-    box-shadow: 0 4px 8px rgba(0, 255, 136, 0.4);
+    box-shadow: 0 2px 4px rgba(0, 255, 136, 0.4); /* Adjusted shadow */
 }
 
 .bit.connection::after {
     content: '';
     position: absolute;
-    width: 2px;
-    height: 50px;
+    width: 1px; /* Thinner connection line */
+    height: 30px; /* Adjusted height */
     background: #facc15;
-    top: -25px;
+    top: -15px; /* Adjusted top */
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
@@ -221,7 +244,7 @@ button:hover {
 }
 
 .calculation-steps.visible {
-    max-height: 300px;
+    max-height: 500px; /* Increased max height for potentially more steps */
 }
 
 .calculation-steps p {
@@ -258,6 +281,30 @@ button:hover {
     to { opacity: 1; }
 }
 
+/* New Styles for Visual Elements */
+.waveform-canvas {
+    background: #3a3a3a;
+    border: 1px solid #555;
+    border-radius: 5px;
+}
+
+.visual-counter {
+    font-size: 2em;
+    color: #00ff88;
+    text-align: left;
+    padding-left: 10px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.value-display {
+    font-size: 1.2em;
+    color: #e0e0e0;
+    text-align: left;
+    padding-left: 10px;
+    font-family: 'Roboto', sans-serif;
+}
+
+
 @media (max-width: 768px) {
     .navbar a {
         float: none;
@@ -271,18 +318,29 @@ button:hover {
         padding: 20px;
     }
     .bit {
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
-        margin: 0 2px;
+        width: 25px;
+        height: 25px;
+        line-height: 25px;
+        margin: 0 1px;
+        font-size: 12px;
     }
+    .bit.low { transform: translateY(12.5px); }
+    .bit.high { transform: translateY(-12.5px); }
+    .bit.connection::after { height: 25px; top: -12.5px; }
     .signal-label {
-        width: 80px;
+        width: 100px;
     }
     .signal-container {
-        height: 120px;
+        height: auto; /* Adjust for smaller screens */
     }
-    .bit.low { transform: translateY(20px); }
-    .bit.high { transform: translateY(-20px); }
-    .bit.connection::after { height: 40px; }
+    .visual-counter, .value-display {
+        font-size: 1.5em; /* Smaller font on smaller screens */
+        margin-left: 110px;
+    }
+    .signal-label {
+        width: 100px;
+    }
+    .signal-bits, .visual-counter, .waveform-canvas, .value-display {
+        margin-left: 110px;
+    }
 }

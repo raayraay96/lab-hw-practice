@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ECE362 HW3 Study Animations</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css"> <!-- updated filename --> matches -->
-    <style>
-         /* Add or override styles in this block if needed. */
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="navbar">
@@ -28,18 +25,8 @@
             <div class="description">
                 Which cannot be implemented using SysTick? Animation explains why measuring <span class="tooltip" data-tooltip="Flash memory latency: Time taken to access data from flash memory.">flash memory latency</span> (option c) is problematic due to SysTick's granularity.
             </div>
-            <div class="signal-container">
-                <div class="signal-row">
-                    <span class="signal-label">Options</span>
-                    <div class="signal-bits" id="systick-limitations-options">
-                        <div>
-                            <span class="bit low">a</span>
-                            <span class="bit low">b</span>
-                            <span class="bit low">c</span>
-                            <span class="bit low">d</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="signal-container"  id="systick-limitations-container">
+                <!-- Animation elements will be injected here by JavaScript -->
             </div>
             <div class="calculation-steps" id="systick-limitations-steps">
                 <p>SysTick measures core clock periods.</p>
@@ -150,17 +137,8 @@
             <div class="signal-container">
                 <div class="signal-row">
                     <span class="signal-label">History Byte</span>
-                    <div class="signal-bits" id="history-byte-bits">
-                        <div>
-                            <span class="bit low">0</span>
-                            <span class="bit low">0</span>
-                            <span class="bit low">0</span>
-                            <span class="bit low">0</span>
-                            <span class="bit low">0</span>
-                            <span class="bit low">0</span>
-                            <span class="bit low">0</span>
-                            <span class="bit low">0</span>
-                        </div>
+                    <div class="signal-bits" id="history-byte-options">
+                        <div></div> <!-- Container for bits to be generated -->
                     </div>
                 </div>
             </div>
@@ -186,12 +164,8 @@
             <div class="signal-container">
                 <div class="signal-row">
                     <span class="signal-label">Frequency</span>
-                    <div class="signal-bits" id="display-frequency-hz">
-                        <div>
-                            <span class="bit low">0</span>
-                            <span class="bit low">0</span>
-                            <span class="bit low">0</span>
-                        </div>
+                    <div class="signal-bits" id="display-frequency-options">
+                        <div></div> <!-- Container for bits to be generated -->
                         <span class="bit">Hz</span>
                     </div>
                 </div>
@@ -217,11 +191,8 @@
             <div class="signal-container">
                 <div class="signal-row">
                     <span class="signal-label">Pins Needed</span>
-                    <div class="signal-bits" id="multiplexing-pins-count">
-                        <div>
-                            <span class="bit low">0</span>
-                            <span class="bit low">0</span>
-                        </div>
+                    <div class="signal-bits" id="multiplexing-pins-options">
+                        <div></div> <!-- Container for bits to be generated -->
                         <span class="bit">pins</span>
                     </div>
                 </div>
@@ -247,11 +218,8 @@
             <div class="signal-container">
                 <div class="signal-row">
                     <span class="signal-label">Pins Needed</span>
-                    <div class="signal-bits" id="two-arrays-pins-count">
-                        <div>
-                            <span class="bit low">0</span>
-                            <span class="bit low">0</span>
-                        </div>
+                    <div class="signal-bits" id="two-arrays-options">
+                        <div></div> <!-- Container for bits to be generated -->
                         <span class="bit">pins</span>
                     </div>
                 </div>
@@ -277,13 +245,8 @@
             <div class="signal-container">
                 <div class="signal-row">
                     <span class="signal-label">Interval (x)</span>
-                    <div class="signal-bits" id="counter-timer-interval-ms">
-                        <div>
-                            <span class="bit low">0</span>
-                            <span class="bit low">0</span>
-                            <span class="bit low">0</span>
-                            <span class="bit low">0</span>
-                        </div>
+                    <div class="signal-bits" id="counter-timer-options">
+                        <div></div> <!-- Container for bits to be generated -->
                         <span class="bit">ms</span>
                     </div>
                 </div>
@@ -304,420 +267,10 @@
 
     </div>
     <div id="back-to-top" onclick="scrollToTop()">↑</div>
-    <div id="animation-explanation" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);color:#fff;padding:10px 20px;border-radius:5px;font-size:16px;z-index:1000;opacity:0;"></div>
-
-    <script>
-        // Utility Functions (from HW2 - keep these)
-        function toggleSteps(steps, btn) { /* ... */ }
-        function highlightSteps(steps) { /* ... */ }
-        function resetBits(bitContainer, initialText) { /* ... */ } // Ensure this is in your script
-        window.onscroll = function() { scrollFunction() };
-        function scrollFunction() { /* ... */ }
-        function scrollToTop() { /* ... */ }
-
-
-        // Problem 1: SysTick Limitations Animation
-        function initSysTickLimitationsAnimation() {
-            const optionsBits = document.getElementById('systick-limitations-options');
-            const steps = document.getElementById('systick-limitations-steps');
-            const animateBtn = document.getElementById('systick-limitations-animate-btn');
-            const stepsBtn = document.getElementById('systick-limitations-steps-btn');
-            const resetBtn = document.getElementById('systick-limitations-reset-btn');
-            const optionBitsGroup = optionsBits.children[0];
-
-            function animate() {
-                resetBits(optionsBits, '');
-                ['a', 'b', 'c', 'd'].forEach((option, index) => {
-                    optionBitsGroup.children[index].textContent = option;
-                });
-
-                setTimeout(() => {
-                    optionBitsGroup.children[2].classList.remove('low');
-                    optionBitsGroup.children[2].classList.add('high', 'connection');
-                    setTimeout(() => optionBitsGroup.children[2].classList.add('visible'), 100)
-                }, 500);
-                setTimeout(() => highlightSteps(steps), 1000);
-            }
-
-            function reset() {
-                resetBits(optionsBits, '');
-                ['a', 'b', 'c', 'd'].forEach((option, index) => {
-                    optionBitsGroup.children[index].textContent = option;
-                });
-                steps.classList.remove('visible');
-                stepsBtn.textContent = 'Show Steps';
-            }
-
-            animateBtn.addEventListener('click', animate);
-            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
-            resetBtn.addEventListener('click', reset);
-            reset();
-        }
-
-        // Problem 2: Timer Configuration Animation
-        function initTimerConfigAnimation() {
-            const optionsBits = document.getElementById('timer-config-options');
-            const steps = document.getElementById('timer-config-steps');
-            const animateBtn = document.getElementById('timer-config-animate-btn');
-            const stepsBtn = document.getElementById('timer-config-steps-btn');
-            const resetBtn = document.getElementById('timer-config-reset-btn');
-            const optionBitsGroup = optionsBits.children[0];
-
-
-            function animate() {
-                resetBits(optionsBits, '');
-
-                setTimeout(() => {
-                    optionBitsGroup.children[0].classList.remove('low');
-                    optionBitsGroup.children[0].classList.add('high', 'connection');
-                    setTimeout(() => optionBitsGroup.children[0].classList.add('visible'), 100)
-                }, 500);
-                 setTimeout(() => {
-                    optionBitsGroup.children[2].classList.remove('low');
-                    optionBitsGroup.children[2].classList.add('high', 'connection');
-                     setTimeout(() => optionBitsGroup.children[2].classList.add('visible'), 100)
-                }, 1000);
-                setTimeout(() => highlightSteps(steps), 1500);
-            }
-
-            function reset() {
-                resetBits(optionsBits, '');
-                steps.classList.remove('visible');
-                stepsBtn.textContent = 'Show Steps';
-            }
-
-            animateBtn.addEventListener('click', animate);
-            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
-            resetBtn.addEventListener('click', reset);
-            reset();
-        }
-
-        // Problem 3: Interrupt Interval Animation
-        function initInterruptIntervalAnimation() {
-            const optionsBits = document.getElementById('interrupt-interval-options');
-            const steps = document.getElementById('interrupt-interval-steps');
-            const animateBtn = document.getElementById('interrupt-interval-animate-btn');
-            const stepsBtn = document.getElementById('interrupt-interval-steps-btn');
-            const resetBtn = document.getElementById('interrupt-interval-reset-btn');
-            const optionBitsGroup = optionsBits.children[0];
-
-
-            function animate() {
-                resetBits(optionsBits, '');
-
-                setTimeout(() => {
-                    optionBitsGroup.children[1].classList.remove('low');
-                    optionBitsGroup.children[1].classList.add('high', 'connection');
-                    setTimeout(() => optionBitsGroup.children[1].classList.add('visible'), 100)
-                }, 500);
-                setTimeout(() => highlightSteps(steps), 1000);
-            }
-
-            function reset() {
-                resetBits(optionsBits, '');
-                steps.classList.remove('visible');
-                stepsBtn.textContent = 'Show Steps';
-            }
-
-            animateBtn.addEventListener('click', animate);
-            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
-            resetBtn.addEventListener('click', reset);
-            reset();
-        }
-
-
-        // Problem 4: Keypad Scanning Animation (Conceptual - you'll need to build keypad visualization)
-        function initKeypadScanningAnimation() {
-            const keypadBits = document.getElementById('keypad-scanning-keypad');
-            const steps = document.getElementById('keypad-scanning-steps');
-            const animateBtn = document.getElementById('keypad-scanning-animate-btn');
-            const stepsBtn = document.getElementById('keypad-scanning-steps-btn');
-            const resetBtn = document.getElementById('keypad-scanning-reset-btn');
-
-            function createKeypad() {
-                let keypadHTML = '<div>';
-                const keys = ['1', '2', '3', 'A', '4', '5', '6', 'B', '7', '8', '9', 'C', '*', '0', '#', 'D'];
-                for (let i = 0; i < keys.length; i++) {
-                    keypadHTML += `<span class="bit low keypad-key" data-key="${keys[i]}">${keys[i]}</span>`;
-                    if ((i + 1) % 4 === 0) {
-                        keypadHTML += '</div><div>'; // Start new row
-                    }
-                }
-                keypadHTML += '</div>';
-                keypadBits.innerHTML = keypadHTML;
-            }
-
-
-            function animate() {
-                reset();
-                createKeypad(); // Generate keypad if not already there.
-                 const keypadKeys = [...keypadBits.querySelectorAll('.keypad-key')];
-
-
-                // Example animation (you'll need to refine this to show row scanning)
-                setTimeout(() => {
-                    keypadKeys[0].classList.remove('low'); // Highlight key '1'
-                    keypadKeys[0].classList.add('high', 'connection');
-                     setTimeout(() => keypadKeys[0].classList.add('visible'), 100);
-                }, 500);
-                 setTimeout(() => {
-                    keypadKeys[1].classList.remove('low'); // Highlight key '2'
-                    keypadKeys[1].classList.add('high', 'connection');
-                     setTimeout(() => keypadKeys[1].classList.add('visible'), 100);
-                }, 1000);
-
-
-                setTimeout(() => highlightSteps(steps), 1500);
-            }
-
-            function reset() {
-                 if(keypadBits.querySelector('.keypad-key')) {
-                     const keypadKeys = [...keypadBits.querySelectorAll('.keypad-key')];
-                     keypadKeys.forEach(key => {
-                        key.classList.remove('high', 'connection', 'visible');
-                        key.classList.add('low');
-                     });
-                 }
-
-                steps.classList.remove('visible');
-                stepsBtn.textContent = 'Show Steps';
-            }
-
-            animateBtn.addEventListener('click', animate);
-            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
-            resetBtn.addEventListener('click', reset);
-            reset();
-        }
-
-
-        // Problem 5: History Byte Animation
-        function initHistoryByteAnimation() {
-            const historyBits = document.getElementById('history-byte-bits');
-            const steps = document.getElementById('history-byte-steps');
-            const animateBtn = document.getElementById('history-byte-animate-btn');
-            const stepsBtn = document.getElementById('history-byte-steps-btn');
-            const resetBtn = document.getElementById('history-byte-reset-btn');
-            const historyBitGroup = historyBits.children[0];
-
-
-            function animate() {
-                resetBits(historyBits, '0');
-
-                const targetValues = ['0', '1', 'X', 'X', 'X', '1', '1', '1']; // Example target values
-                setTimeout(() => {
-                    for (let i = 0; i < targetValues.length; i++) {
-                        if(historyBitGroup.children[i]) {
-                            historyBitGroup.children[i].classList.remove('low');
-                            historyBitGroup.children[i].classList.add('high'); // Or keep 'low' if 0
-                            historyBitGroup.children[i].textContent = targetValues[i]; // Set value
-                        }
-
-                    }
-                }, 500);
-
-
-                setTimeout(() => highlightSteps(steps), 1000);
-            }
-
-            function reset() {
-                resetBits(historyBits, '0');
-                steps.classList.remove('visible');
-                stepsBtn.textContent = 'Show Steps';
-            }
-
-            animateBtn.addEventListener('click', animate);
-            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
-            resetBtn.addEventListener('click', reset);
-            reset();
-        }
-
-        // Problem 6: Display Frequency Animation
-        function initDisplayFrequencyAnimation() {
-            const frequencyBits = document.getElementById('display-frequency-hz').querySelector('div');
-            const steps = document.getElementById('display-frequency-steps');
-            const animateBtn = document.getElementById('display-frequency-animate-btn');
-            const stepsBtn = document.getElementById('display-frequency-steps-btn');
-            const resetBtn = document.getElementById('display-frequency-reset-btn');
-
-
-            function animate() {
-                resetBits( {children: [frequencyBits]}, '0'); //Need to pass in object to match resetBits param
-                const frequencyBitGroup = frequencyBits.children;
-                const result = 625;  // Hz
-                const resultStr = result.toString();
-
-                setTimeout(() => {
-                    for (let i = 0; i < resultStr.length; i++) {
-                        if (frequencyBitGroup[i]) {
-                            frequencyBitGroup[i].classList.remove('low');
-                            frequencyBitGroup[i].classList.add('high', 'connection');
-                            frequencyBitGroup[i].textContent = resultStr[i];
-                             setTimeout(() => frequencyBitGroup[i].classList.add('visible'), 100);
-                        }
-                    }
-                }, 500);
-                setTimeout(() => highlightSteps(steps), 1500);
-            }
-
-            function reset() {
-                resetBits( {children: [frequencyBits]}, '0'); //Need to pass in object to match resetBits param
-                steps.classList.remove('visible');
-                stepsBtn.textContent = 'Show Steps';
-            }
-
-            animateBtn.addEventListener('click', animate);
-            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
-            resetBtn.addEventListener('click', reset);
-            reset();
-        }
-
-        // Problem 7: Multiplexing Pins Animation
-        function initMultiplexingPinsAnimation() {
-            const pinsBits = document.getElementById('multiplexing-pins-count').querySelector('div');
-            const steps = document.getElementById('multiplexing-pins-steps');
-            const animateBtn = document.getElementById('multiplexing-pins-animate-btn');
-            const stepsBtn = document.getElementById('multiplexing-pins-steps-btn');
-            const resetBtn = document.getElementById('multiplexing-pins-reset-btn');
-            const pinsBitGroup = pinsBits.children;
-
-
-            function animate() {
-                resetBits({children: [pinsBits]}, '0'); //Need to pass in object to match resetBits param
-                const result = 14;
-                const resultStr = result.toString();
-                setTimeout(() => {
-                    for (let i = 0; i < resultStr.length; i++) {
-                        if (pinsBitGroup[i]) {
-                            pinsBitGroup[i].classList.remove('low');
-                            pinsBitGroup[i].classList.add('high', 'connection');
-                            pinsBitGroup[i].textContent = resultStr[i];
-                             setTimeout(() => pinsBitGroup[i].classList.add('visible'), 100);
-                        }
-                    }
-                }, 500);
-                setTimeout(() => highlightSteps(steps), 1000);
-            }
-
-            function reset() {
-                resetBits({children: [pinsBits]}, '0'); //Need to pass in object to match resetBits param
-                steps.classList.remove('visible');
-                stepsBtn.textContent = 'Show Steps';
-            }
-
-            animateBtn.addEventListener('click', animate);
-            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
-            resetBtn.addEventListener('click', reset);
-            reset();
-        }
-
-        // Problem 8: Two Arrays Animation
-        function initTwoArraysAnimation() {
-            const pinsBits = document.getElementById('two-arrays-pins-count').querySelector('div');
-            const steps = document.getElementById('two-arrays-steps');
-            const animateBtn = document.getElementById('two-arrays-animate-btn');
-            const stepsBtn = document.getElementById('two-arrays-steps-btn');
-            const resetBtn = document.getElementById('two-arrays-reset-btn');
-             const pinsBitGroup = pinsBits.children;
-
-
-            function animate() {
-                resetBits({children: [pinsBits]}, '0'); //Need to pass in object to match resetBits param
-                const result = 14;
-                const resultStr = result.toString();
-                setTimeout(() => {
-                    for (let i = 0; i < resultStr.length; i++) {
-                        if (pinsBitGroup[i]) {
-                            pinsBitGroup[i].classList.remove('low');
-                            pinsBitGroup[i].classList.add('high', 'connection');
-                            pinsBitGroup[i].textContent = resultStr[i];
-                             setTimeout(() =>  pinsBitGroup[i].classList.add('visible'), 100);
-                        }
-                    }
-                }, 500);
-                setTimeout(() => highlightSteps(steps), 1000);
-            }
-
-            function reset() {
-                resetBits({children: [pinsBits]}, '0'); //Need to pass in object to match resetBits param
-                steps.classList.remove('visible');
-                stepsBtn.textContent = 'Show Steps';
-            }
-
-            animateBtn.addEventListener('click', animate);
-            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
-            resetBtn.addEventListener('click', reset);
-            reset();
-        }
-
-        // Problem 9: Counter Timer Interval Animation
-        function initCounterTimerAnimation() {
-            const intervalBits = document.getElementById('counter-timer-interval-ms').querySelector('div');
-            const steps = document.getElementById('counter-timer-steps');
-            const animateBtn = document.getElementById('counter-timer-animate-btn');
-            const stepsBtn = document.getElementById('counter-timer-steps-btn');
-            const resetBtn = document.getElementById('counter-timer-reset-btn');
-            const intervalBitGroup = intervalBits.children;
-
-
-            function animate() {
-                resetBits({children: [intervalBits]}, '0'); //Need to pass in object to match resetBits param
-                const result = 5.12;
-                const resultStr = result.toString();
-
-                setTimeout(() => {
-                    for (let i = 0; i < resultStr.length; i++) {
-                        if (intervalBitGroup[i]) {
-                            intervalBitGroup[i].classList.remove('low');
-                            intervalBitGroup[i].classList.add('high', 'connection');
-                            intervalBitGroup[i].textContent = resultStr[i];
-                             setTimeout(() => intervalBitGroup[i].classList.add('visible'), 100);
-                        }
-                    }
-                }, 500);
-                setTimeout(() => highlightSteps(steps), 1000);
-            }
-
-            function reset() {
-                resetBits({children: [intervalBits]}, '0'); //Need to pass in object to match resetBits param
-                steps.classList.remove('visible');
-                stepsBtn.textContent = 'Show Steps';
-            }
-
-            animateBtn.addEventListener('click', animate);
-            stepsBtn.addEventListener('click', () => toggleSteps(steps, stepsBtn));
-            resetBtn.addEventListener('click', reset);
-            reset();
-        }
-
-
-        // Initialize animations
-        document.addEventListener('DOMContentLoaded', () => {
-            // Removed undefined calls:
-            // initVectorTableAnimation();
-            // initIsrCallAnimation();
-            // initException1Animation();
-            // initException2Animation();
-            // initStackAnimation();
-            // initPcAnimation();
-            // initPriority1Animation();
-            // initPriority2Animation();
-            // initCyclesAnimation();
-            // initFlagAnimation();
-
-            initSysTickLimitationsAnimation();
-            initTimerConfigAnimation();
-            initInterruptIntervalAnimation();
-            initKeypadScanningAnimation();
-            initHistoryByteAnimation();
-            initDisplayFrequencyAnimation();
-            initMultiplexingPinsAnimation();
-            initTwoArraysAnimation();
-            initCounterTimerAnimation();
-        });
-
-        // Tooltip functionality (from HW2 - keep this)
-        document.querySelectorAll('.tooltip').forEach(tooltipElement => { /* ... */ });
-
-    </script>
+    <div id="explanation-overlay">
+        <div id="explanation-message"></div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
