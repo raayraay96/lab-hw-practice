@@ -706,3 +706,77 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('dac-signal')) { initBJTAnimation(); }
     if (document.getElementById('pwm-signal')) { initPWMAnimation(); }
 });
+
+// Utility Functions
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function drawWaveform(canvasId, period, dutyCycle, color = '#007BFF') {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
+
+    ctx.clearRect(0, 0, width, height);
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+
+    for (let x = 0; x <= width; x++) {
+        const t = (x / width) * period;
+        const y = t < dutyCycle ? height / 4 : (3 * height) / 4;
+        ctx.lineTo(x, y);
+    }
+
+    ctx.stroke();
+}
+
+// Problem 1: Timer Configurations
+const timerCanvas = document.getElementById('timer-output-waveform');
+const timerPrescalerInput = document.getElementById('timer-prescaler');
+const timerArrInput = document.getElementById('timer-arr');
+const timerCcrInput = document.getElementById('timer-ccr');
+const timerPrescalerVal = document.getElementById('timer-prescaler-val');
+const timerArrVal = document.getElementById('timer-arr-val');
+const timerCalculatedFreq = document.getElementById('timer-calculated-freq');
+const timerCcrVal = document.getElementById('timer-ccr-val');
+const timerCalculatedDuty = document.getElementById('timer-calculated-duty');
+
+function updateTimerCalculations() {
+    const prescaler = parseInt(timerPrescalerInput.value, 10);
+    const arr = parseInt(timerArrInput.value, 10);
+    const ccr = parseInt(timerCcrInput.value, 10);
+
+    timerPrescalerVal.textContent = prescaler;
+    timerArrVal.textContent = arr;
+    timerCalculatedFreq.textContent = (100000 / (prescaler + 1) / (arr + 1)).toFixed(2);
+    timerCcrVal.textContent = ccr;
+    timerCalculatedDuty.textContent = ((ccr / (arr + 1)) * 100).toFixed(2);
+
+    drawWaveform('timer-output-waveform', arr + 1, ccr);
+}
+
+document.getElementById('timer-config-animate-btn').addEventListener('click', () => {
+    let ccr = parseInt(timerCcrInput.value, 10);
+    const arr = parseInt(timerArrInput.value, 10);
+
+    const interval = setInterval(() => {
+        if (ccr >= arr) {
+            clearInterval(interval);
+        } else {
+            ccr += 1;
+            timerCcrInput.value = ccr;
+            updateTimerCalculations();
+        }
+    }, 100);
+});
+
+timerPrescalerInput.addEventListener('input', updateTimerCalculations);
+timerArrInput.addEventListener('input', updateTimerCalculations);
+timerCcrInput.addEventListener('input', updateTimerCalculations);
+
+// Initialize timer calculations on load
+updateTimerCalculations();
+
+// Additional Problems Logic Can Be Added Here

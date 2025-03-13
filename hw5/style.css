@@ -1,214 +1,135 @@
+/* Base styles matching other homework pages */
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-    color: #e0e0e0;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: #e6e6e6;
+    line-height: 1.6;
 }
 
 .navbar {
-    background-color: #1e3a8a;
-    padding: 15px 20px;
+    background-color: #0f3460;
+    overflow: hidden;
+    padding: 10px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     position: sticky;
     top: 0;
-    z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    text-align: right;
 }
 
 .navbar a {
-    float: left;
-    color: #fff;
+    display: inline-block;
+    color: white;
     text-align: center;
-    padding: 12px 20px;
+    padding: 14px 20px;
     text-decoration: none;
     font-size: 18px;
-    font-family: 'Roboto', sans-serif;
-    transition: transform 0.2s, background-color 0.3s;
+    transition: all 0.3s ease;
 }
 
 .navbar a:hover {
-    background-color: #3b82f6;
-    transform: scale(1.05);
-}
-
-h1 {
-    font-family: 'Roboto', sans-serif;
-    text-align: center;
-    color: #00ff88;
-    margin: 40px 0;
-    font-size: 2.5em;
-    text-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+    background-color: #16c79a;
+    transform: translateY(-3px);
 }
 
 .content {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    text-align: center;
 }
 
+h1, h2, h3 {
+    color: #16c79a;
+}
+
+/* Section styling */
 .section {
-    background: #2a2a2a;
-    border-radius: 15px;
-    padding: 30px;
-    margin-bottom: 40px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s;
-    animation: fadeIn 0.5s ease-in;
-}
-
-.section:hover {
-    transform: translateY(-5px);
-}
-
-h2 {
-    font-family: 'Roboto', sans-serif;
-    color: #00ff88;
-    margin-bottom: 15px;
+    background: rgba(15, 52, 96, 0.3);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .description {
-    font-size: 1.1em;
-    color: #b0b0b0;
-    margin-bottom: 20px;
-    line-height: 1.5;
+    margin: 15px 0;
+    line-height: 1.6;
 }
 
-.description strong {
-    color: #00ff88;
-}
-
-.description .tooltip {
-    position: relative;
-    cursor: help;
-    border-bottom: 1px dotted #b0b0b0;
-}
-
-.description .tooltip:hover::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #1e3a8a;
-    color: #fff;
-    padding: 5px 10px;
+/* Interactive controls */
+.interactive-controls {
+    margin: 15px 0;
+    padding: 10px;
+    background-color: rgba(22, 33, 62, 0.7);
     border-radius: 5px;
-    font-size: 0.9em;
-    white-space: nowrap;
-    z-index: 10;
 }
 
+.interactive-controls label {
+    margin-right: 15px;
+    color: #e6e6e6;
+}
+
+.interactive-controls input[type="range"] {
+    width: 200px;
+    margin: 0 10px;
+}
+
+/* Signal container and visualization */
 .signal-container {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    background: #3a3a3a;
-    padding: 20px;
-    border-radius: 10px;
+    margin: 20px 0;
     position: relative;
-    overflow: hidden;
-}
-
-.timer-signal-container,
-.sinewave-signal-container,
-.center-signal-container,
-.wavetable-signal-container,
-.bjt-signal-container,
-.pwm-signal-container,
-.systick-limitations-signal-container,
-.interrupt-interval-signal-container,
-.keypad-scanning-signal-container,
-.history-byte-signal-container,
-.display-frequency-signal-container,
-.multiplexing-pins-signal-container,
-.two-arrays-signal-container,
-.counter-timer-signal-container {
-    height: auto;
 }
 
 .signal-row {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
-    position: relative;
+    margin: 10px 0;
 }
 
 .signal-label {
     width: 120px;
-    font-weight: 600;
-    color: #b0b0b0;
-    position: relative;
     text-align: right;
-    padding-right: 10px;
+    margin-right: 10px;
+    color: #16c79a;
 }
 
-.signal-bits,
-.visual-counter,
-.waveform-canvas,
-.value-display {
-    flex: 1;
-    margin-left: 130px;
-    position: relative;
-}
-
-.signal-bits {
-    display: flex;
-}
-
-.bit {
-    width: 30px;
-    height: 30px;
-    text-align: center;
-    line-height: 30px;
-    border: 1px solid #555;
+.visual-counter {
+    background: #2a2a2a;
+    padding: 10px;
     border-radius: 5px;
-    margin: 0 2px;
-    background: #2a2a2a;
-    font-size: 14px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    position: relative;
-    transition: transform 0.3s ease, background-color 0.3s, border-color 0.3s;
+    min-width: 60px;
+    text-align: center;
 }
 
-.bit.low {
-    transform: translateY(15px);
+.waveform-canvas {
     background: #2a2a2a;
-    border-color: #555;
+    border-radius: 5px;
+}
+
+/* Calculation steps */
+.calculation-steps {
+    background: #3a3a3a;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    display: none;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.calculation-steps.visible {
+    display: block;
+}
+
+.calculation-steps p {
+    margin: 10px 0;
+    font-family: 'Roboto Mono', monospace;
     color: #b0b0b0;
 }
 
-.bit.high {
-    transform: translateY(-15px);
-    background: #00ff88;
-    color: #000;
-    border-color: #00ff88;
-    box-shadow: 0 2px 4px rgba(0, 255, 136, 0.4);
-}
-
-.bit.connection::after {
-    content: '';
-    position: absolute;
-    width: 1px;
-    height: 30px;
-    background: #facc15;
-    top: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.bit.connection.visible::after {
-    opacity: 1;
-}
-
-.keypad-key {
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
-    margin: 5px;
-}
-
+/* Controls */
 .controls {
     margin-top: 25px;
     text-align: center;
@@ -232,108 +153,31 @@ button:hover {
     transform: scale(1.05);
 }
 
-.calculation-steps {
-    margin-top: 20px;
-    padding: 15px;
-    background: #444;
-    border-radius: 10px;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease;
-}
-
-.calculation-steps.visible {
-    max-height: 500px;
-}
-
-.calculation-steps p {
-    margin: 10px 0;
-    color: #e0e0e0;
-}
-
-.step-highlight {
-    background-color: #00ff88;
-    color: #000;
-    padding: 5px;
-    border-radius: 5px;
-}
-
+/* Back to top button */
 #back-to-top {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: #1e3a8a;
-    color: #fff;
-    padding: 10px 15px;
+    background: #16c79a;
+    color: white;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
     cursor: pointer;
     display: none;
-    transition: opacity 0.3s;
+    z-index: 99;
+    transition: all 0.3s ease;
 }
 
 #back-to-top:hover {
-    opacity: 0.8;
+    background: #00ff88;
+    transform: translateY(-3px);
 }
 
+/* Animations */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
-}
-
-.waveform-canvas {
-    background: #3a3a3a;
-    border: 1px solid #555;
-    border-radius: 5px;
-}
-
-.visual-counter {
-    font-size: 2em;
-    color: #00ff88;
-    text-align: left;
-    padding-left: 10px;
-    font-family: 'Roboto', sans-serif;
-}
-
-.value-display {
-    font-size: 1.2em;
-    color: #e0e0e0;
-    text-align: left;
-    padding-left: 10px;
-    font-family: 'Roboto', sans-serif;
-}
-
-@media (max-width: 768px) {
-    .navbar a {
-        float: none;
-        display: block;
-        text-align: left;
-    }
-    h1 {
-        font-size: 2em;
-    }
-    .section {
-        padding: 20px;
-    }
-    .bit {
-        width: 25px;
-        height: 25px;
-        line-height: 25px;
-        margin: 0 1px;
-        font-size: 12px;
-    }
-    .bit.low { transform: translateY(12.5px); }
-    .bit.high { transform: translateY(-12.5px); }
-    .bit.connection::after { height: 25px; top: -12.5px; }
-    .signal-label {
-        width: 100px;
-    }
-    .signal-container {
-        height: auto;
-    }
-    .visual-counter, .value-display {
-        font-size: 1.5em;
-    }
-    .signal-bits, .visual-counter, .waveform-canvas, .value-display {
-        margin-left: 110px;
-    }
 }
